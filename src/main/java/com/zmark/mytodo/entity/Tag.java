@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.dto.TagDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,4 +31,25 @@ public class Tag {
     private Timestamp createTime;
     @Column(name = "update_time")
     private Timestamp updateTime;
+
+    public String getTagPath() {
+        // 从当前tag开始，依次向上查找父tag，直到根tag
+        StringBuilder tagPath = new StringBuilder();
+        Tag currentTag = this;
+        while (currentTag != null) {
+            tagPath.insert(0, currentTag.getTagName());
+            currentTag = currentTag.getParentTag();
+            if (currentTag != null) {
+                tagPath.insert(0, "/");
+            }
+        }
+        return tagPath.toString();
+    }
+
+    public TagDTO toTagDTO() {
+        return TagDTO.builder()
+                .tagName(tagName)
+                .tagPath(getTagPath())
+                .build();
+    }
 }

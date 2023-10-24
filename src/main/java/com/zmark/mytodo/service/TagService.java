@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -20,8 +21,16 @@ public class TagService {
         this.tagDAO = tagDAO;
     }
 
-    public Tag getTagById(int id) {
+    public Tag findTagById(int id) {
         return tagDAO.findById(id).orElse(null);
+    }
+
+    public Tag findTagByName(String tagName) {
+        return tagDAO.findByTagName(tagName);
+    }
+
+    public List<Tag> findAllTags() {
+        return tagDAO.findAll();
     }
 
     /**

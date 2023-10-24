@@ -38,4 +38,12 @@ class MyTodoRearApplicationTests {
 		}
 	}
 
+	@Test
+	void testTagToDTO() {
+		tagService.createNewTag("tag1/tag2/tag3");
+		tagService.createNewTag("tag1/tag2/tag4");
+		tagService.createNewTag("tag1/tag2/tag5");
+		tagDAO.findAll().forEach(tag -> log.info(tag.toTagDTO()));
+	}
+
 }
