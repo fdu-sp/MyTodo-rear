@@ -32,8 +32,7 @@ CREATE TABLE `task_content_info`
     `description` TEXT      NOT NULL COMMENT '任务描述',
     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -51,8 +50,7 @@ CREATE TABLE `task_time_info`
     `expected_execution_date`         date             DEFAULT NULL COMMENT '预计执行日期',
     `expected_execution_start_period` time             DEFAULT NULL COMMENT '预计执行开始时间段',
     `expected_execution_end_period`   time             DEFAULT NULL COMMENT '预计执行结束时间段',
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -66,8 +64,7 @@ CREATE TABLE `task_priority_info`
     `task_id`      INT     NOT NULL COMMENT '任务id',
     `is_important` boolean NOT NULL DEFAULT FALSE COMMENT '是否重要',
     `is_urgent`    boolean NOT NULL DEFAULT FALSE COMMENT '是否紧急',
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -89,15 +86,14 @@ CREATE TABLE `step_info`
   DEFAULT CHARSET = utf8mb4;
 
 -- --------------------------
--- Table structure for my_day_task_list 我的一天任务表
+-- Table structure for my_day_task 我的一天任务表
 -- --------------------------
-DROP TABLE IF EXISTS `my_day_task_list`;
-CREATE TABLE `my_day_task_list`
+DROP TABLE IF EXISTS `my_day_task`;
+CREATE TABLE `my_day_task`
 (
     `id`      INT NOT NULL AUTO_INCREMENT,
     `task_id` INT NOT NULL COMMENT '任务id',
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
