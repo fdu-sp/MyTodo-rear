@@ -25,10 +25,10 @@ CREATE TABLE `task_tag`
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "task_tag")
+@Table(name = "task_tag_match")
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class TaskTag {
+public class TaskTagMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

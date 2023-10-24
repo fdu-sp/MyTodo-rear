@@ -113,10 +113,10 @@ CREATE TABLE `tag`
   DEFAULT CHARSET = utf8mb4;
 
 -- --------------------------
--- Table structure for 任务与标签对应表
+-- Table structure for task_tag_match 任务与标签对应表
 -- --------------------------
-DROP TABLE IF EXISTS `task_tag`;
-CREATE TABLE `task_tag`
+DROP TABLE IF EXISTS `task_tag_match`;
+CREATE TABLE `task_tag_match`
 (
     `id`      INT NOT NULL AUTO_INCREMENT,
     `task_id` INT NOT NULL COMMENT '任务id',
