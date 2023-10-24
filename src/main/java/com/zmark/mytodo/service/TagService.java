@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service;
 
 import com.zmark.mytodo.dao.TagDAO;
+import com.zmark.mytodo.dto.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -21,16 +23,14 @@ public class TagService {
         this.tagDAO = tagDAO;
     }
 
-    public Tag findTagById(int id) {
-        return tagDAO.findById(id).orElse(null);
+    public TagDTO findTagByName(String tagName) {
+        return Optional.ofNullable(tagDAO.findByTagName(tagName))
+                .map(Tag::toTagDTO)
+                .orElse(null);
     }
 
-    public Tag findTagByName(String tagName) {
-        return tagDAO.findByTagName(tagName);
-    }
-
-    public List<Tag> findAllTags() {
-        return tagDAO.findAll();
+    public List<TagDTO> findAllTags() {
+        return tagDAO.findAll().stream().map(Tag::toTagDTO).toList();
     }
 
     /**

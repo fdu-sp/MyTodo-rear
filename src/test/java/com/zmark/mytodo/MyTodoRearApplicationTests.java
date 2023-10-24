@@ -46,4 +46,9 @@ class MyTodoRearApplicationTests {
 		tagDAO.findAll().forEach(tag -> log.info(tag.toTagDTO()));
 	}
 
+	@Test
+	void testFindAllTagsWithNoData() {
+		tagService.findAllTags().forEach(log::info);
+	}
+
 }
