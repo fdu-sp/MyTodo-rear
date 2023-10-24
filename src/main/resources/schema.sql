@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag`
 (
     `id`            INT          NOT NULL AUTO_INCREMENT,
-    `tag_name`      varchar(255) NOT NULL COMMENT '标签名称',
+    `tag_name`      varchar(255) NOT NULL unique COMMENT '标签名称' ,
     `parent_tag_id` INT                   DEFAULT NULL COMMENT '父标签id',
     `create_time`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

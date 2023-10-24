@@ -4,4 +4,6 @@ import com.zmark.mytodo.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TagDAO extends JpaRepository<Tag, Integer> {
+
+    Tag findByTagName(String tagName);
 }

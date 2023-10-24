@@ -24,6 +24,8 @@ public class Tag {
     @OneToOne
     @JoinColumn(name = "parent_tag_id", insertable = false, updatable = false)
     private Tag ParentTag;
+    @Column(name = "parent_tag_id")
+    private Integer parentTagId;
     @Column(name = "create_time")
     private Timestamp createTime;
     @Column(name = "update_time")
