@@ -26,11 +26,18 @@ public class TaskController {
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
-    @GetMapping("/api/task/get-all-tasks")
-    public Result getAllTasks() {
+    @GetMapping("/api/task/simple-info/get-all-tasks")
+    public Result getAllTasksWithSimpleInfo() {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
     }
+
+    @GetMapping("/api/task/detail-info/get-all-tasks")
+    public Result getAllTasksWithDetailInfo() {
+        // todo
+        return ResultFactory.buildSuccessResult("todo...", null);
+    }
+
 
     @GetMapping("/api/task/simple-info/get-all-task/{tag-name}")
     public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-name") String tagName) {
@@ -58,7 +65,7 @@ public class TaskController {
 
     @PostMapping("/api/task/update-task")
     public Result updateTask() {
-        // // TODO: 2023/12/3
+        // // TODO: 2023/12/3 或许需要拆的更细致一些
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
