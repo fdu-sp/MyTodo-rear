@@ -34,6 +34,19 @@ public class TagService {
     }
 
     /**
+     * @description: 根据tag的名字，查找tag的所有子tag，以及子tag的子tag，以此类推
+     */
+    public TagDTO findTagWithAllChildren(String tagName) {
+        Tag tag = tagDAO.findByTagName(tagName);
+        if (tag == null) {
+            return null;
+        }
+        List<Tag> childrenTagList = tagDAO.findTagsByParentTagId(tag.getId());
+        return tag.toTagDTO(childrenTagList);
+    }
+
+
+    /**
      * @param tag tag的名字，可以是多级tag，用/分割
      * @return 创建的子tag
      */

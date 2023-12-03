@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -52,4 +53,13 @@ public class Tag {
                 .tagPath(getTagPath())
                 .build();
     }
+
+    public TagDTO toTagDTO(List<Tag> childrenTagList) {
+        return TagDTO.builder()
+                .tagName(tagName)
+                .tagPath(getTagPath())
+                .children(childrenTagList.stream().map(Tag::toTagDTO).toList())
+                .build();
+    }
+
 }
