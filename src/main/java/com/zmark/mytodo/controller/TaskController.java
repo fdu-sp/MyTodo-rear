@@ -2,7 +2,8 @@ package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
-import com.zmark.mytodo.service.TaskService;
+import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.service.impl.TaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import com.zmark.mytodo.vo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.vo.task.resp.TaskSimpleResp;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class TaskController {
 
-    private final TaskService taskService;
+    private final ITaskService taskService;
 
     @Autowired
     public TaskController(TaskService taskService) {

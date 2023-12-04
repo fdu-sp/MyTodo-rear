@@ -1,14 +1,14 @@
 package com.zmark.mytodo;
 
 import com.zmark.mytodo.dao.TagDAO;
-import com.zmark.mytodo.service.TagService;
+import com.zmark.mytodo.service.impl.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @Slf4j
+@SpringBootTest
 class MyTodoRearApplicationTests {
     @Autowired
     private TagService tagService;

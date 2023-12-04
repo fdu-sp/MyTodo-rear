@@ -1,9 +1,10 @@
-package com.zmark.mytodo.service;
+package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.service.api.ITagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class TagService {
+public class TagService implements ITagService {
     private final TagDAO tagDAO;
 
     @Autowired
@@ -23,19 +24,19 @@ public class TagService {
         this.tagDAO = tagDAO;
     }
 
+    @Override
     public TagDTO findTagByName(String tagName) {
         return Optional.ofNullable(tagDAO.findByTagName(tagName))
                 .map(Tag::toTagDTO)
                 .orElse(null);
     }
 
+    @Override
     public List<TagDTO> findAllTags() {
         return tagDAO.findAll().stream().map(Tag::toTagDTO).toList();
     }
-
-    /**
-     * @description: 根据tag的名字，查找tag的所有子tag，以及子tag的子tag，以此类推
-     */
+    
+    @Override
     public TagDTO findTagWithAllChildren(String tagName) {
         Tag tag = tagDAO.findByTagName(tagName);
         if (tag == null) {
@@ -49,6 +50,7 @@ public class TagService {
     /**
      * @param tag tag的名字，可以是多级tag，用/分割
      */
+    @Override
     @Transactional
     public void createNewTag(String tag) {
         // 按照/分割tag

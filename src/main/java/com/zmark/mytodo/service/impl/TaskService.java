@@ -1,4 +1,4 @@
-package com.zmark.mytodo.service;
+package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dao.TaskDAO;
@@ -7,6 +7,7 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskTagMatch;
+import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.List;
  * @date 2023/12/3 23:50
  */
 @Service
-public class TaskService {
+public class TaskService implements ITaskService {
     private final TaskDAO taskDAO;
     private final TaskTagMatchDAO taskTagMatchDAO;
     private final TagDAO tagDAO;
@@ -42,15 +43,18 @@ public class TaskService {
         return TaskDTO.from(task, tags);
     }
 
+    @Override
     public TaskDTO findTaskById(Long taskId) {
         return this.toDTO(taskDAO.findTaskById(taskId));
     }
 
+    @Override
     public List<TaskDTO> findAllTasks() {
         List<Task> taskList = taskDAO.findAll();
         return taskList.stream().map(this::toDTO).toList();
     }
 
+    @Override
     @Transactional
     public void createNewTask(TaskCreatReq taskCreatReq) {
         // 保存tags
