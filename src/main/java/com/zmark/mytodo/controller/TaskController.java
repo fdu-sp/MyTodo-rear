@@ -1,11 +1,9 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.dto.TaskCreatReq;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ZMark
@@ -52,7 +50,7 @@ public class TaskController {
     }
 
     @PostMapping("/api/task/create-new-task")
-    public Result createNewTask() {
+    public Result createNewTask(@RequestBody TaskCreatReq taskCreatReq) {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
     }
