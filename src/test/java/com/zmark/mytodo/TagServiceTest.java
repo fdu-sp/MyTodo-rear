@@ -207,4 +207,44 @@ public class TagServiceTest {
         // 打印：
         tagDTOList.forEach(TagDTO -> log.info(TagDTO.toString()));
     }
+
+    @Test
+    public void testFindTagWithAllChildren() throws NewEntityException {
+        // 准备数据：
+        tagService.createNewTag("大学/课程/智能移动平台开发");
+        tagService.createNewTag("大学/课程/软件设计");
+
+        // 测试：
+        TagDTO universityTag = tagService.findTagWithAllChildren("大学");
+        Assertions.assertEquals(1, universityTag.getChildren().size());
+        Assertions.assertEquals("大学", universityTag.getTagName());
+        Assertions.assertEquals("大学", universityTag.getTagPath());
+
+        TagDTO courseTag = universityTag.getChildren().get(0);
+        Assertions.assertEquals(2, courseTag.getChildren().size());
+        Assertions.assertEquals("课程", courseTag.getTagName());
+        Assertions.assertEquals("大学/课程", courseTag.getTagPath());
+
+        TagDTO intelligentMobilePlatformDevelopmentTag = courseTag.getChildren().get(0);
+        Assertions.assertEquals(0, intelligentMobilePlatformDevelopmentTag.getChildren().size());
+        Assertions.assertEquals("智能移动平台开发", intelligentMobilePlatformDevelopmentTag.getTagName());
+        Assertions.assertEquals("大学/课程/智能移动平台开发", intelligentMobilePlatformDevelopmentTag.getTagPath());
+
+        TagDTO softwareDesignTag = courseTag.getChildren().get(1);
+        Assertions.assertEquals(0, softwareDesignTag.getChildren().size());
+        Assertions.assertEquals("软件设计", softwareDesignTag.getTagName());
+        Assertions.assertEquals("大学/课程/软件设计", softwareDesignTag.getTagPath());
+
+        TagDTO softwareDesignTag2 = tagService.findTagWithAllChildren("软件设计");
+        Assertions.assertEquals(0, softwareDesignTag2.getChildren().size());
+        Assertions.assertEquals("软件设计", softwareDesignTag2.getTagName());
+        Assertions.assertEquals("大学/课程/软件设计", softwareDesignTag2.getTagPath());
+
+        // 打印：
+        log.info(universityTag.toString());
+        log.info(courseTag.toString());
+        log.info(intelligentMobilePlatformDevelopmentTag.toString());
+        log.info(softwareDesignTag.toString());
+        log.info(softwareDesignTag2.toString());
+    }
 }
