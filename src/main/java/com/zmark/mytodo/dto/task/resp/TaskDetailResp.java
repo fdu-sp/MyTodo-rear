@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author ZMark
  * @date 2023/12/4 10:05
@@ -39,5 +42,9 @@ public class TaskDetailResp {
                 .createTime(task.getCreateTime().toString())
                 .updateTime(task.getUpdateTime().toString())
                 .build();
+    }
+
+    public static List<TaskDetailResp> from(List<Task> tasks) {
+        return tasks.stream().map(TaskDetailResp::from).collect(Collectors.toList());
     }
 }
