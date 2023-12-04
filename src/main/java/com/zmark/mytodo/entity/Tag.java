@@ -33,6 +33,10 @@ public class Tag {
     @Column(name = "update_time")
     private Timestamp updateTime;
 
+    public static List<Tag> from(List<String> tagNames) {
+        return tagNames.stream().map(tagName -> Tag.builder().tagName(tagName).build()).toList();
+    }
+
     public String getTagPath() {
         // 从当前tag开始，依次向上查找父tag，直到根tag
         StringBuilder tagPath = new StringBuilder();

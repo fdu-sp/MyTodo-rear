@@ -81,8 +81,13 @@ public class TaskController {
 
     @PostMapping("/api/task/create-new-task")
     public Result createNewTask(@RequestBody TaskCreatReq taskCreatReq) {
-        // todo
-        return ResultFactory.buildSuccessResult("todo...", null);
+        try {
+            taskService.createNewTask(taskCreatReq);
+            return ResultFactory.buildSuccessResult("创建成功", null);
+        } catch (Exception e) {
+            log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
     }
 
     @PostMapping("/api/task/delete-task/{task-id}")
