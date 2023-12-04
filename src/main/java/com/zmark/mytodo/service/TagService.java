@@ -4,7 +4,7 @@ import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-@Log4j2
+@Slf4j
 @Service
 public class TagService {
     private final TagDAO tagDAO;
