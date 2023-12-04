@@ -85,6 +85,7 @@ public class TagService implements ITagService {
             if (tagEntity == null) {
                 tagEntity = Tag.builder()
                         .tagName(tagName)
+                        .parentTag(parentTag)
                         .parentTagId(parentTag == null ? null : parentTag.getId())
                         .createTime(new Timestamp(System.currentTimeMillis()))
                         .updateTime(new Timestamp(System.currentTimeMillis()))
