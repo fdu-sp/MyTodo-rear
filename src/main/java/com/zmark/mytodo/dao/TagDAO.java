@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TagDAO extends JpaRepository<Tag, Integer> {
+public interface TagDAO extends JpaRepository<Tag, Long> {
 
-    Tag findTagById(Integer id);
+    Tag findTagById(Long id);
 
     Tag findByTagName(String tagName);
 
-    List<Tag> findTagsByParentTagId(Integer parentTagId);
+    List<Tag> findTagsByParentTagId(Long parentTagId);
 }

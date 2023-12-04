@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -53,8 +54,8 @@ public class TaskCreatReq {
 
     public Task toTaskDTO() {
         TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
-                .isImportant(this.isImportant)
-                .isUrgent(this.isUrgent)
+                .isImportant(this.isImportant != null && this.isImportant)
+                .isUrgent(this.isUrgent != null && this.isUrgent)
                 .build();
         TaskContentInfo taskContentInfo = TaskContentInfo.builder()
                 .description(this.description)
@@ -62,12 +63,12 @@ public class TaskCreatReq {
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
                 .endDate(endDate)
                 .endTime(endTime)
-                .activateCountdown(this.activateCountdown)
+                .activateCountdown(this.activateCountdown != null && this.activateCountdown)
                 .expectedExecutionDate(this.expectedExecutionDate)
                 .expectedExecutionStartPeriod(this.expectedExecutionStartPeriod)
                 .expectedExecutionEndPeriod(this.expectedExecutionEndPeriod)
                 .build();
-        return Task.builder()
+        Task task = Task.builder()
                 .title(this.title)
                 .completed(false)
                 .completedTime(null)
@@ -75,6 +76,12 @@ public class TaskCreatReq {
                 .taskContentInfo(taskContentInfo)
                 .taskPriorityInfo(taskPriorityInfo)
                 .taskTimeInfo(taskTimeInfo)
+                .createTime(new Timestamp(System.currentTimeMillis()))
+                .updateTime(new Timestamp(System.currentTimeMillis()))
                 .build();
+        taskContentInfo.setTask(task);
+        taskPriorityInfo.setTask(task);
+        taskTimeInfo.setTask(task);
+        return task;
     }
 }

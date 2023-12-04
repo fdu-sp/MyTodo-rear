@@ -26,7 +26,7 @@ public class TaskController {
     }
 
     @GetMapping("/api/task/get-simple-info/{task-id}")
-    public Result getSimpleInfoById(@PathVariable("task-id") int taskId) {
+    public Result getSimpleInfoById(@PathVariable("task-id") Long taskId) {
         try {
             TaskSimpleResp respData = TaskSimpleResp.from(taskService.findTaskById(taskId));
             return ResultFactory.buildSuccessResult(respData);
@@ -37,7 +37,7 @@ public class TaskController {
     }
 
     @GetMapping("/api/task/get-detail-info/{task-id}")
-    public Result getDetailInfoById(@PathVariable("task-id") int taskId) {
+    public Result getDetailInfoById(@PathVariable("task-id") Long taskId) {
         try {
             TaskDetailResp respData = TaskDetailResp.from(taskService.findTaskById(taskId));
             return ResultFactory.buildSuccessResult(respData);

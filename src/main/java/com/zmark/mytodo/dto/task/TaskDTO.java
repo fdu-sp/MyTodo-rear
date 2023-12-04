@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskDTO {
-    private Integer id;
+    private Long id;
 
     private String title;
 

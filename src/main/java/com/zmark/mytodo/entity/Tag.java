@@ -20,14 +20,14 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(nullable = false, name = "tag_name")
     private String tagName;
     @OneToOne
     @JoinColumn(name = "parent_tag_id", insertable = false, updatable = false)
     private Tag ParentTag;
     @Column(name = "parent_tag_id")
-    private Integer parentTagId;
+    private Long parentTagId;
     @Column(name = "create_time")
     private Timestamp createTime;
     @Column(name = "update_time")

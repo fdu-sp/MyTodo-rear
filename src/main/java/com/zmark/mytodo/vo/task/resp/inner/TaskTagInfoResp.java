@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskTagInfoResp {
-    private Integer id;
+    private Long id;
     private String tagName;
     private String tagPath;
 

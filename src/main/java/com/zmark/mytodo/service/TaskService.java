@@ -41,7 +41,7 @@ public class TaskService {
         return TaskDTO.from(task, tags);
     }
 
-    public TaskDTO findTaskById(int taskId) {
+    public TaskDTO findTaskById(Long taskId) {
         return this.toDTO(taskDAO.findTaskById(taskId));
     }
 
@@ -66,7 +66,7 @@ public class TaskService {
         Task task = taskCreatReq.toTaskDTO();
         taskDAO.save(task);
         // 保存 Tags 和 Task 的关联关系
-        Integer taskId = task.getId();
+        Long taskId = task.getId();
         for (Tag tag : tagList) {
             TaskTagMatch match = TaskTagMatch.builder()
                     .taskId(taskId)

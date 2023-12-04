@@ -32,7 +32,7 @@ public class TaskTagMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-    private Integer taskId;
-    private Integer tagId;
+    private Long id;
+    private Long taskId;
+    private Long tagId;
 }

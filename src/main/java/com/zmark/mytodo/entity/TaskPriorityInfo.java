@@ -16,9 +16,10 @@ public class TaskPriorityInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-    @Column(nullable = false, name = "task_id")
-    private Integer taskId;
+    private Long id;
+    @OneToOne
+    @JoinColumn(nullable = false, name = "task_id")
+    private Task task;
     @Column(nullable = false, name = "is_important")
     private Boolean isImportant;
     @Column(nullable = false, name = "is_urgent")

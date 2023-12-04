@@ -18,9 +18,10 @@ public class TaskContentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-    @Column(nullable = false, name = "task_id")
-    private Integer taskId;
+    private Long id;
+    @OneToOne
+    @JoinColumn(nullable = false, name = "task_id")
+    private Task task;
     @Column(nullable = false, name = "description")
     private String description;
     @Column(nullable = false, name = "create_time")

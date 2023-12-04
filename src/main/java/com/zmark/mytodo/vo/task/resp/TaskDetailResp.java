@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskDetailResp {
-    private Integer id;
+    private Long id;
     private String title;
     private Boolean completed;
     private String completedTime;

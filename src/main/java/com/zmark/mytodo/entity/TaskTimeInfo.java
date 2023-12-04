@@ -19,9 +19,10 @@ public class TaskTimeInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-    @Column(nullable = false, name = "task_id")
-    private Integer taskId;
+    private Long id;
+    @OneToOne
+    @JoinColumn(nullable = false, name = "task_id")
+    private Task task;
     @Column(name = "end_date")
     private Date endDate;
     @Column(name = "end_time")

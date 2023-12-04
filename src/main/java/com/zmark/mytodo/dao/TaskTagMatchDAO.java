@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TaskTagMatchDAO extends JpaRepository<TaskTagMatch, Integer> {
-    List<TaskTagMatch> findAllByTagId(Integer tagId);
+public interface TaskTagMatchDAO extends JpaRepository<TaskTagMatch, Long> {
+    List<TaskTagMatch> findAllByTagId(Long tagId);
 
-    List<TaskTagMatch> findAllByTaskId(Integer taskId);
+    List<TaskTagMatch> findAllByTaskId(Long taskId);
 }

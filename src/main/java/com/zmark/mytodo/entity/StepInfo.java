@@ -18,9 +18,9 @@ public class StepInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     @Column(nullable = false, name = "task_id")
-    private Integer taskId;
+    private Long taskId;
     @Column(nullable = false, name = "step_seq_number")
     private Integer stepSeqNumber;
     @Column(nullable = false, name = "title")
