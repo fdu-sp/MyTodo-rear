@@ -26,7 +26,7 @@ public class Tag {
     private String tagName;
     @OneToOne
     @JoinColumn(name = "parent_tag_id", insertable = false, updatable = false)
-    private Tag ParentTag;
+    private Tag parentTag;
     @Column(name = "parent_tag_id")
     private Long parentTagId;
     @Column(name = "create_time")
@@ -59,13 +59,4 @@ public class Tag {
                 .children(new ArrayList<>())
                 .build();
     }
-
-    public TagDTO toTagDTO(List<Tag> childrenTagList) {
-        return TagDTO.builder()
-                .tagName(tagName)
-                .tagPath(getTagPath())
-                .children(childrenTagList.stream().map(Tag::toTagDTO).toList())
-                .build();
-    }
-
 }

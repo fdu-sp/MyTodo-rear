@@ -1,9 +1,11 @@
 package com.zmark.mytodo;
 
 import com.zmark.mytodo.dao.TagDAO;
+import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.service.impl.TagService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +21,11 @@ public class TagServiceTest {
     private TagService tagService;
     @Autowired
     private TagDAO tagDAO;
+
+    @BeforeEach
+    void setUp() {
+        tagDAO.deleteAll();
+    }
 
     // todo maybe mock tagDAO
     @Test
@@ -72,12 +79,12 @@ public class TagServiceTest {
         tagService.createNewTag("tag1/tag2/tag3");
         tagService.createNewTag("tag1/tag2/tag4");
         tagService.createNewTag("tag1/tag2/tag5");
-        tagDAO.findAll().forEach(tag -> log.info(tag.toTagDTO().toString()));
+        tagDAO.findAll().forEach(tag -> log.info(TagDTO.from(tag).toString()));
     }
 
     @Test
     void testFindAllTagsWithNoData() {
-        tagService.findAllTags().forEach(tagDTO -> log.info(tagDTO.toString()));
+        tagService.findAllTagsWithAllChildren().forEach(tagDTO -> log.info(tagDTO.toString()));
     }
 
     @Test
@@ -86,6 +93,6 @@ public class TagServiceTest {
         tagService.createNewTag("tag1/tag2/tag4");
         tagService.createNewTag("tag1/tag2/tag5");
         tagService.createNewTag("tag/tag6/tag7");
-        tagService.findAllTags().forEach(TagDTO -> log.info(TagDTO.toString()));
+        tagService.findAllTagsWithAllChildren().forEach(TagDTO -> log.info(TagDTO.toString()));
     }
 }

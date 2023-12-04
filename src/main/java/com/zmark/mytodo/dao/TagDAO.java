@@ -12,4 +12,6 @@ public interface TagDAO extends JpaRepository<Tag, Long> {
     Tag findByTagName(String tagName);
 
     List<Tag> findTagsByParentTagId(Long parentTagId);
+
+    List<Tag> findAllByParentTagIsNull();
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +28,31 @@ public class TagService implements ITagService {
     @Override
     public TagDTO findTagByName(String tagName) {
         return Optional.ofNullable(tagDAO.findByTagName(tagName))
-                .map(Tag::toTagDTO)
+                .map(TagDTO::from)
                 .orElse(null);
     }
 
     @Override
-    public List<TagDTO> findAllTags() {
-        return tagDAO.findAll().stream().map(Tag::toTagDTO).toList();
+    public List<TagDTO> findAllTagsWithAllChildren() {
+        List<Tag> tagList = tagDAO.findAll();
+        return getTagDTOListWithAllChildren(tagList);
+    }
+
+    @Override
+    public List<TagDTO> findFirstLevelTagsWithAllChildren() {
+        List<Tag> tagList = tagDAO.findAllByParentTagIsNull();
+        return getTagDTOListWithAllChildren(tagList);
+    }
+
+    private List<TagDTO> getTagDTOListWithAllChildren(List<Tag> tagList) {
+        List<TagDTO> tagDTOList = new ArrayList<>();
+        for (Tag tag : tagList) {
+            TagDTO tagDTO = this.findTagWithAllChildren(tag.getTagName());
+            if (tagDTO != null) {
+                tagDTOList.add(tagDTO);
+            }
+        }
+        return tagDTOList;
     }
 
     @Override
@@ -43,7 +62,14 @@ public class TagService implements ITagService {
             return null;
         }
         List<Tag> childrenTagList = tagDAO.findTagsByParentTagId(tag.getId());
-        return tag.toTagDTO(childrenTagList);
+        List<TagDTO> childrenTagDTOList = new ArrayList<>();
+        for (Tag childTag : childrenTagList) {
+            TagDTO childTagDTO = this.findTagWithAllChildren(childTag.getTagName());
+            if (childTagDTO != null) {
+                childrenTagDTOList.add(childTagDTO);
+            }
+        }
+        return TagDTO.from(tag, childrenTagDTOList);
     }
 
     @Override

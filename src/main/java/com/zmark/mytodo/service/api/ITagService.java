@@ -12,9 +12,20 @@ import java.util.List;
  * @date 2023/12/4 15:12
  */
 public interface ITagService {
+    /**
+     * 不包含子tag
+     */
     TagDTO findTagByName(String tagName);
 
-    List<TagDTO> findAllTags();
+    /**
+     * 查找所有tag，包含子tag
+     */
+    List<TagDTO> findAllTagsWithAllChildren();
+
+    /**
+     * 查找所有一级tag，包含子tag
+     */
+    List<TagDTO> findFirstLevelTagsWithAllChildren();
 
     /**
      * 根据tag的名字，查找tag的所有子tag，以及子tag的子tag，以此类推
