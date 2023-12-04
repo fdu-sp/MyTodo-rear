@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -55,6 +56,7 @@ public class Tag {
         return TagDTO.builder()
                 .tagName(tagName)
                 .tagPath(getTagPath())
+                .children(new ArrayList<>())
                 .build();
     }
 
