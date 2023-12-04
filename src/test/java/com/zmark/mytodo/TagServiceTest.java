@@ -1,6 +1,7 @@
 package com.zmark.mytodo;
 
 import com.zmark.mytodo.dao.TagDAO;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.service.impl.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class TagServiceTest {
     }
 
     @Test
-    void testCreateNewTagNormal() {
+    void testCreateNewTagNormal() throws NewEntityException {
         tagService.createNewTag("tag1/tag2/tag3");
         tagService.createNewTag("tag1/tag2/tag4");
         tagService.createNewTag("tag1/tag2/tag5");
@@ -67,7 +68,7 @@ public class TagServiceTest {
     }
 
     @Test
-    void testTagToDTO() {
+    void testTagToDTO() throws NewEntityException {
         tagService.createNewTag("tag1/tag2/tag3");
         tagService.createNewTag("tag1/tag2/tag4");
         tagService.createNewTag("tag1/tag2/tag5");
@@ -80,7 +81,7 @@ public class TagServiceTest {
     }
 
     @Test
-    void testFindAllTags() {
+    void testFindAllTags() throws NewEntityException {
         tagService.createNewTag("tag1/tag2/tag3");
         tagService.createNewTag("tag1/tag2/tag4");
         tagService.createNewTag("tag1/tag2/tag5");

@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,5 +17,5 @@ public interface ITaskService {
     List<TaskDTO> findAllTasks();
 
     @Transactional
-    void createNewTask(TaskCreatReq taskCreatReq);
+    void createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException;
 }

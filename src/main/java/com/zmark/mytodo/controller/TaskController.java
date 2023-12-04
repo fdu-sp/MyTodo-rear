@@ -1,5 +1,6 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskService;
@@ -85,7 +86,10 @@ public class TaskController {
         try {
             taskService.createNewTask(taskCreatReq);
             return ResultFactory.buildSuccessResult("创建成功", null);
-        } catch (Exception e) {
+        } catch (NewEntityException e) {
+            log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
+            return ResultFactory.buildFailResult(e.getMessage());
+        } catch (RuntimeException e) {
             log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
             return ResultFactory.buildInternalServerErrorResult();
         }

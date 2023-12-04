@@ -7,6 +7,7 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskTagMatch;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
@@ -61,7 +62,7 @@ public class TaskService implements ITaskService {
 
     @Override
     @Transactional
-    public void createNewTask(TaskCreatReq taskCreatReq) {
+    public void createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException {
         // 保存tags
         List<Tag> tagList = new ArrayList<>();
         for (String tagName : taskCreatReq.getTagNames()) {
