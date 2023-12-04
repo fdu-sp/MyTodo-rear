@@ -247,4 +247,23 @@ public class TagServiceTest {
         log.info(softwareDesignTag.toString());
         log.info(softwareDesignTag2.toString());
     }
+
+    @Test
+    public void testFindFirstLevelTagsWithAllChildren() throws NewEntityException {
+        List<TagDTO> firstLevelTagsWithAllChildren = tagService.findFirstLevelTagsWithAllChildren();
+        Assertions.assertEquals(0, firstLevelTagsWithAllChildren.size());
+
+        // 准备数据：
+        tagService.createNewTag("大学/课程/智能移动平台开发");
+        tagService.createNewTag("大学/课程/软件设计");
+        tagService.createNewTag("大学/课程/数据库设计（H）");
+        tagService.createNewTag("大学/课程/操作系统（H）");
+        tagService.createNewTag("购物/电子产品");
+        tagService.createNewTag("购物/服装");
+        tagService.createNewTag("工作");
+
+        // 测试：
+        firstLevelTagsWithAllChildren = tagService.findFirstLevelTagsWithAllChildren();
+        Assertions.assertEquals(3, firstLevelTagsWithAllChildren.size());
+    }
 }
