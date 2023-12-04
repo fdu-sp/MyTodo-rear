@@ -1,4 +1,4 @@
-package com.zmark.mytodo.dto;
+package com.zmark.mytodo.dto.task.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,5 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCreatReq {
-
+    private String title;
+    private String description;
+    private String priority;
+    private String deadline;
+    private String tag;
 }

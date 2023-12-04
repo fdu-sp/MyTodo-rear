@@ -1,7 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.dto.TagDTO;
+import com.zmark.mytodo.dto.tag.TagDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

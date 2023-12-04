@@ -1,6 +1,6 @@
 package com.zmark.mytodo.controller;
 
-import com.zmark.mytodo.dto.TaskCreatReq;
+import com.zmark.mytodo.dto.task.req.TaskCreatReq;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import org.springframework.web.bind.annotation.*;

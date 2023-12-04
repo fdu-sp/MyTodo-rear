@@ -1,4 +1,4 @@
-package com.zmark.mytodo.dto;
+package com.zmark.mytodo.dto.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

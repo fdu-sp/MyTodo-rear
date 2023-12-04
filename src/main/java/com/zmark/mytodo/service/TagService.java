@@ -1,7 +1,7 @@
 package com.zmark.mytodo.service;
 
 import com.zmark.mytodo.dao.TagDAO;
-import com.zmark.mytodo.dto.TagDTO;
+import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
 import lombok.extern.log4j.Log4j2;
