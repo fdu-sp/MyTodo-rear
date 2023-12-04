@@ -59,6 +59,8 @@ public class TaskCreatReq {
                 .build();
         TaskContentInfo taskContentInfo = TaskContentInfo.builder()
                 .description(this.description)
+                .createTime(new Timestamp(System.currentTimeMillis()))
+                .updateTime(new Timestamp(System.currentTimeMillis()))
                 .build();
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
                 .endDate(endDate)

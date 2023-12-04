@@ -26,7 +26,7 @@ public class Task {
     @Column(nullable = false, name = "completed")
     private Boolean completed;
 
-    @Column(nullable = false, name = "completed_time")
+    @Column(nullable = true, name = "completed_time")
     private Timestamp completedTime;
 
     @Column(nullable = false, name = "archived")

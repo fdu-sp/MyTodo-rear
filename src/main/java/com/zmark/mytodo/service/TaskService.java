@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,11 @@ public class TaskService {
         for (String tagName : taskCreatReq.getTagNames()) {
             Tag tag = tagDAO.findByTagName(tagName);
             if (tag == null) {
-                tag = Tag.builder().tagName(tagName).build();
+                tag = Tag.builder()
+                        .tagName(tagName)
+                        .createTime(new Timestamp(System.currentTimeMillis()))
+                        .updateTime(new Timestamp(System.currentTimeMillis()))
+                        .build();
                 tagDAO.save(tag);
             }
             tagList.add(tag);
