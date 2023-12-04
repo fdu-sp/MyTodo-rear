@@ -1,6 +1,8 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.tag.TagDTO;
+import com.zmark.mytodo.entity.Tag;
+import com.zmark.mytodo.exception.NewEntityException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public interface ITagService {
      */
     TagDTO findTagWithAllChildren(String tagName);
 
+    /**
+     * @param tag tag的名字，可以是多级tag，用/分割
+     * @throws NewEntityException 如果重名tag存在于其他层级中，则抛出异常
+     */
     @Transactional
-    void createNewTag(String tag);
+    Tag createNewTag(String tag) throws NewEntityException;
 }

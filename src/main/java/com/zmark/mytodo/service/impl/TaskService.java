@@ -7,13 +7,14 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskTagMatch;
+import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,17 +22,21 @@ import java.util.List;
  * @author ZMark
  * @date 2023/12/3 23:50
  */
+@Slf4j
 @Service
 public class TaskService implements ITaskService {
     private final TaskDAO taskDAO;
     private final TaskTagMatchDAO taskTagMatchDAO;
     private final TagDAO tagDAO;
 
+    private final ITagService tagService;
+
     @Autowired
-    public TaskService(TaskDAO taskDAO, TaskTagMatchDAO taskTagMatchDAO, TagDAO tagDAO) {
+    public TaskService(TaskDAO taskDAO, TaskTagMatchDAO taskTagMatchDAO, TagDAO tagDAO, TagService tagService) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
         this.tagDAO = tagDAO;
+        this.tagService = tagService;
     }
 
     private TaskDTO toDTO(Task task) {
@@ -62,12 +67,7 @@ public class TaskService implements ITaskService {
         for (String tagName : taskCreatReq.getTagNames()) {
             Tag tag = tagDAO.findByTagName(tagName);
             if (tag == null) {
-                tag = Tag.builder()
-                        .tagName(tagName)
-                        .createTime(new Timestamp(System.currentTimeMillis()))
-                        .updateTime(new Timestamp(System.currentTimeMillis()))
-                        .build();
-                tagDAO.save(tag);
+                tag = tagService.createNewTag(tagName);
             }
             tagList.add(tag);
         }
@@ -83,6 +83,7 @@ public class TaskService implements ITaskService {
                     .build();
             taskTagMatchDAO.save(match);
         }
+        log.info("createNewTask succeed, task: {}", taskCreatReq);
     }
 
     private List<Task> findAllTasksByTag(Tag tag) {

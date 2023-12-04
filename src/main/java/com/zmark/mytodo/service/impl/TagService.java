@@ -35,7 +35,7 @@ public class TagService implements ITagService {
     public List<TagDTO> findAllTags() {
         return tagDAO.findAll().stream().map(Tag::toTagDTO).toList();
     }
-    
+
     @Override
     public TagDTO findTagWithAllChildren(String tagName) {
         Tag tag = tagDAO.findByTagName(tagName);
@@ -46,13 +46,9 @@ public class TagService implements ITagService {
         return tag.toTagDTO(childrenTagList);
     }
 
-
-    /**
-     * @param tag tag的名字，可以是多级tag，用/分割
-     */
     @Override
     @Transactional
-    public void createNewTag(String tag) {
+    public Tag createNewTag(String tag) throws NewEntityException {
         // 按照/分割tag
         String[] tags = tag.split("/");
         // 从第一个tag开始，如果不存在，则依次创建tag
@@ -75,5 +71,7 @@ public class TagService implements ITagService {
             }
             parentTag = tagEntity;
         }
+        // 返回最后一个tag
+        return parentTag;
     }
 }
