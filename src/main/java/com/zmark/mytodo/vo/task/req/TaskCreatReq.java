@@ -1,4 +1,4 @@
-package com.zmark.mytodo.dto.task.req;
+package com.zmark.mytodo.vo.task.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

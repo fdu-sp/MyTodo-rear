@@ -4,5 +4,5 @@ import com.zmark.mytodo.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TaskDAO extends JpaRepository<Task, Integer> {
-    Task findById(int id);
+    Task findTaskById(int id);
 }

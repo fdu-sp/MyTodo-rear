@@ -1,11 +1,11 @@
 package com.zmark.mytodo.controller;
 
-import com.zmark.mytodo.dto.task.req.TaskCreatReq;
-import com.zmark.mytodo.dto.task.resp.TaskDetailResp;
-import com.zmark.mytodo.dto.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.TaskService;
+import com.zmark.mytodo.vo.task.req.TaskCreatReq;
+import com.zmark.mytodo.vo.task.resp.TaskDetailResp;
+import com.zmark.mytodo.vo.task.resp.TaskSimpleResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

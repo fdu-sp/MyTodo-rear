@@ -1,7 +1,9 @@
 package com.zmark.mytodo.service;
 
+import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dao.TaskDAO;
 import com.zmark.mytodo.dao.TaskTagMatchDAO;
+import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskTagMatch;
@@ -19,31 +21,44 @@ import java.util.List;
 public class TaskService {
     private final TaskDAO taskDAO;
     private final TaskTagMatchDAO taskTagMatchDAO;
+    private final TagDAO tagDAO;
 
     @Autowired
-    public TaskService(TaskDAO taskDAO, TaskTagMatchDAO taskTagMatchDAO) {
+    public TaskService(TaskDAO taskDAO, TaskTagMatchDAO taskTagMatchDAO, TagDAO tagDAO) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
+        this.tagDAO = tagDAO;
     }
 
-    public Task findTaskById(int taskId) {
-        return taskDAO.findById(taskId);
+    private TaskDTO toDTO(Task task) {
+        List<TaskTagMatch> tagMatches = taskTagMatchDAO.findAllByTaskId(task.getId());
+        List<Tag> tags = new ArrayList<>();
+        for (TaskTagMatch match : tagMatches) {
+            tags.add(tagDAO.findTagById(match.getTagId()));
+        }
+        return TaskDTO.from(task, tags);
     }
 
-    public List<Task> findAllTasks() {
-        return taskDAO.findAll();
+    public TaskDTO findTaskById(int taskId) {
+        return this.toDTO(taskDAO.findTaskById(taskId));
+    }
+
+    public List<TaskDTO> findAllTasks() {
+        List<Task> taskList = taskDAO.findAll();
+        return taskList.stream().map(this::toDTO).toList();
     }
 
     public void createNewTask(Task task) {
         taskDAO.save(task);
     }
 
-    public List<Task> findAllTasksByTag(Tag tag) {
+    private List<Task> findAllTasksByTag(Tag tag) {
         List<Task> taskList = new ArrayList<>();
         List<TaskTagMatch> matchList = taskTagMatchDAO.findAllByTagId(tag.getId());
         for (TaskTagMatch match : matchList) {
-            taskList.add(findTaskById(match.getTaskId()));
+            taskList.add(taskDAO.findTaskById(match.getTaskId()));
         }
         return taskList;
     }
+
 }

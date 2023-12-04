@@ -1,4 +1,4 @@
-package com.zmark.mytodo.dto.task.resp;
+package com.zmark.mytodo.vo.task.resp;
 
 import com.zmark.mytodo.entity.TaskContentInfo;
 import lombok.AllArgsConstructor;

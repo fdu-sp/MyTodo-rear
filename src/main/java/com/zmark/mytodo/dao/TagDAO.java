@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface TagDAO extends JpaRepository<Tag, Integer> {
 
+    Tag findTagById(Integer id);
+
     Tag findByTagName(String tagName);
 
     List<Tag> findTagsByParentTagId(Integer parentTagId);

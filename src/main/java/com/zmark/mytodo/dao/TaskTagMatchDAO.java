@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TaskTagMatchDAO extends JpaRepository<TaskTagMatch, Integer> {
     List<TaskTagMatch> findAllByTagId(Integer tagId);
+
+    List<TaskTagMatch> findAllByTaskId(Integer taskId);
 }
