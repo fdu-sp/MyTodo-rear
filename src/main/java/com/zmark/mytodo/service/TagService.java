@@ -48,9 +48,8 @@ public class TagService {
 
     /**
      * @param tag tag的名字，可以是多级tag，用/分割
-     * @return 创建的子tag
      */
-    @Transactional(rollbackFor = NewEntityException.class)
+    @Transactional
     public void createNewTag(String tag) {
         // 按照/分割tag
         String[] tags = tag.split("/");
