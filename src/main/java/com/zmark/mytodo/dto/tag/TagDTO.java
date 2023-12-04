@@ -14,12 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TagDTO {
+    private Long id;
     private String tagName;
     private String tagPath;
     private List<TagDTO> children;
 
     public static TagDTO from(Tag tag) {
         return TagDTO.builder()
+                .id(tag.getId())
                 .tagName(tag.getTagName())
                 .tagPath(tag.getTagPath())
                 .children(new ArrayList<>())
@@ -28,6 +30,7 @@ public class TagDTO {
 
     public static TagDTO from(Tag tag, List<TagDTO> childrenTagDTOList) {
         return TagDTO.builder()
+                .id(tag.getId())
                 .tagName(tag.getTagName())
                 .tagPath(tag.getTagPath())
                 .children(childrenTagDTOList)
