@@ -22,9 +22,11 @@ public interface ITagService {
     TagDTO findTagWithAllChildren(String tagName);
 
     /**
-     * @param tag tag的名字，可以是多级tag，用/分割
+     * @param tagPath tagPath，可以是多级tag，用/分割<br/>
+     *                例如：<br/>
+     *                1. tag1/tag2/tag3<br/>
      * @throws NewEntityException 如果重名tag存在于其他层级中，则抛出异常
      */
     @Transactional
-    Tag createNewTag(String tag) throws NewEntityException;
+    Tag createNewTag(String tagPath) throws NewEntityException;
 }

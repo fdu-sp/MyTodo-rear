@@ -48,9 +48,9 @@ public class TagService implements ITagService {
 
     @Override
     @Transactional
-    public Tag createNewTag(String tag) throws NewEntityException {
+    public Tag createNewTag(String tagPath) throws NewEntityException {
         // 按照/分割tag
-        String[] tags = tag.split("/");
+        String[] tags = tagPath.split("/");
         // 从第一个tag开始，如果不存在，则依次创建tag
         // 使用事务进行控制，如果重名tag存在于其他层级中，则抛出异常，回滚事务
         Tag parentTag = null;
