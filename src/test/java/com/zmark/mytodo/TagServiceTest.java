@@ -2,13 +2,22 @@ package com.zmark.mytodo;
 
 import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dto.tag.TagDTO;
+import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.service.impl.TagService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * @author ZMark
@@ -17,26 +26,55 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Slf4j
 @SpringBootTest
 public class TagServiceTest {
-    @Autowired
+    private static Map<String, Tag> existTagMap;
+
     private TagService tagService;
-    @Autowired
+
+    @MockBean
     private TagDAO tagDAO;
+
+    @BeforeAll
+    static void beforeAll() {
+        log.info("TagServiceTest start");
+        existTagMap = new HashMap<>();
+    }
 
     @BeforeEach
     void setUp() {
-        tagDAO.deleteAll();
+        existTagMap.clear();
+        reset(tagDAO);
+        tagService = new TagService(tagDAO);
+
+        when(tagDAO.findByTagName(anyString())).thenAnswer(invocation -> {
+            String tagName = invocation.getArgument(0);
+            return existTagMap.get(tagName);
+        });
+        when(tagDAO.save(any(Tag.class))).thenAnswer(invocation -> {
+            Tag tag = invocation.getArgument(0);
+            tag.setId((long) existTagMap.size());
+            existTagMap.put(tag.getTagName(), tag);
+            log.info("tag {} saved", tag.getTagName());
+            return tag;
+        });
     }
 
-    // todo maybe mock tagDAO
     @Test
-    void contextLoads() {
-    }
+    void testCreateNewTagNormal() {
+        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag3"));
+        verify(tagDAO, times(3)).findByTagName(anyString());
+        verify(tagDAO, times(3)).save(any(Tag.class));
 
-    @Test
-    void testCreateNewTagNormal() throws NewEntityException {
-        tagService.createNewTag("tag1/tag2/tag3");
-        tagService.createNewTag("tag1/tag2/tag4");
-        tagService.createNewTag("tag1/tag2/tag5");
+        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag4"));
+        verify(tagDAO, times(6)).findByTagName(anyString());
+        verify(tagDAO, times(4)).save(any(Tag.class));
+
+        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag5"));
+        verify(tagDAO, times(9)).findByTagName(anyString());
+        verify(tagDAO, times(5)).save(any(Tag.class));
+
+        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag/tag6/tag7"));
+        verify(tagDAO, times(12)).findByTagName(anyString());
+        verify(tagDAO, times(8)).save(any(Tag.class));
     }
 
     @Test
