@@ -1,6 +1,7 @@
 package com.zmark.mytodo.vo.task.resp;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.task.resp.inner.TaskContentInfoResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskTagInfoResp;
@@ -39,14 +40,14 @@ public class TaskDetailResp {
                 .id(taskDTO.getId())
                 .title(taskDTO.getTitle())
                 .completed(taskDTO.getCompleted())
-                .completedTime(taskDTO.getCompletedTime().toString())
+                .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
                 .archived(taskDTO.getArchived())
                 .tags(TaskTagInfoResp.from(taskDTO.getTags()))
                 .taskContentInfo(TaskContentInfoResp.from(taskDTO.getTaskContentInfo()))
                 .taskPriorityInfo(TaskPriorityInfoResp.from(taskDTO.getTaskPriorityInfo()))
                 .taskTimeInfo(TaskTimeInfoResp.from(taskDTO.getTaskTimeInfo()))
-                .createTime(taskDTO.getCreateTime().toString())
-                .updateTime(taskDTO.getUpdateTime().toString())
+                .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
+                .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
                 .build();
     }
 

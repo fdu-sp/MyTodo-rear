@@ -62,7 +62,7 @@ public class TaskService implements ITaskService {
 
     @Override
     @Transactional
-    public void createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException {
+    public TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException {
         // 保存tags
         List<Tag> tagList = new ArrayList<>();
         for (String tagName : taskCreatReq.getTagNames()) {
@@ -85,6 +85,7 @@ public class TaskService implements ITaskService {
             taskTagMatchDAO.save(match);
         }
         log.info("createNewTask succeed, task: {}", taskCreatReq);
+        return TaskDTO.from(task, tagList);
     }
 
     private List<Task> findAllTasksByTag(Tag tag) {

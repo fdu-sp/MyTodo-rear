@@ -1,5 +1,6 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
@@ -84,8 +85,8 @@ public class TaskController {
     @PostMapping("/api/task/create-new-task")
     public Result createNewTask(@RequestBody TaskCreatReq taskCreatReq) {
         try {
-            taskService.createNewTask(taskCreatReq);
-            return ResultFactory.buildSuccessResult("创建成功", null);
+            TaskDTO taskDTO = taskService.createNewTask(taskCreatReq);
+            return ResultFactory.buildSuccessResult("创建成功", TaskDetailResp.from(taskDTO));
         } catch (NewEntityException e) {
             log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
             return ResultFactory.buildFailResult(e.getMessage());

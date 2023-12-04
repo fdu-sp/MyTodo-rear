@@ -16,6 +16,12 @@ public interface ITaskService {
 
     List<TaskDTO> findAllTasks();
 
+    /**
+     * 如果创建成功，返回新创建的任务DTO
+     *
+     * @param taskCreatReq 创建任务的请求
+     * @throws NewEntityException 如果创建失败，抛出异常
+     */
     @Transactional
-    void createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException;
+    TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException;
 }
