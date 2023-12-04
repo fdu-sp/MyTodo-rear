@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,13 +22,6 @@ public class TagService implements ITagService {
     @Autowired
     public TagService(TagDAO tagDAO) {
         this.tagDAO = tagDAO;
-    }
-
-    @Override
-    public TagDTO findTagByName(String tagName) {
-        return Optional.ofNullable(tagDAO.findByTagName(tagName))
-                .map(TagDTO::from)
-                .orElse(null);
     }
 
     @Override

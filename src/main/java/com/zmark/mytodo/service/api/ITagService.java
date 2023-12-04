@@ -13,11 +13,6 @@ import java.util.List;
  */
 public interface ITagService {
     /**
-     * 不包含子tag
-     */
-    TagDTO findTagByName(String tagName);
-
-    /**
      * 查找所有tag，包含子tag
      */
     List<TagDTO> findAllTagsWithAllChildren();
