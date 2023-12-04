@@ -1,6 +1,10 @@
 package com.zmark.mytodo.vo.task.resp;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.vo.task.resp.inner.TaskContentInfoResp;
+import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
+import com.zmark.mytodo.vo.task.resp.inner.TaskTagInfoResp;
+import com.zmark.mytodo.vo.task.resp.inner.TaskTimeInfoResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

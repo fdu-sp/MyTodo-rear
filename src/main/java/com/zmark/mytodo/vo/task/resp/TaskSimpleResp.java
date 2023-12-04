@@ -2,6 +2,7 @@ package com.zmark.mytodo.vo.task.resp;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
+import com.zmark.mytodo.vo.task.resp.inner.TaskTagInfoResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
