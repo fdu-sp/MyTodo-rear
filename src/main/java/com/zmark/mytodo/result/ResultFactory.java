@@ -33,7 +33,7 @@ public class ResultFactory {
     }
 
     public static Result buildInternalServerErrorResult() {
-        return buildResult(ResultCode.INTERNAL_SERVER_ERROR, "服务器出错了，请稍后重试！", null);
+        return buildResult(ResultCode.INTERNAL_SERVER_ERROR, "服务器开小差啦~", null);
     }
 
     public static Result buildInsufficientPermissionsResult() {
