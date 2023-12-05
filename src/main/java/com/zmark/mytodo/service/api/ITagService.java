@@ -45,4 +45,10 @@ public interface ITagService {
      */
     @Transactional
     List<TagDTO> createNewTags(List<String> tagPathList) throws NewEntityException;
+
+    /**
+     * @param tagName tag的名字
+     */
+    @Transactional
+    void deleteTagByName(String tagName);
 }

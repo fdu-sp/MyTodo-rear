@@ -116,4 +116,20 @@ public class TagController {
             return ResultFactory.buildInternalServerErrorResult();
         }
     }
+
+    /**
+     * TODO: 2023/12/5
+     *
+     * @see com.zmark.mytodo.service.api.ITagService#deleteTagByName(String) 未完成
+     */
+    @DeleteMapping("/api/tag/delete-tag-by-name/{tag-name}")
+    public Result deleteTagByName(@PathVariable("tag-name") String tagName) {
+        try {
+            tagService.deleteTagByName(tagName);
+            return ResultFactory.buildSuccessResult();
+        } catch (Exception e) {
+            log.error("deleteTagByName error:" + e.getMessage(), e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
 }

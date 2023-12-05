@@ -20,6 +20,10 @@ public class ResultFactory {
         return buildResult(ResultCode.SUCCESS, "成功", data);
     }
 
+    public static Result buildSuccessResult() {
+        return buildResult(ResultCode.SUCCESS, "成功", null);
+    }
+
     public static Result buildSuccessResult(String msg, Object data) {
         return buildResult(ResultCode.SUCCESS, msg, data);
     }

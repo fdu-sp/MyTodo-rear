@@ -112,4 +112,14 @@ public class TagService implements ITagService {
         }
         return this.getTagDTOListWithAllChildren(tagList);
     }
+
+    @Override
+    public void deleteTagByName(String tagName) {
+        // todo
+        // 删除 Match
+
+        // 删除 子tag
+
+        // 删除 tag
+    }
 }
