@@ -41,6 +41,9 @@ public class TaskService implements ITaskService {
     }
 
     private TaskDTO toDTO(Task task) {
+        if (task == null) {
+            return null;
+        }
         List<TaskTagMatch> tagMatches = taskTagMatchDAO.findAllByTaskId(task.getId());
         List<Tag> tags = new ArrayList<>();
         for (TaskTagMatch match : tagMatches) {

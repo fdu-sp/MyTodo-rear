@@ -30,10 +30,14 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/api/task/get-simple-info/{task-id}")
+    @GetMapping("/api/task/simple/get-info/{task-id}")
     public Result getSimpleInfoById(@PathVariable("task-id") Long taskId) {
         try {
-            TaskSimpleResp respData = TaskSimpleResp.from(taskService.findTaskById(taskId));
+            TaskDTO taskDTO = taskService.findTaskById(taskId);
+            if (taskDTO == null) {
+                return ResultFactory.buildFailResult("不存在id为" + taskId + "的任务");
+            }
+            TaskSimpleResp respData = TaskSimpleResp.from(taskDTO);
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getSimpleInfoById error, taskId: {}", taskId, e);
@@ -41,10 +45,14 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/get-detail-info/{task-id}")
+    @GetMapping("/api/task/detail/get-info/{task-id}")
     public Result getDetailInfoById(@PathVariable("task-id") Long taskId) {
         try {
-            TaskDetailResp respData = TaskDetailResp.from(taskService.findTaskById(taskId));
+            TaskDTO taskDTO = taskService.findTaskById(taskId);
+            if (taskDTO == null) {
+                return ResultFactory.buildFailResult("不存在id为" + taskId + "的任务");
+            }
+            TaskDetailResp respData = TaskDetailResp.from(taskDTO);
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getDetailInfoById error, taskId: {}", taskId, e);
@@ -52,7 +60,7 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/simple-info/get-all-tasks")
+    @GetMapping("/api/task/simple/get-all-tasks")
     public Result getAllTasksWithSimpleInfo() {
         try {
             return ResultFactory.buildSuccessResult(TaskSimpleResp.from(taskService.findAllTasks()));
@@ -62,7 +70,7 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/detail-info/get-all-tasks")
+    @GetMapping("/api/task/detail/get-all-tasks")
     public Result getAllTasksWithDetailInfo() {
         try {
             return ResultFactory.buildSuccessResult(TaskDetailResp.from(taskService.findAllTasks()));
@@ -72,13 +80,13 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/simple-info/get-all-task/{tag-name}")
+    @GetMapping("/api/task/simple/get-all-task/{tag-name}")
     public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-name") String tagName) {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
-    @GetMapping("/api/task/simple-info/get-all-tasks/{tag-name}/{status}")
+    @GetMapping("/api/task/simple/get-all-tasks/{tag-name}/{status}")
     public Result getAllTasksByTagAndStatus(@PathVariable("tag-name") String tagName, @PathVariable("status") String status) {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
@@ -98,13 +106,13 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/api/task/delete-task/{task-id}")
+    @PostMapping("/api/task/delete/{task-id}")
     public Result deleteTaskById(@PathVariable("task-id") int taskId) {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
-    @PostMapping("/api/task/update-task")
+    @PostMapping("/api/task/update")
     public Result updateTask() {
         // // TODO: 2023/12/3 或许需要拆的更细致一些
         return ResultFactory.buildSuccessResult("todo...", null);
