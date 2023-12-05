@@ -24,6 +24,7 @@ public class TaskCreatReq {
     @NotEmpty(message = "任务标题不能为空")
     private String title;
 
+    @NotNull(message = "任务标签必填")
     private List<String> tagNames;
 
     /**
