@@ -63,6 +63,7 @@ public class TaskController {
     @GetMapping("/api/task/simple/get-all-tasks")
     public Result getAllTasksWithSimpleInfo() {
         try {
+            log.info("getAllTasksWithSimpleInfo api called");
             return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskService.findAllTasks()));
         } catch (Exception e) {
             log.error("getAllTasksWithSimpleInfo error", e);
