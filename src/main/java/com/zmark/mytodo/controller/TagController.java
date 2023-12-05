@@ -1,7 +1,6 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.dto.tag.TagDTO;
-import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
@@ -12,6 +11,7 @@ import com.zmark.mytodo.vo.tag.resp.TagDetailResp;
 import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +21,7 @@ import java.util.List;
  * @date 2023/12/4 20:43
  */
 @Slf4j
+@Validated
 @RestController
 public class TagController {
     private final ITagService tagService;
@@ -30,11 +31,11 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @PostMapping("/api/tag/create-new-tag")
-    public Result createNewTask(@RequestBody TagCreateReq tagCreateReq) {
+    @PostMapping("/api/tag/create-new-tags")
+    public Result createNewTasks(@Validated @RequestBody TagCreateReq tagCreateReq) {
         try {
-            Tag tag = tagService.createNewTag(tagCreateReq.getTagPath());
-            return ResultFactory.buildSuccessResult(TagDetailResp.from(TagDTO.from(tag)));
+            List<TagDTO> tagList = tagService.createNewTags(tagCreateReq.getTagPathList());
+            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagList));
         } catch (NewEntityException e) {
             log.error("createNewTask error:" + e.getMessage(), e);
             return ResultFactory.buildFailResult(e.getMessage());

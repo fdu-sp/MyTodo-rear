@@ -64,9 +64,10 @@ public class TagService implements ITagService {
         return TagDTO.from(tag, childrenTagDTOList);
     }
 
-    @Override
-    @Transactional
-    public Tag createNewTag(String tagPath) throws NewEntityException {
+    /**
+     * 内部辅助方法，用于创建新的tag
+     */
+    private Tag creatNew(String tagPath) throws NewEntityException {
         // 按照/分割tag
         String[] tags = tagPath.split("/");
         // 从第一个tag开始，如果不存在，则依次创建tag
@@ -92,5 +93,23 @@ public class TagService implements ITagService {
         }
         // 返回最后一个tag
         return parentTag;
+    }
+
+
+    @Override
+    @Transactional
+    public Tag createNewTag(String tagPath) throws NewEntityException {
+        return this.creatNew(tagPath);
+    }
+
+    @Override
+    @Transactional
+    public List<TagDTO> createNewTags(List<String> tagPathList) throws NewEntityException {
+        List<Tag> tagList = new ArrayList<>();
+        for (String tagPath : tagPathList) {
+            Tag tag = this.creatNew(tagPath);
+            tagList.add(tag);
+        }
+        return this.getTagDTOListWithAllChildren(tagList);
     }
 }

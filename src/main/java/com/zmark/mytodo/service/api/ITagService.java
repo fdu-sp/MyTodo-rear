@@ -35,4 +35,14 @@ public interface ITagService {
      */
     @Transactional
     Tag createNewTag(String tagPath) throws NewEntityException;
+
+    /**
+     * @param tagPathList tagPathList，可以是多级tag，用/分割<br/>
+     *                    例如：<br/>
+     *                    1. tag1/tag2/tag3<br/>
+     * @return 返回创建成功的tag列表(TagDTO)
+     * @throws NewEntityException 如果重名tag存在于其他层级中，则抛出异常
+     */
+    @Transactional
+    List<TagDTO> createNewTags(List<String> tagPathList) throws NewEntityException;
 }
