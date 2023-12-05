@@ -2,6 +2,7 @@ package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskService;
@@ -119,13 +120,30 @@ public class TaskController {
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
-    @PostMapping("/api/task/done/{task-id}")
-    public Result doneTaskById(@PathVariable("task-id") Long taskId) {
+    @PostMapping("/api/task/complete/{task-id}")
+    public Result completeTask(@PathVariable("task-id") Long taskId) {
         try {
             taskService.completeTask(taskId);
-            return ResultFactory.buildSuccessResult("任务完成", null);
+            return ResultFactory.buildSuccessResult("任务已完成", null);
+        } catch (NoDataInDataBaseException e) {
+            log.warn("请求有误：前端请求了" + e.getMessage());
+            return ResultFactory.buildNotFoundResult(e.getMessage());
         } catch (Exception e) {
-            log.error("doneTaskById error, taskId: {}", taskId, e);
+            log.error("completeTask error, taskId: {}", taskId, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @PostMapping("/api/task/un-complete/{task-id}")
+    public Result unCompleteTask(@PathVariable("task-id") Long taskId) {
+        try {
+            taskService.unCompleteTask(taskId);
+            return ResultFactory.buildSuccessResult("任务未完成", null);
+        } catch (NoDataInDataBaseException e) {
+            log.warn("请求有误：前端请求了" + e.getMessage());
+            return ResultFactory.buildNotFoundResult(e.getMessage());
+        } catch (Exception e) {
+            log.error("unCompleteTask error, taskId: {}", taskId, e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }

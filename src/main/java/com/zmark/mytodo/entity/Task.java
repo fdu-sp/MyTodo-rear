@@ -53,6 +53,11 @@ public class Task {
         this.completedTime = new Timestamp(System.currentTimeMillis());
     }
 
+    public void unComplete() {
+        this.completed = false;
+        this.completedTime = null;
+    }
+
     public static Task fromTaskCreatReq(TaskCreatReq req) {
         TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
                 .isImportant(req.getIsImportant() != null && req.getIsImportant())

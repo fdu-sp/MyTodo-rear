@@ -102,6 +102,16 @@ public class TaskService implements ITaskService {
         taskDAO.save(task);
     }
 
+    @Override
+    public void unCompleteTask(Long taskId) throws NoDataInDataBaseException {
+        Task task = taskDAO.findTaskById(taskId);
+        if (task == null) {
+            throw new NoDataInDataBaseException("找不到id为" + taskId + "的任务");
+        }
+        task.unComplete();
+        taskDAO.save(task);
+    }
+
     private List<Task> findAllTasksByTag(Tag tag) {
         List<Task> taskList = new ArrayList<>();
         List<TaskTagMatch> matchList = taskTagMatchDAO.findAllByTagId(tag.getId());

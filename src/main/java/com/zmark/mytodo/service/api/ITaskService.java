@@ -33,4 +33,12 @@ public interface ITaskService {
      * @throws NoDataInDataBaseException 如果任务不存在，抛出异常
      */
     void completeTask(Long taskId) throws NoDataInDataBaseException;
+
+    /**
+     * 标记任务为未完成
+     *
+     * @param taskId 任务id
+     * @throws NoDataInDataBaseException 如果任务不存在，抛出异常
+     */
+    void unCompleteTask(Long taskId) throws NoDataInDataBaseException;
 }
