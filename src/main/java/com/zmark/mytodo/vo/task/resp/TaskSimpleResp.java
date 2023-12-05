@@ -3,7 +3,7 @@ package com.zmark.mytodo.vo.task.resp;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.vo.task.resp.inner.TaskTagInfoResp;
+import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class TaskSimpleResp {
     private Boolean completed;
     private String completedTime;
     private Boolean archived;
-    private List<TaskTagInfoResp> tags;
+    private List<TagSimpleResp> tags;
     private String createTime;
     private String updateTime;
 
@@ -38,7 +38,7 @@ public class TaskSimpleResp {
                 .completed(taskDTO.getCompleted())
                 .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
                 .archived(taskDTO.getArchived())
-                .tags(TaskTagInfoResp.from(taskDTO.getTags()))
+                .tags(TagSimpleResp.from(taskDTO.getTags()))
                 .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
                 .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
                 .build();

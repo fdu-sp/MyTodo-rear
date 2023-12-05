@@ -2,9 +2,9 @@ package com.zmark.mytodo.vo.task.resp;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.utils.TimeUtils;
+import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskContentInfoResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
-import com.zmark.mytodo.vo.task.resp.inner.TaskTagInfoResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskTimeInfoResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class TaskDetailResp {
     private Boolean completed;
     private String completedTime;
     private Boolean archived;
-    private List<TaskTagInfoResp> tags;
+    private List<TagSimpleResp> tags;
     private TaskContentInfoResp taskContentInfo;
     private TaskPriorityInfoResp taskPriorityInfo;
     private TaskTimeInfoResp taskTimeInfo;
@@ -42,7 +42,7 @@ public class TaskDetailResp {
                 .completed(taskDTO.getCompleted())
                 .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
                 .archived(taskDTO.getArchived())
-                .tags(TaskTagInfoResp.from(taskDTO.getTags()))
+                .tags(TagSimpleResp.from(taskDTO.getTags()))
                 .taskContentInfo(TaskContentInfoResp.from(taskDTO.getTaskContentInfo()))
                 .taskPriorityInfo(TaskPriorityInfoResp.from(taskDTO.getTaskPriorityInfo()))
                 .taskTimeInfo(TaskTimeInfoResp.from(taskDTO.getTaskTimeInfo()))

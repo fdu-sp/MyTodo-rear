@@ -8,10 +8,14 @@ import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.impl.TagService;
 import com.zmark.mytodo.vo.tag.req.TagCreateReq;
+import com.zmark.mytodo.vo.tag.resp.TagDetailResp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author ZMark
@@ -30,10 +34,20 @@ public class TagController {
     public Result createNewTask(@RequestBody TagCreateReq tagCreateReq) {
         try {
             Tag tag = tagService.createNewTag(tagCreateReq.getTagPath());
-            return ResultFactory.buildSuccessResult(TagDTO.from(tag));
+            return ResultFactory.buildSuccessResult(TagDetailResp.from(TagDTO.from(tag)));
         } catch (NewEntityException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @GetMapping("/api/tag/get-all-first-level-tags")
+    public Result getAllFirstLevelTags() {
+        try {
+            List<TagDTO> tagDTOList = tagService.findFirstLevelTagsWithAllChildren();
+            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagDTOList));
+        } catch (Exception e) {
             return ResultFactory.buildInternalServerErrorResult();
         }
     }
