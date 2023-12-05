@@ -8,6 +8,7 @@ import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskTagMatch;
 import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
@@ -89,6 +90,16 @@ public class TaskService implements ITaskService {
         }
         log.info("createNewTask succeed, task: {}", taskCreatReq);
         return TaskDTO.from(task, tagList);
+    }
+
+    @Override
+    public void completeTask(Long taskId) throws NoDataInDataBaseException {
+        Task task = taskDAO.findTaskById(taskId);
+        if (task == null) {
+            throw new NoDataInDataBaseException("找不到id为" + taskId + "的任务");
+        }
+        task.complete();
+        taskDAO.save(task);
     }
 
     private List<Task> findAllTasksByTag(Tag tag) {

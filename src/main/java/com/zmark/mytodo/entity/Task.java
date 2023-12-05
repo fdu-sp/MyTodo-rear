@@ -48,6 +48,11 @@ public class Task {
     @Column(nullable = false, name = "update_time")
     private Timestamp updateTime;
 
+    public void complete() {
+        this.completed = true;
+        this.completedTime = new Timestamp(System.currentTimeMillis());
+    }
+
     public static Task fromTaskCreatReq(TaskCreatReq req) {
         TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
                 .isImportant(req.getIsImportant() != null && req.getIsImportant())

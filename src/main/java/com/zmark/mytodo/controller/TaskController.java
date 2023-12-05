@@ -119,4 +119,14 @@ public class TaskController {
         return ResultFactory.buildSuccessResult("todo...", null);
     }
 
+    @PostMapping("/api/task/done/{task-id}")
+    public Result doneTaskById(@PathVariable("task-id") Long taskId) {
+        try {
+            taskService.completeTask(taskId);
+            return ResultFactory.buildSuccessResult("任务完成", null);
+        } catch (Exception e) {
+            log.error("doneTaskById error, taskId: {}", taskId, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
 }
