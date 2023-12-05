@@ -4,7 +4,6 @@ import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskContentInfo;
 import com.zmark.mytodo.entity.TaskPriorityInfo;
 import com.zmark.mytodo.entity.TaskTimeInfo;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +24,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCreatReq {
-    @Valid
     @NotNull(message = "任务标题不能为空")
     private String title;
 
@@ -34,6 +32,7 @@ public class TaskCreatReq {
     /**
      * content description
      */
+    @NotNull(message = "任务描述不能为空")
     private String description;
 
     /**

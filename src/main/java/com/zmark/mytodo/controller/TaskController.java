@@ -1,5 +1,6 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.annotation.paramvalidation.ParamValidation;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.result.Result;
@@ -9,8 +10,10 @@ import com.zmark.mytodo.service.impl.TaskService;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import com.zmark.mytodo.vo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.vo.task.resp.TaskSimpleResp;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -83,7 +86,8 @@ public class TaskController {
     }
 
     @PostMapping("/api/task/create-new-task")
-    public Result createNewTask(@RequestBody TaskCreatReq taskCreatReq) {
+    @ParamValidation
+    public Result createNewTask(@Valid @RequestBody TaskCreatReq taskCreatReq, BindingResult bindingResult) {
         try {
             TaskDTO taskDTO = taskService.createNewTask(taskCreatReq);
             return ResultFactory.buildSuccessResult("创建成功", TaskDetailResp.from(taskDTO));
