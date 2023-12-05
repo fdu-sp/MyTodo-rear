@@ -42,7 +42,7 @@ public class TagController {
         }
     }
 
-    @GetMapping("/api/tag/get-all-first-level-tags")
+    @GetMapping("/api/tag/details/get-all-first-level-tags")
     public Result getAllFirstLevelTags() {
         try {
             List<TagDTO> tagDTOList = tagService.findFirstLevelTagsWithAllChildren();
