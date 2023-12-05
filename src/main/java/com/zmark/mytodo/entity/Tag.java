@@ -1,12 +1,10 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.dto.tag.TagDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -50,13 +48,5 @@ public class Tag {
             }
         }
         return tagPath.toString();
-    }
-
-    public TagDTO toTagDTO() {
-        return TagDTO.builder()
-                .tagName(tagName)
-                .tagPath(getTagPath())
-                .children(new ArrayList<>())
-                .build();
     }
 }
