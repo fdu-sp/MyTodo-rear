@@ -19,12 +19,4 @@ public class TaskContentInfoResp {
     private String description;
     private String createTime;
     private String updateTime;
-
-    public static TaskContentInfoResp from(TaskContentInfo taskContentInfo) {
-        return TaskContentInfoResp.builder()
-                .description(taskContentInfo.getDescription())
-                .createTime(taskContentInfo.getCreateTime().toString())
-                .updateTime(taskContentInfo.getCreateTime().toString())
-                .build();
-    }
 }

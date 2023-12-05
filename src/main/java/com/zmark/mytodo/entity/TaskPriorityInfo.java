@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,11 @@ public class TaskPriorityInfo {
     private Boolean isImportant;
     @Column(nullable = false, name = "is_urgent")
     private Boolean isUrgent;
+
+    public static TaskPriorityInfoResp from(TaskPriorityInfo taskPriorityInfo) {
+        return TaskPriorityInfoResp.builder()
+                .isImportant(taskPriorityInfo.getIsImportant())
+                .isUrgent(taskPriorityInfo.getIsUrgent())
+                .build();
+    }
 }

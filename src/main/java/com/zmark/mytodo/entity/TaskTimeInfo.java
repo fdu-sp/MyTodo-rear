@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.vo.task.resp.inner.TaskTimeInfoResp;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +36,15 @@ public class TaskTimeInfo {
     private Time expectedExecutionStartPeriod;
     @Column(name = "expected_execution_end_period")
     private Time expectedExecutionEndPeriod;
+
+    public static TaskTimeInfoResp from(TaskTimeInfo taskTimeInfo) {
+        return TaskTimeInfoResp.builder()
+                .endDate(taskTimeInfo.getEndDate())
+                .endTime(taskTimeInfo.getEndTime())
+                .activateCountdown(taskTimeInfo.getActivateCountdown())
+                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
+                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
+                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
+                .build();
+    }
 }

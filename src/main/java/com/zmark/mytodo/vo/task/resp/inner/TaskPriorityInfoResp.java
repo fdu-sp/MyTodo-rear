@@ -18,11 +18,4 @@ import lombok.NoArgsConstructor;
 public class TaskPriorityInfoResp {
     private Boolean isImportant;
     private Boolean isUrgent;
-
-    public static TaskPriorityInfoResp from(TaskPriorityInfo taskPriorityInfo) {
-        return TaskPriorityInfoResp.builder()
-                .isImportant(taskPriorityInfo.getIsImportant())
-                .isUrgent(taskPriorityInfo.getIsUrgent())
-                .build();
-    }
 }

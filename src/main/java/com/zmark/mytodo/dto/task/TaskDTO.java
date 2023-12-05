@@ -1,6 +1,10 @@
 package com.zmark.mytodo.dto.task;
 
+import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.*;
+import com.zmark.mytodo.utils.TimeUtils;
+import com.zmark.mytodo.vo.task.resp.TaskDetailResp;
+import com.zmark.mytodo.vo.task.resp.TaskSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用于TaskService传递数据的DTO
@@ -74,5 +79,42 @@ public class TaskDTO {
                 .createTime(task.getCreateTime())
                 .updateTime(task.getUpdateTime())
                 .build();
+    }
+
+    public static TaskDetailResp toDetailResp(TaskDTO taskDTO) {
+        return TaskDetailResp.builder()
+                .id(taskDTO.getId())
+                .title(taskDTO.getTitle())
+                .completed(taskDTO.getCompleted())
+                .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
+                .archived(taskDTO.getArchived())
+                .tags(TagDTO.toSimpleRespFromTag(taskDTO.getTags()))
+                .taskContentInfo(TaskContentInfo.from(taskDTO.getTaskContentInfo()))
+                .taskPriorityInfo(TaskPriorityInfo.from(taskDTO.getTaskPriorityInfo()))
+                .taskTimeInfo(TaskTimeInfo.from(taskDTO.getTaskTimeInfo()))
+                .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
+                .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
+                .build();
+    }
+
+    public static List<TaskDetailResp> toDetailResp(List<TaskDTO> taskDTOS) {
+        return taskDTOS.stream().map(TaskDTO::toDetailResp).collect(Collectors.toList());
+    }
+
+    public static TaskSimpleResp toSimpleResp(TaskDTO taskDTO) {
+        return TaskSimpleResp.builder()
+                .id(taskDTO.getId())
+                .title(taskDTO.getTitle())
+                .completed(taskDTO.getCompleted())
+                .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
+                .archived(taskDTO.getArchived())
+                .tags(TagDTO.toSimpleRespFromTag(taskDTO.getTags()))
+                .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
+                .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
+                .build();
+    }
+
+    public static List<TaskSimpleResp> toSimpleResp(List<TaskDTO> taskDTOS) {
+        return taskDTOS.stream().map(TaskDTO::toSimpleResp).collect(Collectors.toList());
     }
 }

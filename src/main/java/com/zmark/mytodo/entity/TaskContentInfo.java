@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.vo.task.resp.inner.TaskContentInfoResp;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +29,12 @@ public class TaskContentInfo {
     private Timestamp createTime;
     @Column(nullable = false, name = "update_time")
     private Timestamp updateTime;
+
+    public static TaskContentInfoResp from(TaskContentInfo taskContentInfo) {
+        return TaskContentInfoResp.builder()
+                .description(taskContentInfo.getDescription())
+                .createTime(taskContentInfo.getCreateTime().toString())
+                .updateTime(taskContentInfo.getCreateTime().toString())
+                .build();
+    }
 }

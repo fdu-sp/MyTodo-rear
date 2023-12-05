@@ -37,7 +37,7 @@ public class TaskController {
             if (taskDTO == null) {
                 return ResultFactory.buildFailResult("不存在id为" + taskId + "的任务");
             }
-            TaskSimpleResp respData = TaskSimpleResp.from(taskDTO);
+            TaskSimpleResp respData = TaskDTO.toSimpleResp(taskDTO);
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getSimpleInfoById error, taskId: {}", taskId, e);
@@ -52,7 +52,7 @@ public class TaskController {
             if (taskDTO == null) {
                 return ResultFactory.buildFailResult("不存在id为" + taskId + "的任务");
             }
-            TaskDetailResp respData = TaskDetailResp.from(taskDTO);
+            TaskDetailResp respData = TaskDTO.toDetailResp(taskDTO);
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getDetailInfoById error, taskId: {}", taskId, e);
@@ -63,7 +63,7 @@ public class TaskController {
     @GetMapping("/api/task/simple/get-all-tasks")
     public Result getAllTasksWithSimpleInfo() {
         try {
-            return ResultFactory.buildSuccessResult(TaskSimpleResp.from(taskService.findAllTasks()));
+            return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskService.findAllTasks()));
         } catch (Exception e) {
             log.error("getAllTasksWithSimpleInfo error", e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -73,7 +73,7 @@ public class TaskController {
     @GetMapping("/api/task/detail/get-all-tasks")
     public Result getAllTasksWithDetailInfo() {
         try {
-            return ResultFactory.buildSuccessResult(TaskDetailResp.from(taskService.findAllTasks()));
+            return ResultFactory.buildSuccessResult(TaskDTO.toDetailResp(taskService.findAllTasks()));
         } catch (Exception e) {
             log.error("getAllTasksWithDetailInfo error", e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -96,7 +96,7 @@ public class TaskController {
     public Result createNewTask(@Validated @RequestBody TaskCreatReq taskCreatReq) {
         try {
             TaskDTO taskDTO = taskService.createNewTask(taskCreatReq);
-            return ResultFactory.buildSuccessResult("创建成功", TaskDetailResp.from(taskDTO));
+            return ResultFactory.buildSuccessResult("创建成功", TaskDTO.toDetailResp(taskDTO));
         } catch (NewEntityException e) {
             log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
             return ResultFactory.buildFailResult(e.getMessage());

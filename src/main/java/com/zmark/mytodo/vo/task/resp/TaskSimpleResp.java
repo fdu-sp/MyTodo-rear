@@ -1,8 +1,6 @@
 package com.zmark.mytodo.vo.task.resp;
 
-import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
-import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ZMark
@@ -30,21 +27,4 @@ public class TaskSimpleResp {
     private List<TagSimpleResp> tags;
     private String createTime;
     private String updateTime;
-
-    public static TaskSimpleResp from(TaskDTO taskDTO) {
-        return TaskSimpleResp.builder()
-                .id(taskDTO.getId())
-                .title(taskDTO.getTitle())
-                .completed(taskDTO.getCompleted())
-                .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
-                .archived(taskDTO.getArchived())
-                .tags(TagSimpleResp.from(taskDTO.getTags()))
-                .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
-                .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
-                .build();
-    }
-
-    public static List<TaskSimpleResp> from(List<TaskDTO> taskDTOS) {
-        return taskDTOS.stream().map(TaskSimpleResp::from).collect(Collectors.toList());
-    }
 }

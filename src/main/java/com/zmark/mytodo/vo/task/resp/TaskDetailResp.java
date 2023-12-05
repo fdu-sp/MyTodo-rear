@@ -1,7 +1,5 @@
 package com.zmark.mytodo.vo.task.resp;
 
-import com.zmark.mytodo.dto.task.TaskDTO;
-import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskContentInfoResp;
 import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
@@ -12,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ZMark
@@ -34,24 +31,4 @@ public class TaskDetailResp {
     private TaskTimeInfoResp taskTimeInfo;
     private String createTime;
     private String updateTime;
-
-    public static TaskDetailResp from(TaskDTO taskDTO) {
-        return TaskDetailResp.builder()
-                .id(taskDTO.getId())
-                .title(taskDTO.getTitle())
-                .completed(taskDTO.getCompleted())
-                .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
-                .archived(taskDTO.getArchived())
-                .tags(TagSimpleResp.from(taskDTO.getTags()))
-                .taskContentInfo(TaskContentInfoResp.from(taskDTO.getTaskContentInfo()))
-                .taskPriorityInfo(TaskPriorityInfoResp.from(taskDTO.getTaskPriorityInfo()))
-                .taskTimeInfo(TaskTimeInfoResp.from(taskDTO.getTaskTimeInfo()))
-                .createTime(TimeUtils.toString(taskDTO.getCreateTime()))
-                .updateTime(TimeUtils.toString(taskDTO.getUpdateTime()))
-                .build();
-    }
-
-    public static List<TaskDetailResp> from(List<TaskDTO> taskDTOS) {
-        return taskDTOS.stream().map(TaskDetailResp::from).collect(Collectors.toList());
-    }
 }

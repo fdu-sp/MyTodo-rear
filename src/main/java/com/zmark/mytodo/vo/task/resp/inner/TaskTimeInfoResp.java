@@ -25,15 +25,4 @@ public class TaskTimeInfoResp {
     private Date expectedExecutionDate;
     private Time expectedExecutionStartPeriod;
     private Time expectedExecutionEndPeriod;
-
-    public static TaskTimeInfoResp from(TaskTimeInfo taskTimeInfo) {
-        return TaskTimeInfoResp.builder()
-                .endDate(taskTimeInfo.getEndDate())
-                .endTime(taskTimeInfo.getEndTime())
-                .activateCountdown(taskTimeInfo.getActivateCountdown())
-                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
-                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
-                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
-                .build();
-    }
 }

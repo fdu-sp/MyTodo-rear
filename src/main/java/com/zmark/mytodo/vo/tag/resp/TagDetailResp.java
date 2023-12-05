@@ -21,20 +21,4 @@ public class TagDetailResp {
     private String tagName;
     private String tagPath;
     private List<TagDTO> children;
-
-    public static TagDetailResp from(TagDTO tagDTO) throws IllegalArgumentException {
-        if (tagDTO == null) {
-            throw new IllegalArgumentException("tagDTO cannot be null");
-        }
-        return TagDetailResp.builder()
-                .id(tagDTO.getId())
-                .tagName(tagDTO.getTagName())
-                .tagPath(tagDTO.getTagPath())
-                .children(tagDTO.getChildren())
-                .build();
-    }
-
-    public static List<TagDetailResp> from(List<TagDTO> tagDTOList) {
-        return tagDTOList.stream().map(TagDetailResp::from).toList();
-    }
 }

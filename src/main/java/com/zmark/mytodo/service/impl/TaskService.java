@@ -76,7 +76,7 @@ public class TaskService implements ITaskService {
             tagList.add(tag);
         }
         // 保存task
-        Task task = taskCreatReq.toTaskDTO();
+        Task task = Task.fromTaskCreatReq(taskCreatReq);
         taskDAO.save(task);
         // 保存 Tags 和 Task 的关联关系
         Long taskId = task.getId();

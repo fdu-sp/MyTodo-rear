@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,4 +47,39 @@ public class Task {
 
     @Column(nullable = false, name = "update_time")
     private Timestamp updateTime;
+
+    public static Task fromTaskCreatReq(TaskCreatReq req) {
+        TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
+                .isImportant(req.getIsImportant() != null && req.getIsImportant())
+                .isUrgent(req.getIsUrgent() != null && req.getIsUrgent())
+                .build();
+        TaskContentInfo taskContentInfo = TaskContentInfo.builder()
+                .description(req.getDescription())
+                .createTime(new Timestamp(System.currentTimeMillis()))
+                .updateTime(new Timestamp(System.currentTimeMillis()))
+                .build();
+        TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
+                .endDate(req.getEndDate())
+                .endTime(req.getEndTime())
+                .activateCountdown(req.getActivateCountdown() != null && req.getActivateCountdown())
+                .expectedExecutionDate(req.getExpectedExecutionDate())
+                .expectedExecutionStartPeriod(req.getExpectedExecutionStartPeriod())
+                .expectedExecutionEndPeriod(req.getExpectedExecutionEndPeriod())
+                .build();
+        Task task = Task.builder()
+                .title(req.getTitle())
+                .completed(false)
+                .completedTime(null)
+                .archived(false)
+                .taskContentInfo(taskContentInfo)
+                .taskPriorityInfo(taskPriorityInfo)
+                .taskTimeInfo(taskTimeInfo)
+                .createTime(new Timestamp(System.currentTimeMillis()))
+                .updateTime(new Timestamp(System.currentTimeMillis()))
+                .build();
+        taskContentInfo.setTask(task);
+        taskPriorityInfo.setTask(task);
+        taskTimeInfo.setTask(task);
+        return task;
+    }
 }

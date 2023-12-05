@@ -7,8 +7,6 @@ import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.impl.TagService;
 import com.zmark.mytodo.vo.tag.req.TagCreateReq;
-import com.zmark.mytodo.vo.tag.resp.TagDetailResp;
-import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +33,7 @@ public class TagController {
     public Result createNewTasks(@Validated @RequestBody TagCreateReq tagCreateReq) {
         try {
             List<TagDTO> tagList = tagService.createNewTags(tagCreateReq.getTagPathList());
-            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagList));
+            return ResultFactory.buildSuccessResult(TagDTO.toDetailResp(tagList));
         } catch (NewEntityException e) {
             log.error("createNewTask error:" + e.getMessage(), e);
             return ResultFactory.buildFailResult(e.getMessage());
@@ -49,7 +47,7 @@ public class TagController {
     public Result getAllFirstLevelTags() {
         try {
             List<TagDTO> tagDTOList = tagService.findFirstLevelTagsWithAllChildren();
-            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagDTOList));
+            return ResultFactory.buildSuccessResult(TagDTO.toDetailResp(tagDTOList));
         } catch (Exception e) {
             log.error("getAllFirstLevelTags error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -60,7 +58,7 @@ public class TagController {
     public Result getAllTags() {
         try {
             List<TagDTO> tagDTOList = tagService.findAllTagsWithAllChildren();
-            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagDTOList));
+            return ResultFactory.buildSuccessResult(TagDTO.toDetailResp(tagDTOList));
         } catch (Exception e) {
             log.error("getAllTags error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -74,7 +72,7 @@ public class TagController {
             if (tagDTO == null) {
                 return ResultFactory.buildFailResult("找不到tag [" + tagName + "]");
             }
-            return ResultFactory.buildSuccessResult(TagDetailResp.from(tagDTO));
+            return ResultFactory.buildSuccessResult(TagDTO.toDetailResp(tagDTO));
         } catch (Exception e) {
             log.error("getTagByName error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -85,7 +83,7 @@ public class TagController {
     public Result getAllFirstLevelTagsSimple() {
         try {
             List<TagDTO> tagDTOList = tagService.findFirstLevelTagsWithAllChildren();
-            return ResultFactory.buildSuccessResult(TagSimpleResp.fromTagDTO(tagDTOList));
+            return ResultFactory.buildSuccessResult(TagDTO.toSimpleResp(tagDTOList));
         } catch (Exception e) {
             log.error("getAllFirstLevelTagsSimple error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -96,7 +94,7 @@ public class TagController {
     public Result getAllTagsSimple() {
         try {
             List<TagDTO> tagDTOList = tagService.findAllTagsWithAllChildren();
-            return ResultFactory.buildSuccessResult(TagSimpleResp.fromTagDTO(tagDTOList));
+            return ResultFactory.buildSuccessResult(TagDTO.toSimpleResp(tagDTOList));
         } catch (Exception e) {
             log.error("getAllTagsSimple error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
@@ -110,7 +108,7 @@ public class TagController {
             if (tagDTO == null) {
                 return ResultFactory.buildFailResult("找不到tag [" + tagName + "]");
             }
-            return ResultFactory.buildSuccessResult(TagSimpleResp.from(tagDTO));
+            return ResultFactory.buildSuccessResult(TagDTO.toSimpleResp(tagDTO));
         } catch (Exception e) {
             log.error("getTagByNameSimple error:" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
