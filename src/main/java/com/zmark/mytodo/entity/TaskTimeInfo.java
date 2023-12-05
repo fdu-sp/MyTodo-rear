@@ -1,12 +1,14 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.task.resp.inner.TaskTimeInfoResp;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -46,5 +48,12 @@ public class TaskTimeInfo {
                 .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
                 .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
                 .build();
+    }
+
+    /**
+     * 返回任务的截止时间，如果没有设置，则返回null
+     */
+    public Timestamp getDueTime() {
+        return TimeUtils.combineDateAndTime(endDate, endTime);
     }
 }

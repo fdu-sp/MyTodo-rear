@@ -105,6 +105,8 @@ public class TaskDTO {
         return TaskSimpleResp.builder()
                 .id(taskDTO.getId())
                 .title(taskDTO.getTitle())
+                .description(taskDTO.getTaskContentInfo().getDescription())
+                .dueDate(TimeUtils.toString(taskDTO.getTaskTimeInfo().getEndDate()))
                 .completed(taskDTO.getCompleted())
                 .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
                 .archived(taskDTO.getArchived())

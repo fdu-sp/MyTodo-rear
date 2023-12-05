@@ -21,6 +21,8 @@ import java.util.List;
 public class TaskSimpleResp {
     private Long id;
     private String title;
+    private String description;
+    private String dueDate;
     private Boolean completed;
     private String completedTime;
     private Boolean archived;
