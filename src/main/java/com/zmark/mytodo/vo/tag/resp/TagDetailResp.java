@@ -1,6 +1,5 @@
 package com.zmark.mytodo.vo.tag.resp;
 
-import com.zmark.mytodo.dto.tag.TagDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +19,5 @@ public class TagDetailResp {
     private Long id;
     private String tagName;
     private String tagPath;
-    private List<TagDTO> children;
+    private List<TagDetailResp> children;
 }

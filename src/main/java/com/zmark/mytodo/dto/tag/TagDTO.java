@@ -48,7 +48,7 @@ public class TagDTO {
                 .id(tagDTO.getId())
                 .tagName(tagDTO.getTagName())
                 .tagPath(tagDTO.getTagPath())
-                .children(tagDTO.getChildren())
+                .children(tagDTO.getChildren().stream().map(TagDTO::toDetailResp).collect(Collectors.toList()))
                 .build();
     }
 
