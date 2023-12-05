@@ -171,3 +171,64 @@ VALUES (11, '计算机图形学', 2, '2023-12-06 11:15:00', '2023-12-06 11:15:00
 INSERT INTO task_tag_match (id, task_id, tag_id)
 VALUES (9, 9, 11);
 
+-- Task 10
+INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+VALUES (10, '软件工程作业', 0, null, 0, '2023-12-06 12:00:00', '2023-12-06 12:00:00');
+
+INSERT INTO task_content_info (id, task_id, description, create_time, update_time)
+VALUES (10, 10, 'Requirements Specification', '2023-12-06 12:00:00', '2023-12-06 12:00:00');
+
+INSERT INTO task_priority_info (id, task_id, is_important, is_urgent)
+VALUES (10, 10, 1, 0);
+
+INSERT INTO task_time_info (id, task_id, activate_countdown, expected_execution_date,
+                            expected_execution_start_period, expected_execution_end_period)
+VALUES (10, 10, 0, '2023-12-15', '10:00:00', '14:00:00');
+
+INSERT INTO tag (id, tag_name, parent_tag_id, create_time, update_time)
+VALUES (12, '软件工程', 2, '2023-12-06 12:00:00', '2023-12-06 12:00:00');
+
+INSERT INTO task_tag_match (id, task_id, tag_id)
+VALUES (10, 10, 12);
+
+
+-- Task 11
+INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+VALUES (11, '计算机组成原理实验', 0, null, 0, '2023-12-06 13:00:00', '2023-12-06 13:00:00');
+
+INSERT INTO task_content_info (id, task_id, description, create_time, update_time)
+VALUES (11, 11, 'CPU Design Simulation', '2023-12-06 13:00:00', '2023-12-06 13:00:00');
+
+INSERT INTO task_priority_info (id, task_id, is_important, is_urgent)
+VALUES (11, 11, 0, 1);
+
+INSERT INTO task_time_info (id, task_id, activate_countdown, expected_execution_date,
+                            expected_execution_start_period, expected_execution_end_period)
+VALUES (11, 11, 0, '2023-12-18', '09:00:00', '13:00:00');
+
+INSERT INTO tag (id, tag_name, parent_tag_id, create_time, update_time)
+VALUES (13, '计算机组成原理', 2, '2023-12-06 13:00:00', '2023-12-06 13:00:00');
+
+INSERT INTO task_tag_match (id, task_id, tag_id)
+VALUES (11, 11, 13);
+
+
+-- Task 12
+INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+VALUES (12, '人机交互设计项目', 0, null, 0, '2023-12-06 14:00:00', '2023-12-06 14:00:00');
+
+INSERT INTO task_content_info (id, task_id, description, create_time, update_time)
+VALUES (12, 12, 'UI Prototyping', '2023-12-06 14:00:00', '2023-12-06 14:00:00');
+
+INSERT INTO task_priority_info (id, task_id, is_important, is_urgent)
+VALUES (12, 12, 1, 0);
+
+INSERT INTO task_time_info (id, task_id, activate_countdown, expected_execution_date,
+                            expected_execution_start_period, expected_execution_end_period)
+VALUES (12, 12, 0, '2023-12-22', '14:00:00', '18:00:00');
+
+INSERT INTO tag (id, tag_name, parent_tag_id, create_time, update_time)
+VALUES (14, '人机交互设计', 2, '2023-12-06 14:00:00', '2023-12-06 14:00:00');
+
+INSERT INTO task_tag_match (id, task_id, tag_id)
+VALUES (12, 12, 14);
