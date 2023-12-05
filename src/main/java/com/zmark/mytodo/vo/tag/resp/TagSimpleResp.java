@@ -23,12 +23,19 @@ public class TagSimpleResp {
     private String tagName;
     private String tagPath;
 
-    public static TagSimpleResp from(TagDTO tagDTO) {
+    public static TagSimpleResp from(TagDTO tagDTO) throws IllegalArgumentException {
+        if (tagDTO == null) {
+            throw new IllegalArgumentException("tagDTO cannot be null");
+        }
         return TagSimpleResp.builder()
                 .id(tagDTO.getId())
                 .tagName(tagDTO.getTagName())
                 .tagPath(tagDTO.getTagPath())
                 .build();
+    }
+
+    public static List<TagSimpleResp> fromTagDTO(List<TagDTO> tagDTOList) {
+        return tagDTOList.stream().map(TagSimpleResp::from).collect(Collectors.toList());
     }
 
     public static TagSimpleResp from(Tag tag) {

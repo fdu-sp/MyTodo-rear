@@ -22,7 +22,10 @@ public class TagDetailResp {
     private String tagPath;
     private List<TagDTO> children;
 
-    public static TagDetailResp from(TagDTO tagDTO) {
+    public static TagDetailResp from(TagDTO tagDTO) throws IllegalArgumentException {
+        if (tagDTO == null) {
+            throw new IllegalArgumentException("tagDTO cannot be null");
+        }
         return TagDetailResp.builder()
                 .id(tagDTO.getId())
                 .tagName(tagDTO.getTagName())
