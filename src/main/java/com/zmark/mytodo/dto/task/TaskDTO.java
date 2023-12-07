@@ -108,6 +108,8 @@ public class TaskDTO {
                 .description(taskDTO.getTaskContentInfo().getDescription())
                 .dueDate(TimeUtils.toString(taskDTO.getTaskTimeInfo().getEndDate()))
                 .expectedDate(TimeUtils.toString(taskDTO.getTaskTimeInfo().getExpectedExecutionDate()))
+                .isImportant(taskDTO.getTaskPriorityInfo().getIsImportant())
+                .isUrgent(taskDTO.getTaskPriorityInfo().getIsUrgent())
                 .completed(taskDTO.getCompleted())
                 .completedTime(TimeUtils.toString(taskDTO.getCompletedTime()))
                 .archived(taskDTO.getArchived())

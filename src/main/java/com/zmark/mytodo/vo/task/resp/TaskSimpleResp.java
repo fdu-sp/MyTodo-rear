@@ -24,6 +24,8 @@ public class TaskSimpleResp {
     private String description;
     private String dueDate;
     private String expectedDate;
+    private Boolean isImportant;
+    private Boolean isUrgent;
     private Boolean completed;
     private String completedTime;
     private Boolean archived;
