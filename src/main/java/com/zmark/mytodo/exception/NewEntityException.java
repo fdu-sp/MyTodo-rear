@@ -16,6 +16,11 @@ package com.zmark.mytodo.exception;
  * @date 2023/3/19 16:12
  */
 public class NewEntityException extends Exception {
+
+    public NewEntityException(String entityClassName, String name) {
+        super(String.format("创建%s失败！%s", entityClassName, name));
+    }
+
     public NewEntityException() {
         super();
     }
@@ -30,6 +35,11 @@ public class NewEntityException extends Exception {
 
     public NewEntityException(Exception e) {
         super(e);
+    }
+
+
+    public static NewEntityException RepeatEntityName(String entityClassName, String name) {
+        return new NewEntityException(String.format("已存在name为%s的%s", name, entityClassName));
     }
 }
 

@@ -1,7 +1,9 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.TaskListDTO;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
 
 /**
  * @author ZMark
@@ -13,7 +15,7 @@ public interface ITaskListService {
 
     TaskListDTO findByName(String name) throws NoDataInDataBaseException;
 
-    TaskListDTO createNewTaskList(String name, Long taskGroupId);
+    TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, NewEntityException;
 
     long countByTaskGroup(long tagGroupId);
 

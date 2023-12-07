@@ -23,6 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "task_group")
 public class TaskGroup {
+    public final static Long DEFAULT_GROUP_ID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

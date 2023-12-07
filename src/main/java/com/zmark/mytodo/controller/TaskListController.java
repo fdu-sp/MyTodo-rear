@@ -1,21 +1,23 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.dto.TaskListDTO;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskListService;
+import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ZMark
  * @date 2023/12/7 20:25
  */
 @Slf4j
+@Validated
 @RestController
 public class TaskListController {
 
@@ -40,7 +42,17 @@ public class TaskListController {
         }
     }
 
-    public Result createNew() {
-        return null;
+    @PostMapping("/api/task-list/create-new")
+    public Result createNew(@Validated @RequestBody TaskListCreatReq creatReq) {
+        try {
+            TaskListDTO taskListDTO = taskListService.createNewTaskList(creatReq);
+            return ResultFactory.buildSuccessResult(taskListDTO.toDetailResp());
+        } catch (NoDataInDataBaseException | NewEntityException e) {
+            log.warn("创建任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(e.getMessage());
+        } catch (Exception e) {
+            log.error("创建任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
     }
 }

@@ -5,16 +5,22 @@ import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.dto.TaskListDTO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * @author ZMark
  * @date 2023/12/7 19:26
  */
+@Slf4j
 @Service
 public class TaskListService implements ITaskListService {
 
@@ -52,10 +58,20 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
-    public TaskListDTO createNewTaskList(String name, Long taskGroupId) {
+    public TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, NewEntityException {
+        String name = creatReq.getName();
+        Long taskGroupId =
+                creatReq.getTaskGroupId() == null ? TaskGroup.DEFAULT_GROUP_ID : creatReq.getTaskGroupId();
+        Optional<TaskGroup> taskGroup = taskGroupDAO.findById(taskGroupId);
+        if (taskGroup.isEmpty()) {
+            if (taskGroupId.equals(TaskGroup.DEFAULT_GROUP_ID)) {
+                log.warn("创建任务列表失败！默认任务组不存在！");
+            }
+            throw new NoDataInDataBaseException("TaskGroup", taskGroupId);
+        }
         TaskList taskList = taskListDAO.findByName(name);
         if (taskList != null) {
-            return TaskListDTO.from(taskList, taskService);
+            throw NewEntityException.RepeatEntityName("TaskList", name);
         }
         taskList = TaskList.builder()
                 .name(name)
