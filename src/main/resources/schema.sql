@@ -1,5 +1,36 @@
 SET
-    FOREIGN_KEY_CHECKS = 0;
+FOREIGN_KEY_CHECKS = 0;
+
+
+-- --------------------------
+-- Table structure for task_group 分组表
+-- --------------------------
+DROP TABLE IF EXISTS `task_group`;
+CREATE TABLE `task_group`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`        varchar(255) NOT NULL COMMENT '分组名称',
+    `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- --------------------------
+-- Table structure for task_list 任务清单表
+-- --------------------------
+DROP TABLE IF EXISTS `task_list`;
+CREATE TABLE `task_list`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`        varchar(255) NOT NULL COMMENT '清单名称',
+    `group_id`    BIGINT       NOT NULL DEFAULT 1 COMMENT '分组id',
+    `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`group_id`) REFERENCES `task_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 -- --------------------------
 -- Table structure for task 任务表
@@ -11,10 +42,12 @@ CREATE TABLE `task`
     `title`          varchar(255) NOT NULL COMMENT '任务标题',
     `completed`      boolean      NOT NULL DEFAULT FALSE COMMENT '是否完成',
     `completed_time` timestamp             DEFAULT NULL COMMENT '完成时间',
+    `task_list_id`   BIGINT       NOT NULL DEFAULT 1 COMMENT '任务清单id',
     `archived`       boolean      NOT NULL DEFAULT FALSE COMMENT '是否归档',
     `create_time`    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`task_list_id`) REFERENCES `task_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -131,4 +164,4 @@ CREATE TABLE `task_tag_match`
 
 -- ----------------------------
 SET
-    FOREIGN_KEY_CHECKS = 1;
+FOREIGN_KEY_CHECKS = 1;

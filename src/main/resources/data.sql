@@ -1,3 +1,9 @@
+INSERT INTO task_group (id, name, create_time, update_time)
+VALUES (1, '默认分组', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+
+INSERT INTO task_list (id, name, create_time, update_time)
+VALUES (1, '默认清单', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
 VALUES (1, '概率论与数理统计HW11', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
