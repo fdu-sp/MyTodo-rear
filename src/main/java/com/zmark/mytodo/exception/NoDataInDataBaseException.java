@@ -18,11 +18,20 @@ package com.zmark.mytodo.exception;
  * @date 2023/4/12 18:38
  */
 public class NoDataInDataBaseException extends Exception {
+
+    public NoDataInDataBaseException(String entityClassName, long id) {
+        super(String.format("id为%d的%s不存在", id, entityClassName));
+    }
+
     public NoDataInDataBaseException(String msg) {
         super(msg);
     }
 
     public NoDataInDataBaseException(Exception e) {
         super(e);
+    }
+
+    public NoDataInDataBaseException(String entityClassName, String name) {
+        super(String.format("名称为%s的%s不存在", name, entityClassName));
     }
 }
