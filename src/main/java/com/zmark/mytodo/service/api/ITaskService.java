@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
@@ -13,6 +14,8 @@ import java.util.List;
  * @date 2023/12/4 15:21
  */
 public interface ITaskService {
+    TaskDTO toDTO(Task task);
+
     TaskDTO findTaskById(Long taskId);
 
     /**
