@@ -12,5 +12,5 @@ public interface TaskListDAO extends JpaRepository<TaskList, Long> {
 
     TaskList findByName(String name);
 
-    long countTaskListsByTaskGroupId(long taskGroupId);
+    long countTaskListsByGroupId(long taskGroupId);
 }

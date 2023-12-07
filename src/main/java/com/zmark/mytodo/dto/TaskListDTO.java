@@ -3,6 +3,7 @@ package com.zmark.mytodo.dto;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.vo.list.TaskListDetailResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,9 @@ public class TaskListDTO {
 
     String name;
 
-    List<TaskDTO> taskLists;
+    Long groupId;
+
+    List<TaskDTO> taskDTOList;
 
     Timestamp createTime;
 
@@ -34,7 +37,8 @@ public class TaskListDTO {
         return TaskListDTO.builder()
                 .id(taskList.getId())
                 .name(taskList.getName())
-                .taskLists(taskList.getTaskList().stream().map(taskService::toDTO).toList())
+                .groupId(taskList.getGroupId())
+                .taskDTOList(taskList.getTaskList().stream().map(taskService::toDTO).toList())
                 .createTime(taskList.getCreateTime())
                 .updateTime(taskList.getUpdateTime())
                 .build();
@@ -42,5 +46,17 @@ public class TaskListDTO {
 
     public static List<TaskListDTO> from(List<TaskList> taskLists, ITaskService taskService) {
         return taskLists.stream().map(taskList -> TaskListDTO.from(taskList, taskService)).toList();
+    }
+
+    public TaskListDetailResp toDetailResp() {
+        return TaskListDetailResp.builder()
+                .id(this.id)
+                .name(this.name)
+                .groupId(this.groupId)
+                .count((long) this.taskDTOList.size())
+                .tasks(this.taskDTOList.stream().map(TaskDTO::toSimpleResp).toList())
+                .createTime(this.createTime)
+                .updateTime(this.updateTime)
+                .build();
     }
 }

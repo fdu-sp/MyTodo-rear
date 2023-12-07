@@ -32,7 +32,7 @@ public class TaskList {
     private String name;
 
     @Column(nullable = false, name = "group_id")
-    private Long taskGroupId = 1L;
+    private Long groupId = 1L;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", insertable = false)
