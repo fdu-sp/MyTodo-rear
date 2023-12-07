@@ -41,7 +41,8 @@ public class TaskService implements ITaskService {
         this.tagService = tagService;
     }
 
-    private TaskDTO toDTO(Task task) {
+    @Override
+    public TaskDTO toDTO(Task task) {
         if (task == null) {
             return null;
         }
