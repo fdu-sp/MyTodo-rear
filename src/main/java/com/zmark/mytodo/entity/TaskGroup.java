@@ -32,7 +32,7 @@ public class TaskGroup {
     private String name;
 
     @OneToMany
-    @JoinColumn(name = "task_group_id")
+    @JoinColumn(name = "group_id")
     private List<TaskList> taskLists = new ArrayList<>();
 
     @Column(nullable = false, name = "create_time")

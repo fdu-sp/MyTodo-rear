@@ -30,7 +30,7 @@ public class Task {
     @Column(nullable = true, name = "completed_time")
     private Timestamp completedTime;
 
-    @Column(nullable = false, name = "task_list_id")
+    @Column(nullable = false, name = "list_id")
     private Long taskListId = 1L;
 
     @Column(nullable = false, name = "archived")

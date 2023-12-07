@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task_group")
+@Table(name = "task_list")
 public class TaskList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +31,11 @@ public class TaskList {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "task_group_id")
+    @Column(nullable = false, name = "group_id")
     private Long taskGroupId = 1L;
 
-    @OneToMany
-    @JoinColumn(name = "task_list_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "list_id", insertable = false)
     private List<Task> taskList = new ArrayList<>();
 
     @Column(nullable = false, name = "create_time")
