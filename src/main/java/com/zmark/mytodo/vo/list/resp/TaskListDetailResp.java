@@ -1,4 +1,4 @@
-package com.zmark.mytodo.vo.list;
+package com.zmark.mytodo.vo.list.resp;
 
 import com.zmark.mytodo.vo.task.resp.TaskSimpleResp;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.zmark.mytodo.vo;
+package com.zmark.mytodo.vo.group.resp;
 
 /**
  * @author ZMark

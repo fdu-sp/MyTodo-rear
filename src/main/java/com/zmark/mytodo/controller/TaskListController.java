@@ -39,4 +39,8 @@ public class TaskListController {
             return ResultFactory.buildFailResult(String.format("不存在id为 %d 的任务列表！", id));
         }
     }
+
+    public Result createNew() {
+        return null;
+    }
 }

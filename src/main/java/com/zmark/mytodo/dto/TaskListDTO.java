@@ -3,7 +3,7 @@ package com.zmark.mytodo.dto;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.ITaskService;
-import com.zmark.mytodo.vo.list.TaskListDetailResp;
+import com.zmark.mytodo.vo.list.resp.TaskListDetailResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
