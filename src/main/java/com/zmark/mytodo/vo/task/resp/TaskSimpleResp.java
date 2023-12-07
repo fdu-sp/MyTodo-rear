@@ -23,6 +23,7 @@ public class TaskSimpleResp {
     private String title;
     private String description;
     private String dueDate;
+    private String expectedDate;
     private Boolean completed;
     private String completedTime;
     private Boolean archived;
