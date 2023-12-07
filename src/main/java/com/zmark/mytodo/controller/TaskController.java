@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author ZMark
  * @date 2023/12/3 23:40
@@ -82,14 +84,14 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/simple/get-all-task/{tag-name}")
-    public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-name") String tagName) {
-        // todo
-        return ResultFactory.buildSuccessResult("todo...", null);
+    @GetMapping("/api/task/simple/get-all-task/{tag-id}")
+    public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-id") Long tagId) {
+        List<TaskDTO> taskDTOList = taskService.findAllByTag(tagId);
+        return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskDTOList));
     }
 
-    @GetMapping("/api/task/simple/get-all-tasks/{tag-name}/{status}")
-    public Result getAllTasksByTagAndStatus(@PathVariable("tag-name") String tagName, @PathVariable("status") String status) {
+    @GetMapping("/api/task/simple/get-all-tasks/{tag-id}/{status}")
+    public Result getAllTasksByTagAndStatus(@PathVariable("tag-id") Long tagId, @PathVariable("status") String status) {
         // todo
         return ResultFactory.buildSuccessResult("todo...", null);
     }

@@ -15,6 +15,16 @@ import java.util.List;
 public interface ITaskService {
     TaskDTO findTaskById(Long taskId);
 
+    /**
+     * 获取指定标签下的所有任务
+     * <p>
+     * 如果标签不存在，返回空列表
+     *
+     * @param tagId 标签id
+     */
+    List<TaskDTO> findAllByTag(Long tagId);
+
+
     List<TaskDTO> findAllTasks();
 
     /**

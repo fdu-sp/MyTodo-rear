@@ -59,6 +59,16 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    public List<TaskDTO> findAllByTag(Long tagId) {
+        Tag tag = tagDAO.findTagById(tagId);
+        if (tag == null) {
+            return new ArrayList<>();
+        }
+        List<Task> taskList = this.findAllTasksByTag(tag);
+        return taskList.stream().map(this::toDTO).toList();
+    }
+
+    @Override
     public List<TaskDTO> findAllTasks() {
         List<Task> taskList = taskDAO.findAll();
         return taskList.stream().map(this::toDTO).toList();
