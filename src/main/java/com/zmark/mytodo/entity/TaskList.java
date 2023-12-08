@@ -42,8 +42,8 @@ public class TaskList {
     private List<Task> taskList = new ArrayList<>();
 
     @Column(nullable = false, name = "create_time")
-    private Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    private Timestamp createTime;
 
     @Column(nullable = false, name = "update_time")
-    private Timestamp updateTime = new Timestamp(System.currentTimeMillis());
+    private Timestamp updateTime;
 }

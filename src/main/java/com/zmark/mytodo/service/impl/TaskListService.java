@@ -9,11 +9,13 @@ import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -77,6 +79,9 @@ public class TaskListService implements ITaskListService {
                 .name(name)
                 .description(creatReq.getDescription())
                 .groupId(taskGroupId)
+                .taskList(new ArrayList<>())
+                .createTime(TimeUtils.now())
+                .updateTime(TimeUtils.now())
                 .build();
         taskListDAO.save(taskList);
         return TaskListDTO.from(taskList, taskService);
