@@ -49,15 +49,6 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
-    public TaskListDTO findByName(String name) throws NoDataInDataBaseException {
-        TaskList taskList = taskListDAO.findByName(name);
-        if (taskList == null) {
-            throw new NoDataInDataBaseException("TaskList", name);
-        }
-        return TaskListDTO.from(taskList, taskService);
-    }
-
-    @Override
     public TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
         String name = creatReq.getName();
         Long taskGroupId =
@@ -69,7 +60,7 @@ public class TaskListService implements ITaskListService {
             }
             throw new NoDataInDataBaseException("TaskGroup", taskGroupId);
         }
-        TaskList taskList = taskListDAO.findByName(name);
+        TaskList taskList = taskListDAO.findByNameAndGroupId(name, taskGroupId);
         if (taskList != null) {
             throw RepeatedEntityInDatabase.RepeatEntityName("TaskList", name);
         }

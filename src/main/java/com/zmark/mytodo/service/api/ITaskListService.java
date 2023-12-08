@@ -1,7 +1,6 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.list.TaskListDTO;
-import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
@@ -13,12 +12,10 @@ import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
 public interface ITaskListService {
 
     TaskListDTO findById(long taskListId) throws NoDataInDataBaseException;
-
-    TaskListDTO findByName(String name) throws NoDataInDataBaseException;
-
+    
     /**
      * @throws NoDataInDataBaseException 如果没有找到对应的分组
-     * @throws NewEntityException        如果name已经存在
+     * @throws RepeatedEntityInDatabase  如果分组中同名的清单已经存在
      */
     TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase;
 

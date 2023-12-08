@@ -13,5 +13,8 @@ import java.util.List;
 public interface ITaskGroupService {
     List<TaskGroupSimpleDTO> findAll();
 
+    /**
+     * @throws RepeatedEntityInDatabase 如果数据库中已经存在同名的分组，则抛出异常
+     */
     TaskGroupSimpleDTO createNew(TaskGroupCreateReq createReq) throws RepeatedEntityInDatabase;
 }
