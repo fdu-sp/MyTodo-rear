@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 任务组，一个任务组有多个任务清单，一个任务清单只能属于一个任务组
@@ -56,5 +57,9 @@ public class TaskGroup {
                 .createTime(this.getCreateTime())
                 .updateTime(this.getUpdateTime())
                 .build();
+    }
+
+    public static List<TaskGroupSimpleDTO> toSimpleDTOList(List<TaskGroup> taskGroupList) {
+        return taskGroupList.stream().map(TaskGroup::toSimpleDTO).collect(Collectors.toList());
     }
 }
