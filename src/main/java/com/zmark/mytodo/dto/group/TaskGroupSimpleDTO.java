@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskGroupSimpDTO {
+public class TaskGroupSimpleDTO {
     Long id;
 
     String name;
