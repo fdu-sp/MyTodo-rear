@@ -18,13 +18,18 @@ public class TaskPriorityInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @OneToOne
     @JoinColumn(nullable = false, name = "task_id")
     private Task task;
+
     @Column(nullable = false, name = "is_important")
-    private Boolean isImportant;
+    @Builder.Default
+    private Boolean isImportant = false;
+
     @Column(nullable = false, name = "is_urgent")
-    private Boolean isUrgent;
+    @Builder.Default
+    private Boolean isUrgent = false;
 
     public static TaskPriorityInfoResp from(TaskPriorityInfo taskPriorityInfo) {
         return TaskPriorityInfoResp.builder()

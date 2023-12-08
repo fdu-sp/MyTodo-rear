@@ -26,10 +26,12 @@ public class Task {
     private String title;
 
     @Column(nullable = false, name = "completed")
-    private Boolean completed;
+    @Builder.Default
+    private Boolean completed = false;
 
     @Column(nullable = true, name = "completed_time")
-    private Timestamp completedTime;
+    @Builder.Default
+    private Timestamp completedTime = null;
 
     @Column(nullable = false, name = "list_id")
     @Builder.Default
@@ -72,8 +74,6 @@ public class Task {
                 .build();
         TaskContentInfo taskContentInfo = TaskContentInfo.builder()
                 .description(req.getDescription())
-                .createTime(new Timestamp(System.currentTimeMillis()))
-                .updateTime(new Timestamp(System.currentTimeMillis()))
                 .build();
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
                 .endDate(req.getEndDate())
@@ -91,8 +91,6 @@ public class Task {
                 .taskContentInfo(taskContentInfo)
                 .taskPriorityInfo(taskPriorityInfo)
                 .taskTimeInfo(taskTimeInfo)
-                .createTime(new Timestamp(System.currentTimeMillis()))
-                .updateTime(new Timestamp(System.currentTimeMillis()))
                 .build();
         taskContentInfo.setTask(task);
         taskPriorityInfo.setTask(task);

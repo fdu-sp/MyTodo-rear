@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.zmark.mytodo.dto.group.TaskGroupSimpleDTO;
+import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,17 +37,21 @@ public class TaskGroup {
     private String name;
 
     @Column(nullable = false, name = "description")
-    private String description;
+    @Builder.Default
+    private String description = "";
 
     @OneToMany
     @JoinColumn(name = "group_id")
+    @Builder.Default
     private List<TaskList> taskLists = new ArrayList<>();
 
     @Column(nullable = false, name = "create_time")
-    private Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    @Builder.Default
+    private Timestamp createTime = TimeUtils.now();
 
     @Column(nullable = false, name = "update_time")
-    private Timestamp updateTime = new Timestamp(System.currentTimeMillis());
+    @Builder.Default
+    private Timestamp updateTime = TimeUtils.now();
 
     public TaskGroupSimpleDTO toSimpleDTO() {
         return TaskGroupSimpleDTO.builder()

@@ -27,6 +27,7 @@ public class MyDayTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(nullable = false, name = "task_id")
     private Long taskId;
 }

@@ -23,21 +23,34 @@ public class TaskTimeInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @OneToOne
     @JoinColumn(nullable = false, name = "task_id")
     private Task task;
+
     @Column(name = "end_date")
-    private Date endDate;
+    @Builder.Default
+    private Date endDate = null;
+
     @Column(name = "end_time")
-    private Time endTime;
+    @Builder.Default
+    private Time endTime = null;
+
     @Column(name = "activate_countdown")
-    private Boolean activateCountdown;
+    @Builder.Default
+    private Boolean activateCountdown = false;
+
     @Column(name = "expected_execution_date")
-    private Date expectedExecutionDate;
+    @Builder.Default
+    private Date expectedExecutionDate = null;
+
     @Column(name = "expected_execution_start_period")
-    private Time expectedExecutionStartPeriod;
+    @Builder.Default
+    private Time expectedExecutionStartPeriod = null;
+
     @Column(name = "expected_execution_end_period")
-    private Time expectedExecutionEndPeriod;
+    @Builder.Default
+    private Time expectedExecutionEndPeriod = null;
 
     public static TaskTimeInfoResp from(TaskTimeInfo taskTimeInfo) {
         return TaskTimeInfoResp.builder()

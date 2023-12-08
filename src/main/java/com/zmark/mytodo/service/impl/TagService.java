@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +79,6 @@ public class TagService implements ITagService {
                         .tagName(tagName)
                         .parentTag(parentTag)
                         .parentTagId(parentTag == null ? null : parentTag.getId())
-                        .createTime(new Timestamp(System.currentTimeMillis()))
-                        .updateTime(new Timestamp(System.currentTimeMillis()))
                         .build();
                 tagDAO.save(tagEntity);
             } else {

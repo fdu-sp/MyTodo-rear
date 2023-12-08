@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
+import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,20 +34,25 @@ public class TaskList {
     private String name;
 
     @Column(nullable = false, name = "description")
-    private String description;
+    @Builder.Default
+    private String description = "";
 
     @Column(nullable = false, name = "group_id")
+    @Builder.Default
     private Long groupId = 1L;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", insertable = false)
+    @Builder.Default
     private List<Task> taskList = new ArrayList<>();
 
     @Column(nullable = false, name = "create_time")
-    private Timestamp createTime;
+    @Builder.Default
+    private Timestamp createTime = TimeUtils.now();
 
     @Column(nullable = false, name = "update_time")
-    private Timestamp updateTime;
+    @Builder.Default
+    private Timestamp updateTime = TimeUtils.now();
 
     public TaskListSimpleDTO toSimpleDTO() {
         return TaskListSimpleDTO.builder()
