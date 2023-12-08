@@ -4,6 +4,19 @@ VALUES (1, '默认分组', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
 INSERT INTO task_list (id, name, create_time, update_time)
 VALUES (1, '默认清单', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
 
+INSERT INTO task_group (id, name, create_time, update_time)
+VALUES (2, '专业课程', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+
+INSERT INTO task_list (id, name, group_id)
+VALUES (2, '智能移动平台应用开发', 2),
+       (3, '软件设计', 2),
+       (4, '操作系统（H）', 2),
+       (5, '计算机网络', 2),
+       (6, '机器学习', 2),
+       (7, '概率论与数理统计', 2),
+       (8, '数据库设计（H）', 2),
+       (9, '分布式系统', 2);
+
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
 VALUES (1, '概率论与数理统计HW11', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
