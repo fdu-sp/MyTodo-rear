@@ -28,6 +28,9 @@ public class TaskListController {
         this.taskListService = taskListService;
     }
 
+    /**
+     * 详细-获取指定清单，包括清单统计，拥有的TaskSimpleResp
+     */
     @GetMapping("/api/task-list/detail/find-by-id/{id}")
     public Result findById(@PathVariable("id") int id) {
         try {
