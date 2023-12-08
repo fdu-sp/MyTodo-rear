@@ -2,7 +2,7 @@ package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
-import com.zmark.mytodo.dto.TaskListDTO;
+import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.exception.NewEntityException;

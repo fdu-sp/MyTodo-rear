@@ -1,10 +1,11 @@
-package com.zmark.mytodo.dto;
+package com.zmark.mytodo.dto.list;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.list.resp.TaskListDetailResp;
+import com.zmark.mytodo.vo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -63,5 +64,21 @@ public class TaskListDTO {
                 .createTime(TimeUtils.toString(this.createTime))
                 .updateTime(TimeUtils.toString(this.updateTime))
                 .build();
+    }
+
+    public TaskListSimpleResp toSimpleResp() {
+        return TaskListSimpleResp.builder()
+                .id(this.id)
+                .name(this.name)
+                .count((long) this.taskDTOList.size())
+                .description(this.description)
+                .groupId(this.groupId)
+                .createTime(TimeUtils.toString(this.createTime))
+                .updateTime(TimeUtils.toString(this.updateTime))
+                .build();
+    }
+
+    public static List<TaskListSimpleResp> toSimpleResp(List<TaskListDTO> taskListDTOList) {
+        return taskListDTOList.stream().map(TaskListDTO::toSimpleResp).toList();
     }
 }

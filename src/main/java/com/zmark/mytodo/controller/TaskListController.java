@@ -1,6 +1,6 @@
 package com.zmark.mytodo.controller;
 
-import com.zmark.mytodo.dto.TaskListDTO;
+import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
