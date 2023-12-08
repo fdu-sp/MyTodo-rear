@@ -3,6 +3,7 @@ package com.zmark.mytodo.dto;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.list.resp.TaskListDetailResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,8 +60,8 @@ public class TaskListDTO {
                 .groupId(this.groupId)
                 .count((long) this.taskDTOList.size())
                 .tasks(this.taskDTOList.stream().map(TaskDTO::toSimpleResp).toList())
-                .createTime(this.createTime)
-                .updateTime(this.updateTime)
+                .createTime(TimeUtils.toString(this.createTime))
+                .updateTime(TimeUtils.toString(this.updateTime))
                 .build();
     }
 }

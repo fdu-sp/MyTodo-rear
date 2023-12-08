@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class TaskListDetailResp {
 
     List<TaskSimpleResp> tasks;
 
-    Timestamp createTime;
+    String createTime;
 
-    Timestamp updateTime;
+    String updateTime;
 }
