@@ -39,4 +39,8 @@ public class TimeUtils {
             return Timestamp.valueOf(date1 + " " + time);
         }).orElse(null);
     }
+
+    public static Timestamp now() {
+        return new Timestamp(System.currentTimeMillis());
+    }
 }
