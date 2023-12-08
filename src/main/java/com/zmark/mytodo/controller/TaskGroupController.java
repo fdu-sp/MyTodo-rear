@@ -5,7 +5,7 @@ import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskGroupService;
-import com.zmark.mytodo.vo.group.req.TaskGroupCreateReq;
+import com.zmark.mytodo.bo.group.req.TaskGroupCreateReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,4 @@
-package com.zmark.mytodo.vo.task.req;
+package com.zmark.mytodo.bo.task.req;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

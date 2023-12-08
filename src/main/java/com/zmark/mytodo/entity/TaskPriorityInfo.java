@@ -1,7 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.vo.task.resp.inner.TaskPriorityInfoResp;
+import com.zmark.mytodo.bo.task.resp.inner.TaskPriorityInfoResp;
 import jakarta.persistence.*;
 import lombok.*;
 

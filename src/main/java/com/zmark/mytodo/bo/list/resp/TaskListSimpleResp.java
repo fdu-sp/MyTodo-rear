@@ -1,27 +1,24 @@
-package com.zmark.mytodo.vo.group.resp;
+package com.zmark.mytodo.bo.list.resp;
 
-import com.zmark.mytodo.vo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author ZMark
- * @date 2023/12/7 20:28
+ * @date 2023/12/8 14:08
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskGroupSimpleResp {
+public class TaskListSimpleResp {
     Long id;
     String name;
-    String description;
     Long count;
-    List<TaskListSimpleResp> taskLists;
+    String description;
+    Long groupId;
     String createTime;
     String updateTime;
 }

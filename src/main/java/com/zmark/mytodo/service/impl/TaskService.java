@@ -13,7 +13,7 @@ import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
-import com.zmark.mytodo.vo.task.req.TaskCreatReq;
+import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

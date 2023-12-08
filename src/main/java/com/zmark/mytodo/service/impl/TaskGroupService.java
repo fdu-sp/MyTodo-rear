@@ -5,7 +5,7 @@ import com.zmark.mytodo.dto.group.TaskGroupSimpleDTO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.api.ITaskGroupService;
-import com.zmark.mytodo.vo.group.req.TaskGroupCreateReq;
+import com.zmark.mytodo.bo.group.req.TaskGroupCreateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

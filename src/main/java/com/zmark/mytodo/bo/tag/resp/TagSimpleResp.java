@@ -1,4 +1,4 @@
-package com.zmark.mytodo.vo.tag.resp;
+package com.zmark.mytodo.bo.tag.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,7 +4,7 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.vo.task.req.TaskCreatReq;
+import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

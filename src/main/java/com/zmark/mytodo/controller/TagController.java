@@ -6,7 +6,7 @@ import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.impl.TagService;
-import com.zmark.mytodo.vo.tag.req.TagCreateReq;
+import com.zmark.mytodo.bo.tag.req.TagCreateReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

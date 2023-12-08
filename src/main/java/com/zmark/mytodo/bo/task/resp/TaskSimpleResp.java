@@ -1,7 +1,7 @@
-package com.zmark.mytodo.vo.task.resp;
+package com.zmark.mytodo.bo.task.resp;
 
 import com.zmark.mytodo.entity.Task;
-import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
+import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.vo.task.req.TaskCreatReq;
+import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -9,7 +9,7 @@ import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
-import com.zmark.mytodo.vo.list.req.TaskListCreatReq;
+import com.zmark.mytodo.bo.list.req.TaskListCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

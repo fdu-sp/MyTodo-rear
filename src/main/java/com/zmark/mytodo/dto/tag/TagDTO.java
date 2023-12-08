@@ -1,8 +1,8 @@
 package com.zmark.mytodo.dto.tag;
 
 import com.zmark.mytodo.entity.Tag;
-import com.zmark.mytodo.vo.tag.resp.TagDetailResp;
-import com.zmark.mytodo.vo.tag.resp.TagSimpleResp;
+import com.zmark.mytodo.bo.tag.resp.TagDetailResp;
+import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

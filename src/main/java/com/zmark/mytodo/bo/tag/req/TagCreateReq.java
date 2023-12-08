@@ -1,4 +1,4 @@
-package com.zmark.mytodo.vo.tag.req;
+package com.zmark.mytodo.bo.tag.req;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

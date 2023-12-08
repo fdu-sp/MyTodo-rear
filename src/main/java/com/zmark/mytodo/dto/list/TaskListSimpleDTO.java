@@ -1,7 +1,7 @@
 package com.zmark.mytodo.dto.list;
 
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.vo.list.resp.TaskListSimpleResp;
+import com.zmark.mytodo.bo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

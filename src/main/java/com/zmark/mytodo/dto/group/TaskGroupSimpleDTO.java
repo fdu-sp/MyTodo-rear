@@ -1,7 +1,7 @@
 package com.zmark.mytodo.dto.group;
 
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
-import com.zmark.mytodo.vo.group.resp.TaskGroupSimpleResp;
+import com.zmark.mytodo.bo.group.resp.TaskGroupSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
