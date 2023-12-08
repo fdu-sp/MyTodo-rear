@@ -1,9 +1,12 @@
 package com.zmark.mytodo.vo.group.resp;
 
+import com.zmark.mytodo.vo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * @author ZMark
@@ -18,6 +21,7 @@ public class TaskGroupSimpleResp {
     String name;
     String description;
     Long count;
+    List<TaskListSimpleResp> taskLists;
     String createTime;
     String updateTime;
 }

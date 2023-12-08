@@ -1,5 +1,6 @@
 package com.zmark.mytodo.entity;
 
+import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +47,16 @@ public class TaskList {
 
     @Column(nullable = false, name = "update_time")
     private Timestamp updateTime;
+
+    public TaskListSimpleDTO toSimpleDTO() {
+        return TaskListSimpleDTO.builder()
+                .id(this.getId())
+                .name(this.getName())
+                .count((long) this.getTaskList().size())
+                .description(this.getDescription())
+                .groupId(this.getGroupId())
+                .createTime(this.getCreateTime())
+                .updateTime(this.getUpdateTime())
+                .build();
+    }
 }

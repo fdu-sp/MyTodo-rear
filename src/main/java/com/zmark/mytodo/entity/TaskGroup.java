@@ -54,6 +54,7 @@ public class TaskGroup {
                 .name(this.getName())
                 .description(this.getDescription())
                 .count((long) this.getTaskLists().size())
+                .taskListDTOS(this.taskLists.stream().map(TaskList::toSimpleDTO).collect(Collectors.toList()))
                 .createTime(this.getCreateTime())
                 .updateTime(this.getUpdateTime())
                 .build();

@@ -1,6 +1,7 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.vo.task.req.TaskCreatReq;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,6 +32,7 @@ public class Task {
     private Timestamp completedTime;
 
     @Column(nullable = false, name = "list_id")
+    @Builder.Default
     private Long taskListId = 1L;
 
     @Column(nullable = false, name = "archived")
@@ -46,10 +48,12 @@ public class Task {
     private TaskTimeInfo taskTimeInfo;
 
     @Column(nullable = false, name = "create_time")
-    private Timestamp createTime;
+    @Builder.Default
+    private Timestamp createTime = TimeUtils.now();
 
     @Column(nullable = false, name = "update_time")
-    private Timestamp updateTime;
+    @Builder.Default
+    private Timestamp updateTime = TimeUtils.now();
 
     public void complete() {
         this.completed = true;
