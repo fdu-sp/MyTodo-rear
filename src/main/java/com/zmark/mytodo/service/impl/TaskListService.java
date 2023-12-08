@@ -75,6 +75,7 @@ public class TaskListService implements ITaskListService {
         }
         taskList = TaskList.builder()
                 .name(name)
+                .description(creatReq.getDescription())
                 .groupId(taskGroupId)
                 .build();
         taskListDAO.save(taskList);
