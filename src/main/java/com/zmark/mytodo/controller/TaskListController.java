@@ -1,8 +1,8 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.dto.list.TaskListDTO;
-import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskListService;
@@ -50,7 +50,7 @@ public class TaskListController {
         try {
             TaskListDTO taskListDTO = taskListService.createNewTaskList(creatReq);
             return ResultFactory.buildSuccessResult(taskListDTO.toDetailResp());
-        } catch (NoDataInDataBaseException | NewEntityException e) {
+        } catch (NoDataInDataBaseException | RepeatedEntityInDatabase e) {
             log.warn("创建任务列表失败！" + e.getMessage(), e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (Exception e) {

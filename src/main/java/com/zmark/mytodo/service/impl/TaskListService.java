@@ -5,8 +5,8 @@ import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
-import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.utils.TimeUtils;
@@ -60,7 +60,7 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
-    public TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, NewEntityException {
+    public TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
         String name = creatReq.getName();
         Long taskGroupId =
                 creatReq.getTaskGroupId() == null ? TaskGroup.DEFAULT_GROUP_ID : creatReq.getTaskGroupId();
@@ -73,7 +73,7 @@ public class TaskListService implements ITaskListService {
         }
         TaskList taskList = taskListDAO.findByName(name);
         if (taskList != null) {
-            throw NewEntityException.RepeatEntityName("TaskList", name);
+            throw RepeatedEntityInDatabase.RepeatEntityName("TaskList", name);
         }
         taskList = TaskList.builder()
                 .name(name)
