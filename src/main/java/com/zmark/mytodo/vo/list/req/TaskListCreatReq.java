@@ -19,6 +19,12 @@ public class TaskListCreatReq {
     @NotNull(message = "清单名称必填")
     @NotEmpty(message = "清单名称不能为空")
     String name;
-    
+
+    /**
+     * 必填，但是可以为空
+     */
+    @NotNull(message = "清单描述必填")
+    String description;
+
     Long taskGroupId;
 }

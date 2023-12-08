@@ -33,6 +33,9 @@ public class TaskGroup {
     @Column(nullable = false, name = "name")
     private String name;
 
+    @Column(nullable = false, name = "description")
+    private String description;
+
     @OneToMany
     @JoinColumn(name = "group_id")
     private List<TaskList> taskLists = new ArrayList<>();

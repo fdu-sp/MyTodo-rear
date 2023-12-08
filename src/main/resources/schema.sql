@@ -10,6 +10,7 @@ CREATE TABLE `task_group`
 (
     `id`          BIGINT       NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL COMMENT '分组名称',
+    `description` varchar(255) NOT NULL DEFAULT '' COMMENT '分组描述',
     `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -24,6 +25,7 @@ CREATE TABLE `task_list`
 (
     `id`          BIGINT       NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL COMMENT '清单名称',
+    `description` varchar(255) NOT NULL DEFAULT '' COMMENT '清单描述',
     `group_id`    BIGINT       NOT NULL DEFAULT 1 COMMENT '分组id',
     `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

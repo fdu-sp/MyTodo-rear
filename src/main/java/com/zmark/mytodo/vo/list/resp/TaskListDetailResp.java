@@ -22,6 +22,8 @@ public class TaskListDetailResp {
 
     String name;
 
+    String description;
+
     Long groupId;
 
     Long count;

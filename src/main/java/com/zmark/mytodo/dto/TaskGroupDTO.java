@@ -22,6 +22,8 @@ public class TaskGroupDTO {
 
     String name;
 
+    private String description;
+
     List<TaskListDTO> taskLists;
 
     Timestamp createTime;
@@ -32,6 +34,7 @@ public class TaskGroupDTO {
         return TaskGroupDTO.builder()
                 .id(taskGroup.getId())
                 .name(taskGroup.getName())
+                .description(taskGroup.getDescription())
                 .createTime(taskGroup.getCreateTime())
                 .updateTime(taskGroup.getUpdateTime())
                 .build();

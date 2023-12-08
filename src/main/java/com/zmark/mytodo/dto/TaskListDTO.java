@@ -25,6 +25,8 @@ public class TaskListDTO {
 
     String name;
 
+    String description;
+
     Long groupId;
 
     List<TaskDTO> taskDTOList;
@@ -37,6 +39,7 @@ public class TaskListDTO {
         return TaskListDTO.builder()
                 .id(taskList.getId())
                 .name(taskList.getName())
+                .description(taskList.getDescription())
                 .groupId(taskList.getGroupId())
                 .taskDTOList(taskList.getTaskList().stream().map(taskService::toDTO).toList())
                 .createTime(taskList.getCreateTime())
@@ -52,6 +55,7 @@ public class TaskListDTO {
         return TaskListDetailResp.builder()
                 .id(this.id)
                 .name(this.name)
+                .description(this.description)
                 .groupId(this.groupId)
                 .count((long) this.taskDTOList.size())
                 .tasks(this.taskDTOList.stream().map(TaskDTO::toSimpleResp).toList())

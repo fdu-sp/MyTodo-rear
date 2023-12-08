@@ -31,6 +31,9 @@ public class TaskList {
     @Column(nullable = false, name = "name")
     private String name;
 
+    @Column(nullable = false, name = "description")
+    private String description;
+
     @Column(nullable = false, name = "group_id")
     private Long groupId = 1L;
 
