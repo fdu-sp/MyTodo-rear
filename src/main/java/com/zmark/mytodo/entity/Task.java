@@ -88,6 +88,7 @@ public class Task {
                 .completed(false)
                 .completedTime(null)
                 .archived(false)
+                .taskListId(req.getTaskListId() == null ? TaskList.DEFAULT_LIST_ID : req.getTaskListId())
                 .taskContentInfo(taskContentInfo)
                 .taskPriorityInfo(taskPriorityInfo)
                 .taskTimeInfo(taskTimeInfo)

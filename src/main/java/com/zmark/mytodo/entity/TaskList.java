@@ -25,6 +25,8 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "task_list")
 public class TaskList {
+    public final static Long DEFAULT_LIST_ID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -39,7 +41,7 @@ public class TaskList {
 
     @Column(nullable = false, name = "group_id")
     @Builder.Default
-    private Long groupId = 1L;
+    private Long groupId = TaskGroup.DEFAULT_GROUP_ID;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "list_id", insertable = false)

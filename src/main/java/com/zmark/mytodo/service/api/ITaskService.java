@@ -37,7 +37,7 @@ public interface ITaskService {
      * @throws NewEntityException 如果创建失败，抛出异常
      */
     @Transactional
-    TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException;
+    TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException, NoDataInDataBaseException;
 
     /**
      * 标记任务为已完成

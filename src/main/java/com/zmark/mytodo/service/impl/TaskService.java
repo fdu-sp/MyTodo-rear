@@ -2,10 +2,12 @@ package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dao.TaskDAO;
+import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.dao.TaskTagMatchDAO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.entity.Task;
+import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.entity.TaskTagMatch;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author ZMark
@@ -30,14 +33,20 @@ public class TaskService implements ITaskService {
     private final TaskDAO taskDAO;
     private final TaskTagMatchDAO taskTagMatchDAO;
     private final TagDAO tagDAO;
+    private final TaskListDAO taskListDAO;
 
     private final ITagService tagService;
 
     @Autowired
-    public TaskService(TaskDAO taskDAO, TaskTagMatchDAO taskTagMatchDAO, TagDAO tagDAO, TagService tagService) {
+    public TaskService(TaskDAO taskDAO,
+                       TaskTagMatchDAO taskTagMatchDAO,
+                       TagDAO tagDAO,
+                       TaskListDAO taskListDAO,
+                       TagService tagService) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
         this.tagDAO = tagDAO;
+        this.taskListDAO = taskListDAO;
         this.tagService = tagService;
     }
 
@@ -77,7 +86,15 @@ public class TaskService implements ITaskService {
 
     @Override
     @Transactional
-    public TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException {
+    public TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException, NoDataInDataBaseException {
+        // 检查taskList是否存在
+        Long taskListId = taskCreatReq.getTaskListId();
+        taskListId = taskListId == null ? TaskList.DEFAULT_LIST_ID : taskListId;
+        Optional<TaskList> taskList = taskListDAO.findById(taskListId);
+        if (taskList.isEmpty()) {
+            throw new NoDataInDataBaseException("找不到id为" + taskListId + "的任务清单");
+        }
+        taskCreatReq.setTaskListId(taskListId);
         // 保存tags
         List<Tag> tagList = new ArrayList<>();
         for (String tagName : taskCreatReq.getTagNames()) {

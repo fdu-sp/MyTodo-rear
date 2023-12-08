@@ -101,7 +101,7 @@ public class TaskController {
         try {
             TaskDTO taskDTO = taskService.createNewTask(taskCreatReq);
             return ResultFactory.buildSuccessResult("创建成功", TaskDTO.toDetailResp(taskDTO));
-        } catch (NewEntityException e) {
+        } catch (NewEntityException | NoDataInDataBaseException e) {
             log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {

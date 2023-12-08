@@ -33,6 +33,8 @@ public class TaskCreatReq {
     @NotNull(message = "任务描述必填")
     private String description;
 
+    private Long taskListId;
+
     /**
      * priority info
      */
