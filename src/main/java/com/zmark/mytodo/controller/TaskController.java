@@ -1,15 +1,18 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.bo.task.req.TaskCreatReq;
+import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
+import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
+import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
+import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.service.impl.TaskListService;
 import com.zmark.mytodo.service.impl.TaskService;
-import com.zmark.mytodo.bo.task.req.TaskCreatReq;
-import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
-import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,9 +31,13 @@ public class TaskController {
 
     private final ITaskService taskService;
 
+    private final ITaskListService taskListService;
+
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService,
+                          TaskListService taskListService) {
         this.taskService = taskService;
+        this.taskListService = taskListService;
     }
 
     @GetMapping("/api/task/simple/get-info/{task-id}")
@@ -84,10 +91,25 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/simple/get-all-task/{tag-id}")
+    @GetMapping("/api/task/simple/get-all-tasks/{tag-id}")
     public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-id") Long tagId) {
         List<TaskDTO> taskDTOList = taskService.findAllByTag(tagId);
         return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskDTOList));
+    }
+
+    @GetMapping("/api/task/simple/get-all-tasks-by-list/{list-id}")
+    public Result getAllTasksWithSimpleInfoByList(@PathVariable("list-id") Long listId) {
+        try {
+            TaskListDTO taskListDTO = taskListService.findById(listId);
+            List<TaskDTO> taskDTOList = taskListDTO.getTaskDTOList();
+            return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskDTOList));
+        } catch (NoDataInDataBaseException e) {
+            log.warn("getAllTasksWithSimpleInfoByList error, listId: {}", listId, e);
+            return ResultFactory.buildNotFoundResult(e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("getAllTasksWithSimpleInfoByList error, listId: {}", listId, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
     }
 
     @GetMapping("/api/task/simple/get-all-tasks/{tag-id}/{status}")
