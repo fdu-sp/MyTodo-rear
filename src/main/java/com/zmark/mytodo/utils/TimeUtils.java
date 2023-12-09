@@ -1,14 +1,19 @@
 package com.zmark.mytodo.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 /**
  * @author ZMark
  * @date 2023/12/4 17:48
  */
+@Slf4j
 public class TimeUtils {
     /**
      * 返回Timestamp的字符串形式，如果timestamp为null，则返回null
@@ -29,7 +34,16 @@ public class TimeUtils {
     }
 
     public static Time toTime(String time) {
-        return Optional.ofNullable(time).map(Time::valueOf).orElse(null);
+        return Optional.ofNullable(time)
+                .map(s -> {
+                    try {
+                        return new Time(new SimpleDateFormat("HH:mm:ss").parse(s + ":00").getTime());
+                    } catch (ParseException e) {
+                        log.error("时间转换失败", e);
+                        return null;
+                    }
+                })
+                .orElse(null);
     }
 
     /**
