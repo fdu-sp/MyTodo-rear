@@ -1,6 +1,6 @@
 package com.zmark.mytodo.controller;
 
-import com.zmark.mytodo.bo.task.req.TaskCreatReq;
+import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.dto.list.TaskListDTO;
@@ -119,15 +119,15 @@ public class TaskController {
     }
 
     @PostMapping("/api/task/create-new-task")
-    public Result createNewTask(@Validated @RequestBody TaskCreatReq taskCreatReq) {
+    public Result createNewTask(@Validated @RequestBody TaskCreateReq taskCreateReq) {
         try {
-            TaskDTO taskDTO = taskService.createNewTask(taskCreatReq);
+            TaskDTO taskDTO = taskService.createNewTask(taskCreateReq);
             return ResultFactory.buildSuccessResult("创建成功", TaskDTO.toDetailResp(taskDTO));
         } catch (NewEntityException | NoDataInDataBaseException e) {
-            log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
+            log.error("createNewTask error, taskCreatReq: {}", taskCreateReq, e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
-            log.error("createNewTask error, taskCreatReq: {}", taskCreatReq, e);
+            log.error("createNewTask error, taskCreatReq: {}", taskCreateReq, e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }

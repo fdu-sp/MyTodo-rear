@@ -1,8 +1,8 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -67,7 +67,7 @@ public class Task {
         this.completedTime = null;
     }
 
-    public static Task fromTaskCreatReq(TaskCreatReq req) {
+    public static Task fromTaskCreatReq(TaskCreateReq req) {
         TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
                 .isImportant(req.getIsImportant() != null && req.getIsImportant())
                 .isUrgent(req.getIsUrgent() != null && req.getIsUrgent())

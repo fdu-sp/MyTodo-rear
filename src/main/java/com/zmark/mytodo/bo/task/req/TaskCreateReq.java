@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskCreatReq {
+public class TaskCreateReq {
     @NotNull(message = "任务标题必填")
     @NotEmpty(message = "任务标题不能为空")
     private String title;

@@ -1,12 +1,12 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
 import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskListService;
-import com.zmark.mytodo.bo.list.req.TaskListCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -46,7 +46,7 @@ public class TaskListController {
     }
 
     @PostMapping("/api/task-list/create-new")
-    public Result createNew(@Validated @RequestBody TaskListCreatReq creatReq) {
+    public Result createNew(@Validated @RequestBody TaskListCreateReq creatReq) {
         try {
             TaskListDTO taskListDTO = taskListService.createNewTaskList(creatReq);
             return ResultFactory.buildSuccessResult(taskListDTO.toDetailResp());

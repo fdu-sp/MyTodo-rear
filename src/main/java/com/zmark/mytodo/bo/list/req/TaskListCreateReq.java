@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskListCreatReq {
+public class TaskListCreateReq {
     @NotNull(message = "清单名称必填")
     @NotEmpty(message = "清单名称不能为空")
     String name;

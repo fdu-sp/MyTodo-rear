@@ -1,5 +1,6 @@
 package com.zmark.mytodo.service.impl;
 
+import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.dto.list.TaskListDTO;
@@ -9,7 +10,6 @@ import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.api.ITaskListService;
 import com.zmark.mytodo.service.api.ITaskService;
-import com.zmark.mytodo.bo.list.req.TaskListCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class TaskListService implements ITaskListService {
     }
 
     @Override
-    public TaskListDTO createNewTaskList(TaskListCreatReq creatReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
+    public TaskListDTO createNewTaskList(TaskListCreateReq creatReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
         String name = creatReq.getName();
         Long taskGroupId =
                 creatReq.getTaskGroupId() == null ? TaskGroup.DEFAULT_GROUP_ID : creatReq.getTaskGroupId();

@@ -1,10 +1,10 @@
 package com.zmark.mytodo.service.api;
 
+import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,11 +33,11 @@ public interface ITaskService {
     /**
      * 如果创建成功，返回新创建的任务DTO
      *
-     * @param taskCreatReq 创建任务的请求
+     * @param taskCreateReq 创建任务的请求
      * @throws NewEntityException 如果创建失败，抛出异常
      */
     @Transactional
-    TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException, NoDataInDataBaseException;
+    TaskDTO createNewTask(TaskCreateReq taskCreateReq) throws NewEntityException, NoDataInDataBaseException;
 
     /**
      * 标记任务为已完成

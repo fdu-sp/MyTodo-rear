@@ -1,5 +1,6 @@
 package com.zmark.mytodo.service.impl;
 
+import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.dao.TagDAO;
 import com.zmark.mytodo.dao.TaskDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
@@ -13,7 +14,6 @@ import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
-import com.zmark.mytodo.bo.task.req.TaskCreatReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,18 +86,18 @@ public class TaskService implements ITaskService {
 
     @Override
     @Transactional
-    public TaskDTO createNewTask(TaskCreatReq taskCreatReq) throws NewEntityException, NoDataInDataBaseException {
+    public TaskDTO createNewTask(TaskCreateReq taskCreateReq) throws NewEntityException, NoDataInDataBaseException {
         // 检查taskList是否存在
-        Long taskListId = taskCreatReq.getTaskListId();
+        Long taskListId = taskCreateReq.getTaskListId();
         taskListId = taskListId == null ? TaskList.DEFAULT_LIST_ID : taskListId;
         Optional<TaskList> taskList = taskListDAO.findById(taskListId);
         if (taskList.isEmpty()) {
             throw new NoDataInDataBaseException("找不到id为" + taskListId + "的任务清单");
         }
-        taskCreatReq.setTaskListId(taskListId);
+        taskCreateReq.setTaskListId(taskListId);
         // 保存tags
         List<Tag> tagList = new ArrayList<>();
-        for (String tagName : taskCreatReq.getTagNames()) {
+        for (String tagName : taskCreateReq.getTagNames()) {
             Tag tag = tagDAO.findByTagName(tagName);
             if (tag == null) {
                 tag = tagService.createNewTag(tagName);
@@ -105,7 +105,7 @@ public class TaskService implements ITaskService {
             tagList.add(tag);
         }
         // 保存task
-        Task task = Task.fromTaskCreatReq(taskCreatReq);
+        Task task = Task.fromTaskCreatReq(taskCreateReq);
         taskDAO.save(task);
         // 保存 Tags 和 Task 的关联关系
         Long taskId = task.getId();
@@ -116,7 +116,7 @@ public class TaskService implements ITaskService {
                     .build();
             taskTagMatchDAO.save(match);
         }
-        log.info("createNewTask succeed, task: {}", taskCreatReq);
+        log.info("createNewTask succeed, task: {}", taskCreateReq);
         return TaskDTO.from(task, tagList);
     }
 
