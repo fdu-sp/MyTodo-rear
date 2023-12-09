@@ -24,6 +24,14 @@ public class TimeUtils {
         return Optional.ofNullable(date).map(Date::toString).orElse(null);
     }
 
+    public static Date toDate(String date) {
+        return Optional.ofNullable(date).map(Date::valueOf).orElse(null);
+    }
+
+    public static Time toTime(String time) {
+        return Optional.ofNullable(time).map(Time::valueOf).orElse(null);
+    }
+
     /**
      * 转化为Timestamp，如果date或者time为null，则返回null
      *

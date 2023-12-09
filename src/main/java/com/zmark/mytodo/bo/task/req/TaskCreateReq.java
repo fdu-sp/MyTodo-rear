@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 
 /**
@@ -44,10 +43,10 @@ public class TaskCreateReq {
     /**
      * time info
      */
-    private Date endDate;
-    private Time endTime;
+    private String endDate;
+    private String endTime;
     private Boolean activateCountdown;
     private Date expectedExecutionDate;
-    private Time expectedExecutionStartPeriod;
-    private Time expectedExecutionEndPeriod;
+    private String expectedExecutionStartPeriod;
+    private String expectedExecutionEndPeriod;
 }

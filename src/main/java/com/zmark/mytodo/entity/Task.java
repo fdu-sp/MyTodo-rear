@@ -76,12 +76,12 @@ public class Task {
                 .description(req.getDescription())
                 .build();
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
-                .endDate(req.getEndDate())
-                .endTime(req.getEndTime())
+                .endDate(TimeUtils.toDate(req.getEndDate()))
+                .endTime(TimeUtils.toTime(req.getEndTime()))
                 .activateCountdown(req.getActivateCountdown() != null && req.getActivateCountdown())
                 .expectedExecutionDate(req.getExpectedExecutionDate())
-                .expectedExecutionStartPeriod(req.getExpectedExecutionStartPeriod())
-                .expectedExecutionEndPeriod(req.getExpectedExecutionEndPeriod())
+                .expectedExecutionStartPeriod(TimeUtils.toTime(req.getExpectedExecutionStartPeriod()))
+                .expectedExecutionEndPeriod(TimeUtils.toTime(req.getExpectedExecutionEndPeriod()))
                 .build();
         Task task = Task.builder()
                 .title(req.getTitle())
