@@ -44,8 +44,8 @@ public class MyDayTaskController {
         }
     }
 
-    @PostMapping("/api/task/my-day/remove")
-    public Result removeFromMyDayList(Long taskId) {
+    @PostMapping("/api/task/my-day/remove/{task-id}")
+    public Result removeFromMyDayList(@PathVariable("task-id") Long taskId) {
         try {
             myDayTaskService.removeFromMyDayList(taskId);
             return ResultFactory.buildSuccessResult();
