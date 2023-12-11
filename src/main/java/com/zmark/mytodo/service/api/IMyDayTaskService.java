@@ -1,7 +1,7 @@
 package com.zmark.mytodo.service.api;
 
+import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
-import com.zmark.mytodo.entity.TaskList;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface IMyDayTaskService {
 
     List<TaskDTO> getMyDayList();
 
-    TaskList getMyDayTaskList();
+    TaskListSimpleDTO getMyDayTaskList();
 }

@@ -1,7 +1,7 @@
 package com.zmark.mytodo.service.impl;
 
+import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
-import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.IMyDayTaskService;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class MyDayTaskService implements IMyDayTaskService {
     }
 
     @Override
-    public TaskList getMyDayTaskList() {
+    public TaskListSimpleDTO getMyDayTaskList() {
         return null;
     }
 }

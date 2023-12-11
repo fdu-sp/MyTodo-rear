@@ -2,11 +2,15 @@ package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
 import com.zmark.mytodo.dto.list.TaskListDTO;
+import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
+import com.zmark.mytodo.service.api.IMyDayTaskService;
 import com.zmark.mytodo.service.api.ITaskListService;
+import com.zmark.mytodo.service.impl.MyDayTaskService;
+import com.zmark.mytodo.service.impl.TaskListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,9 +27,27 @@ public class TaskListController {
 
     private final ITaskListService taskListService;
 
+    private final IMyDayTaskService myDayTaskService;
+
     @Autowired
-    public TaskListController(com.zmark.mytodo.service.impl.TaskListService taskListService) {
+    public TaskListController(TaskListService taskListService,
+                              MyDayTaskService myDayTaskService) {
         this.taskListService = taskListService;
+        this.myDayTaskService = myDayTaskService;
+    }
+
+    /**
+     * 获取 `我的一天` 清单的清单统计
+     */
+    @GetMapping("/api/task-list/simple/my-day")
+    public Result getMyDayTaskList() {
+        try {
+            TaskListSimpleDTO taskListSimpleDTO = myDayTaskService.getMyDayTaskList();
+            return ResultFactory.buildSuccessResult(taskListSimpleDTO.toSimpleResp());
+        } catch (RuntimeException e) {
+            log.error("getMyDayTaskList error" + e.getMessage(), e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
     }
 
     /**
