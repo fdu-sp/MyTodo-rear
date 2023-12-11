@@ -5,6 +5,7 @@ import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.IMyDayTaskService;
+import com.zmark.mytodo.service.impl.MyDayTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class MyDayTaskController {
     private final IMyDayTaskService myDayTaskService;
 
     @Autowired
-    public MyDayTaskController(IMyDayTaskService myDayTaskService) {
+    public MyDayTaskController(MyDayTaskService myDayTaskService) {
         this.myDayTaskService = myDayTaskService;
     }
 
