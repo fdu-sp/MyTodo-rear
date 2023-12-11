@@ -1,5 +1,6 @@
 package com.zmark.mytodo.service.api;
 
+import com.zmark.mytodo.dto.list.RecommendMyDayDTO;
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.exception.NewEntityException;
@@ -21,4 +22,6 @@ public interface IMyDayTaskService {
     List<TaskDTO> getMyDayList();
 
     TaskListSimpleDTO getMyDayTaskList();
+
+    RecommendMyDayDTO getRecommendTasks();
 }

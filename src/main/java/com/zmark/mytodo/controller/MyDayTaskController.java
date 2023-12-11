@@ -91,4 +91,14 @@ public class MyDayTaskController {
             return ResultFactory.buildInternalServerErrorResult();
         }
     }
+
+    @GetMapping("/api/task/my-day/recommend")
+    public Result getRecommendTaskList() {
+        try {
+            return ResultFactory.buildSuccessResult(myDayTaskService.getRecommendTasks().toResp());
+        } catch (RuntimeException e) {
+            log.error("getRecommendTaskList error" + e.getMessage(), e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
 }
