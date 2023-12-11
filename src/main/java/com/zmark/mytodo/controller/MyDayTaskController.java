@@ -8,6 +8,7 @@ import com.zmark.mytodo.service.api.IMyDayTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +29,8 @@ public class MyDayTaskController {
         this.myDayTaskService = myDayTaskService;
     }
 
-    @PostMapping("/api/task/my-day/add")
-    public Result addToMyDayList(Long taskId) {
+    @PostMapping("/api/task/my-day/add/{task-id}")
+    public Result addToMyDayList(@PathVariable("task-id") Long taskId) {
         try {
             myDayTaskService.addToMyDayList(taskId);
             return ResultFactory.buildSuccessResult();
