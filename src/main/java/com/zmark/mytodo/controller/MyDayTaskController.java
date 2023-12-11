@@ -1,6 +1,7 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.IMyDayTaskService;
@@ -35,6 +36,9 @@ public class MyDayTaskController {
         } catch (RuntimeException e) {
             log.error("addToMyDayList error" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
+        } catch (NoDataInDataBaseException e) {
+            log.error("addToMyDayList error" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(e.getMessage());
         }
     }
 
@@ -46,6 +50,9 @@ public class MyDayTaskController {
         } catch (RuntimeException e) {
             log.error("removeFromMyDayList error" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
+        } catch (NoDataInDataBaseException e) {
+            log.error("removeFromMyDayList error" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(e.getMessage());
         }
     }
 
