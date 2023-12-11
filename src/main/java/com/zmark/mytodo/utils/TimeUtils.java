@@ -65,4 +65,22 @@ public class TimeUtils {
     public static Timestamp now() {
         return new Timestamp(System.currentTimeMillis());
     }
+
+    /**
+     * 获取dayNum天前的时间戳
+     */
+    public static Timestamp before(int dayNum) {
+        return new Timestamp(System.currentTimeMillis() - (long) dayNum * 24 * 60 * 60 * 1000);
+    }
+
+    public static Date today() {
+        return new Date(System.currentTimeMillis());
+    }
+
+    /**
+     * 获取dayNum天后的日期
+     */
+    public static Date afterDays(int dayNum) {
+        return new Date(System.currentTimeMillis() + (long) dayNum * 24 * 60 * 60 * 1000);
+    }
 }
