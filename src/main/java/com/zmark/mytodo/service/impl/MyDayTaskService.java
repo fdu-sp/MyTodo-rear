@@ -74,7 +74,7 @@ public class MyDayTaskService implements IMyDayTaskService {
         return TaskListSimpleDTO.builder()
                 .id(0L)
                 .name("我的一天")
-                .count(myDayTaskDAO.countAll())
+                .count(myDayTaskDAO.count())
                 .description("")
                 .groupId(TaskGroup.DEFAULT_GROUP_ID)
                 .createTime(TimeUtils.now())
