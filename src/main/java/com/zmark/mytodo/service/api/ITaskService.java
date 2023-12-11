@@ -7,6 +7,8 @@ import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -54,4 +56,24 @@ public interface ITaskService {
      * @throws NoDataInDataBaseException 如果任务不存在，抛出异常
      */
     void unCompleteTask(Long taskId) throws NoDataInDataBaseException;
+
+    /**
+     * 截止日期为今天的任务
+     */
+    List<TaskDTO> getTasksEndToday();
+
+    /**
+     * 截止日期在指定日期之间的任务
+     */
+    List<TaskDTO> getTasksEndBetweenDate(Date endDateStart, Date endDateEnd);
+
+    /**
+     * 已经过期，但是没有完成的任务
+     */
+    List<TaskDTO> getUncompletedTasksEndBeforeToday();
+
+    /**
+     * 指定时间段内创建的任务
+     */
+    List<TaskDTO> getTasksCreatedBetween(Timestamp start, Timestamp end);
 }

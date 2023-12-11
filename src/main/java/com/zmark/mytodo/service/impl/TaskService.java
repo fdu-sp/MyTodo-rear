@@ -1,24 +1,21 @@
 package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
-import com.zmark.mytodo.dao.TagDAO;
-import com.zmark.mytodo.dao.TaskDAO;
-import com.zmark.mytodo.dao.TaskListDAO;
-import com.zmark.mytodo.dao.TaskTagMatchDAO;
+import com.zmark.mytodo.dao.*;
 import com.zmark.mytodo.dto.task.TaskDTO;
-import com.zmark.mytodo.entity.Tag;
-import com.zmark.mytodo.entity.Task;
-import com.zmark.mytodo.entity.TaskList;
-import com.zmark.mytodo.entity.TaskTagMatch;
+import com.zmark.mytodo.entity.*;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +31,7 @@ public class TaskService implements ITaskService {
     private final TaskTagMatchDAO taskTagMatchDAO;
     private final TagDAO tagDAO;
     private final TaskListDAO taskListDAO;
+    private final TaskTimeInfoDAO taskTimeInfoDAO;
 
     private final ITagService tagService;
 
@@ -42,11 +40,13 @@ public class TaskService implements ITaskService {
                        TaskTagMatchDAO taskTagMatchDAO,
                        TagDAO tagDAO,
                        TaskListDAO taskListDAO,
+                       TaskTimeInfoDAO taskTimeInfoDAO,
                        TagService tagService) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
         this.tagDAO = tagDAO;
         this.taskListDAO = taskListDAO;
+        this.taskTimeInfoDAO = taskTimeInfoDAO;
         this.tagService = tagService;
     }
 
@@ -147,5 +147,39 @@ public class TaskService implements ITaskService {
             taskList.add(taskDAO.findTaskById(match.getTaskId()));
         }
         return taskList;
+    }
+
+    @Override
+    public List<TaskDTO> getTasksEndToday() {
+        List<Task> taskList = taskDAO.findAllByTaskTimeInfo_EndDate(TimeUtils.today());
+        return taskList.stream().map(this::toDTO).toList();
+
+    }
+
+    @Override
+    public List<TaskDTO> getTasksEndBetweenDate(Date endDateStart, Date endDateEnd) {
+        List<TaskTimeInfo> taskTimeInfoList
+                = taskTimeInfoDAO
+                .findAllByEndDateIsGreaterThanEqualAndEndDateIsLessThanEqual(endDateStart, endDateEnd);
+        return taskTimeInfoList.stream()
+                .map(TaskTimeInfo::getTask)
+                .map(this::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<TaskDTO> getUncompletedTasksEndBeforeToday() {
+        List<TaskTimeInfo> taskTimeInfoList
+                = taskTimeInfoDAO.findAllByEndDateIsLessThanAndTaskCompleted(TimeUtils.today(), false);
+        return taskTimeInfoList.stream()
+                .map(TaskTimeInfo::getTask)
+                .map(this::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<TaskDTO> getTasksCreatedBetween(Timestamp start, Timestamp end) {
+        List<Task> taskList = taskDAO.findAllByCreateTimeIsGreaterThanEqualAndCreateTimeIsLessThanEqual(start, end);
+        return taskList.stream().map(this::toDTO).toList();
     }
 }
