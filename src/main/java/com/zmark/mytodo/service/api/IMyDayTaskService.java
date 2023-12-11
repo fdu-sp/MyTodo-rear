@@ -2,6 +2,7 @@ package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @date 2023/12/11 17:47
  */
 public interface IMyDayTaskService {
-    void addToMyDayList(Long taskId) throws NoDataInDataBaseException;
+    void addToMyDayList(Long taskId) throws NoDataInDataBaseException, NewEntityException;
 
     void removeFromMyDayList(Long taskId) throws NoDataInDataBaseException;
 

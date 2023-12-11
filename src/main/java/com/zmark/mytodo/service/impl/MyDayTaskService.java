@@ -5,6 +5,7 @@ import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.MyDayTask;
 import com.zmark.mytodo.entity.TaskGroup;
+import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.IMyDayTaskService;
 import com.zmark.mytodo.service.api.ITaskService;
@@ -32,10 +33,14 @@ public class MyDayTaskService implements IMyDayTaskService {
     }
 
     @Override
-    public void addToMyDayList(Long taskId) throws NoDataInDataBaseException {
+    public void addToMyDayList(Long taskId) throws NoDataInDataBaseException, NewEntityException {
         TaskDTO taskDTO = taskService.findTaskById(taskId);
         if (taskDTO == null) {
             throw new NoDataInDataBaseException(String.format("id为%d的task不存在！", taskId));
+        }
+        MyDayTask myDayTaskInDataBase = myDayTaskDAO.findMyDayTaskByTaskId(taskId);
+        if (myDayTaskInDataBase != null) {
+            throw new NewEntityException(String.format("id为%d的task已经在我的一天列表中！", taskId));
         }
         MyDayTask myDayTask = MyDayTask.builder()
                 .taskId(taskId)
