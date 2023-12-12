@@ -90,7 +90,7 @@ public class MyDayTaskService implements IMyDayTaskService {
     }
 
     /**
-     * 推荐任务列表：(都是没有完成的任务)
+     * 推荐任务列表：(都是没有完成的任务，并且不在我的一天列表中)
      * <p>
      * 1. 截止日期为今天的任务 <br/>
      * 2. 截止日期为之后三天的任务 <br/>
@@ -106,30 +106,35 @@ public class MyDayTaskService implements IMyDayTaskService {
                 .taskDTOList(taskService.getTasksEndToday())
                 .build();
         tasksEndToday.removeCompletedTasks();
+        this.removeTasksInMyDayList(tasksEndToday);
         // 截止日期为之后三天的任务
         RecommendTaskListDTO tasksEndInThreeDays = RecommendTaskListDTO.builder()
                 .title("三天内")
                 .taskDTOList(taskService.getTasksEndBetweenDate(TimeUtils.afterDays(1), TimeUtils.afterDays(3)))
                 .build();
         tasksEndInThreeDays.removeCompletedTasks();
+        this.removeTasksInMyDayList(tasksEndInThreeDays);
         // 截止日期为之后四到七天的任务
         RecommendTaskListDTO tasksEndInFourToSevenDays = RecommendTaskListDTO.builder()
                 .title("四到七天内到期")
                 .taskDTOList(taskService.getTasksEndBetweenDate(TimeUtils.afterDays(4), TimeUtils.afterDays(7)))
                 .build();
         tasksEndInFourToSevenDays.removeCompletedTasks();
+        this.removeTasksInMyDayList(tasksEndInFourToSevenDays);
         // 已经过期，但是没有完成的任务
         RecommendTaskListDTO uncompletedTasksEndBeforeToday = RecommendTaskListDTO.builder()
                 .title("先前")
                 .taskDTOList(taskService.getUncompletedTasksEndBeforeToday())
                 .build();
         uncompletedTasksEndBeforeToday.removeCompletedTasks();
+        this.removeTasksInMyDayList(uncompletedTasksEndBeforeToday);
         // 最新一天创建的任务
         RecommendTaskListDTO latestCreatedTasks = RecommendTaskListDTO.builder()
                 .title("最近添加")
                 .taskDTOList(taskService.getTasksCreatedBetween(TimeUtils.before(1), TimeUtils.now()))
                 .build();
         latestCreatedTasks.removeCompletedTasks();
+        this.removeTasksInMyDayList(latestCreatedTasks);
         return RecommendMyDayDTO.builder()
                 .tasksEndToday(tasksEndToday)
                 .tasksEndInThreeDays(tasksEndInThreeDays)
@@ -137,5 +142,11 @@ public class MyDayTaskService implements IMyDayTaskService {
                 .uncompletedTasksEndBeforeToday(uncompletedTasksEndBeforeToday)
                 .latestCreatedTasks(latestCreatedTasks)
                 .build();
+    }
+
+    private void removeTasksInMyDayList(RecommendTaskListDTO recommendTaskListDTO) {
+        List<TaskDTO> taskDTOList = recommendTaskListDTO.getTaskDTOList();
+        List<TaskDTO> taskDTOListInMyDayList = getMyDayList();
+        taskDTOList.removeAll(taskDTOListInMyDayList);
     }
 }
