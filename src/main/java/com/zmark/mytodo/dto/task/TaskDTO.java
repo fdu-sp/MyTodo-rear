@@ -1,17 +1,16 @@
 package com.zmark.mytodo.dto.task;
 
+import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
+import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.*;
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
-import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,22 +47,6 @@ public class TaskDTO {
     private Timestamp createTime;
 
     private Timestamp updateTime;
-
-    public static TaskDTO from(Task task) {
-        return TaskDTO.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .completed(task.getCompleted())
-                .completedTime(task.getCompletedTime())
-                .archived(task.getArchived())
-                .tags(new ArrayList<>())
-                .taskContentInfo(task.getTaskContentInfo())
-                .taskPriorityInfo(task.getTaskPriorityInfo())
-                .taskTimeInfo(task.getTaskTimeInfo())
-                .createTime(task.getCreateTime())
-                .updateTime(task.getUpdateTime())
-                .build();
-    }
 
     public static TaskDTO from(Task task, List<Tag> tags) {
         return TaskDTO.builder()
