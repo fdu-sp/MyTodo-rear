@@ -102,13 +102,13 @@ public class MyDayTaskService implements IMyDayTaskService {
     public RecommendMyDayDTO getRecommendTasks() {
         // 截止日期为今天的任务
         RecommendTaskListDTO tasksEndToday = RecommendTaskListDTO.builder()
-                .title("今天到期")
+                .title("今天")
                 .taskDTOList(taskService.getTasksEndToday())
                 .build();
         tasksEndToday.removeCompletedTasks();
         // 截止日期为之后三天的任务
         RecommendTaskListDTO tasksEndInThreeDays = RecommendTaskListDTO.builder()
-                .title("三天内到期")
+                .title("三天内")
                 .taskDTOList(taskService.getTasksEndBetweenDate(TimeUtils.afterDays(1), TimeUtils.afterDays(3)))
                 .build();
         tasksEndInThreeDays.removeCompletedTasks();
@@ -120,13 +120,13 @@ public class MyDayTaskService implements IMyDayTaskService {
         tasksEndInFourToSevenDays.removeCompletedTasks();
         // 已经过期，但是没有完成的任务
         RecommendTaskListDTO uncompletedTasksEndBeforeToday = RecommendTaskListDTO.builder()
-                .title("已经过期，但是没有完成的任务")
+                .title("先前")
                 .taskDTOList(taskService.getUncompletedTasksEndBeforeToday())
                 .build();
         uncompletedTasksEndBeforeToday.removeCompletedTasks();
         // 最新一天创建的任务
         RecommendTaskListDTO latestCreatedTasks = RecommendTaskListDTO.builder()
-                .title("最新一天创建的任务")
+                .title("最近添加")
                 .taskDTOList(taskService.getTasksCreatedBetween(TimeUtils.before(1), TimeUtils.now()))
                 .build();
         latestCreatedTasks.removeCompletedTasks();
