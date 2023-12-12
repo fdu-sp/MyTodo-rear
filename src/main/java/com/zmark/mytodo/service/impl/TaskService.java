@@ -32,6 +32,7 @@ public class TaskService implements ITaskService {
     private final TagDAO tagDAO;
     private final TaskListDAO taskListDAO;
     private final TaskTimeInfoDAO taskTimeInfoDAO;
+    private final MyDayTaskDAO myDayTaskDAO;
 
     private final ITagService tagService;
 
@@ -41,12 +42,14 @@ public class TaskService implements ITaskService {
                        TagDAO tagDAO,
                        TaskListDAO taskListDAO,
                        TaskTimeInfoDAO taskTimeInfoDAO,
+                       MyDayTaskDAO myDayTaskDAO,
                        TagService tagService) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
         this.tagDAO = tagDAO;
         this.taskListDAO = taskListDAO;
         this.taskTimeInfoDAO = taskTimeInfoDAO;
+        this.myDayTaskDAO = myDayTaskDAO;
         this.tagService = tagService;
     }
 
@@ -60,7 +63,7 @@ public class TaskService implements ITaskService {
         for (TaskTagMatch match : tagMatches) {
             tags.add(tagDAO.findTagById(match.getTagId()));
         }
-        return TaskDTO.from(task, tags);
+        return TaskDTO.from(task, tags, isTaskInMyDay(task.getId()));
     }
 
     @Override
@@ -117,7 +120,7 @@ public class TaskService implements ITaskService {
             taskTagMatchDAO.save(match);
         }
         log.info("createNewTask succeed, task: {}", taskCreateReq);
-        return TaskDTO.from(task, tagList);
+        return TaskDTO.from(task, tagList, isTaskInMyDay(taskId));
     }
 
     @Override
@@ -181,5 +184,9 @@ public class TaskService implements ITaskService {
     public List<TaskDTO> getTasksCreatedBetween(Timestamp start, Timestamp end) {
         List<Task> taskList = taskDAO.findAllByCreateTimeIsGreaterThanEqualAndCreateTimeIsLessThanEqual(start, end);
         return taskList.stream().map(this::toDTO).toList();
+    }
+
+    private boolean isTaskInMyDay(Long taskId) {
+        return myDayTaskDAO.findMyDayTaskByTaskId(taskId) != null;
     }
 }
