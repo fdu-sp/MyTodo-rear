@@ -30,11 +30,17 @@ public class TimeUtils {
     }
 
     public static Date toDate(String date) {
-        return Optional.ofNullable(date).map(Date::valueOf).orElse(null);
+        if (date == null || date.isEmpty()) {
+            return null;
+        }
+        return Optional.of(date).map(Date::valueOf).orElse(null);
     }
 
     public static Time toTime(String time) {
-        return Optional.ofNullable(time)
+        if (time == null || time.isEmpty()) {
+            return null;
+        }
+        return Optional.of(time)
                 .map(s -> {
                     try {
                         return new Time(new SimpleDateFormat("HH:mm:ss").parse(s + ":00").getTime());
