@@ -51,7 +51,7 @@ public class MyDayTaskController {
             myDayTaskService.removeFromMyDayList(taskId);
             return ResultFactory.buildSuccessResult();
         } catch (RuntimeException e) {
-            log.error("removeFromMyDayList error" + e.getMessage(), e);
+            log.error("removeFromMyDayList error " + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
         } catch (NoDataInDataBaseException e) {
             log.error("removeFromMyDayList error" + e.getMessage(), e);
