@@ -21,7 +21,7 @@ public interface IMyDayTaskService {
 
     List<TaskDTO> getMyDayList();
 
-    TaskListSimpleDTO getMyDayTaskList();
+    TaskListSimpleDTO getMyDayTaskListSimple();
 
     RecommendMyDayDTO getRecommendTasks();
 }

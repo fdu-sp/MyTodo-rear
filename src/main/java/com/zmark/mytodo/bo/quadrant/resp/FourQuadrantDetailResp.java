@@ -1,5 +1,6 @@
 package com.zmark.mytodo.bo.quadrant.resp;
 
+import com.zmark.mytodo.bo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FourQuadrantDetailResp {
+    private TaskListSimpleResp taskListInfo;
     private OneQuadrantDetailResp urgentAndImportant;
     private OneQuadrantDetailResp urgentAndNotImportant;
     private OneQuadrantDetailResp notUrgentAndImportant;

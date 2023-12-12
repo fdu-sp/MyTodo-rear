@@ -77,7 +77,7 @@ public class MyDayTaskService implements IMyDayTaskService {
     }
 
     @Override
-    public TaskListSimpleDTO getMyDayTaskList() {
+    public TaskListSimpleDTO getMyDayTaskListSimple() {
         return TaskListSimpleDTO.builder()
                 .id(0L)
                 .name("我的一天")

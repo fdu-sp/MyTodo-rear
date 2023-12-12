@@ -42,7 +42,7 @@ public class TaskListController {
     @GetMapping("/api/task-list/simple/my-day")
     public Result getMyDayTaskList() {
         try {
-            TaskListSimpleDTO taskListSimpleDTO = myDayTaskService.getMyDayTaskList();
+            TaskListSimpleDTO taskListSimpleDTO = myDayTaskService.getMyDayTaskListSimple();
             return ResultFactory.buildSuccessResult(taskListSimpleDTO.toSimpleResp());
         } catch (RuntimeException e) {
             log.error("getMyDayTaskList error" + e.getMessage(), e);

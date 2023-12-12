@@ -3,6 +3,7 @@ package com.zmark.mytodo.service.impl;
 import com.zmark.mytodo.bo.quadrant.resp.FourQuadrantDetailResp;
 import com.zmark.mytodo.bo.quadrant.resp.OneQuadrantDetailResp;
 import com.zmark.mytodo.dto.list.TaskListDTO;
+import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskPriorityInfo;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
@@ -35,17 +36,17 @@ public class FourQuadrantService implements IFourQuadrantService {
     @Override
     public FourQuadrantDetailResp getFourQuadrantDetailByList(Long taskListId) throws NoDataInDataBaseException {
         TaskListDTO taskListDTO = taskListService.findById(taskListId);
-        List<TaskDTO> taskDTOList = taskListDTO.getTaskDTOList();
-        return covertFrom(taskDTOList);
+        return covertFrom(taskListDTO.getTaskDTOList(), taskListDTO.toSimpleDTO());
     }
 
     @Override
     public FourQuadrantDetailResp getFourQuadrantDetailByMyDay() {
         List<TaskDTO> taskDTOList = myDayTaskService.getMyDayList();
-        return covertFrom(taskDTOList);
+        TaskListSimpleDTO taskListSimpleDTO = myDayTaskService.getMyDayTaskListSimple();
+        return covertFrom(taskDTOList, taskListSimpleDTO);
     }
 
-    private FourQuadrantDetailResp covertFrom(List<TaskDTO> taskDTOList) {
+    private FourQuadrantDetailResp covertFrom(List<TaskDTO> taskDTOList, TaskListSimpleDTO taskListSimpleDTO) {
         OneQuadrantDetailResp urgentAndImportant = new OneQuadrantDetailResp("紧急且重要");
         OneQuadrantDetailResp urgentAndNotImportant = new OneQuadrantDetailResp("紧急不重要");
         OneQuadrantDetailResp notUrgentAndImportant = new OneQuadrantDetailResp("不紧急但重要");
@@ -64,6 +65,7 @@ public class FourQuadrantService implements IFourQuadrantService {
             }
         });
         return FourQuadrantDetailResp.builder()
+                .taskListInfo(taskListSimpleDTO.toSimpleResp())
                 .urgentAndImportant(urgentAndImportant)
                 .urgentAndNotImportant(urgentAndNotImportant)
                 .notUrgentAndImportant(notUrgentAndImportant)
