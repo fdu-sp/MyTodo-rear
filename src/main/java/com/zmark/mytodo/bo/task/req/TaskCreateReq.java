@@ -33,6 +33,7 @@ public class TaskCreateReq {
     private String description;
 
     private Long taskListId;
+    private Boolean inMyDay;
 
     /**
      * priority info

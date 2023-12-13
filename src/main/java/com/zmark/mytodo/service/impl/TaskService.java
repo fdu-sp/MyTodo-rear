@@ -126,6 +126,15 @@ public class TaskService implements ITaskService {
                     .build();
             taskTagMatchDAO.save(match);
         }
+        // 如果是 MyDayTask，保存 MyDayTask
+        if (taskCreateReq.getInMyDay() != null
+                && taskCreateReq.getInMyDay()
+                && !isTaskInMyDay(taskId)) {
+            MyDayTask myDayTask = MyDayTask.builder()
+                    .taskId(taskId)
+                    .build();
+            myDayTaskDAO.save(myDayTask);
+        }
         log.info("createNewTask succeed, task: {}", taskCreateReq);
         TaskList taskList1 = taskListDAO.findTaskListById(taskListId);
         if (taskList1 == null) {
