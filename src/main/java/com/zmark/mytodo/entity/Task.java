@@ -78,6 +78,7 @@ public class Task {
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
                 .endDate(TimeUtils.toDate(req.getEndDate()))
                 .endTime(TimeUtils.toTime(req.getEndTime()))
+                .reminderTimestamp(TimeUtils.toTimestamp(req.getReminderTimestamp()))
                 .activateCountdown(req.getActivateCountdown() != null && req.getActivateCountdown())
                 .expectedExecutionDate(req.getExpectedExecutionDate())
                 .expectedExecutionStartPeriod(TimeUtils.toTime(req.getExpectedExecutionStartPeriod()))

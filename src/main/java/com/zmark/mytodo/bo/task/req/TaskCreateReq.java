@@ -45,6 +45,7 @@ public class TaskCreateReq {
      */
     private String endDate;
     private String endTime;
+    private String reminderTimestamp;
     private Boolean activateCountdown;
     private Date expectedExecutionDate;
     private String expectedExecutionStartPeriod;

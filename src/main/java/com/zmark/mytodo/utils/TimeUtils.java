@@ -89,4 +89,14 @@ public class TimeUtils {
     public static Date afterDays(int dayNum) {
         return new Date(System.currentTimeMillis() + (long) dayNum * 24 * 60 * 60 * 1000);
     }
+
+    /**
+     * 解析Timestamp字符串，如果timestampStr为null，则返回null
+     */
+    public static Timestamp toTimestamp(String timestampStr) {
+        if (timestampStr == null || timestampStr.isEmpty()) {
+            return null;
+        }
+        return Optional.of(timestampStr).map(Timestamp::valueOf).orElse(null);
+    }
 }
