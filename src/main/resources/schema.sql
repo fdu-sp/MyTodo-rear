@@ -79,6 +79,7 @@ CREATE TABLE `task_time_info`
     `task_id`                         BIGINT  NOT NULL COMMENT '任务id',
     `end_date`                        date             DEFAULT NULL COMMENT '截止日期',
     `end_time`                        time             DEFAULT NULL COMMENT '截止时间',
+    `reminder_timestamp`              timestamp        DEFAULT NULL COMMENT '提醒时间戳',
     `activate_countdown`              boolean NOT NULL DEFAULT FALSE COMMENT '是否激活倒计时',
     `expected_execution_date`         date             DEFAULT NULL COMMENT '预计执行日期',
     `expected_execution_start_period` time             DEFAULT NULL COMMENT '预计执行开始时间段',

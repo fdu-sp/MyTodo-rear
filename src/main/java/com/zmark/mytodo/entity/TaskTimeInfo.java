@@ -1,8 +1,8 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.bo.task.resp.inner.TaskTimeInfoResp;
+import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +36,10 @@ public class TaskTimeInfo {
     @Builder.Default
     private Time endTime = null;
 
+    @Column(name = "reminder_timestamp")
+    @Builder.Default
+    private Timestamp reminderTimestamp = null;
+
     @Column(name = "activate_countdown")
     @Builder.Default
     private Boolean activateCountdown = false;
@@ -56,6 +60,7 @@ public class TaskTimeInfo {
         return TaskTimeInfoResp.builder()
                 .endDate(taskTimeInfo.getEndDate())
                 .endTime(taskTimeInfo.getEndTime())
+                .reminderTimestamp(taskTimeInfo.getReminderTimestamp())
                 .activateCountdown(taskTimeInfo.getActivateCountdown())
                 .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
                 .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())

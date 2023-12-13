@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * @author ZMark
@@ -21,6 +22,7 @@ import java.sql.Time;
 public class TaskTimeInfoResp {
     private Date endDate;
     private Time endTime;
+    private Timestamp reminderTimestamp;
     private Boolean activateCountdown;
     private Date expectedExecutionDate;
     private Time expectedExecutionStartPeriod;
