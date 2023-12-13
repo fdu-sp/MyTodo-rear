@@ -63,7 +63,14 @@ public class TaskService implements ITaskService {
         for (TaskTagMatch match : tagMatches) {
             tags.add(tagDAO.findTagById(match.getTagId()));
         }
-        return TaskDTO.from(task, tags, isTaskInMyDay(task.getId()));
+        TaskList taskList = taskListDAO.findTaskListById(task.getTaskListId());
+        if (taskList == null) {
+            taskList = TaskList.builder()
+                    .id(TaskList.DEFAULT_LIST_ID)
+                    .name("默认清单")
+                    .build();
+        }
+        return TaskDTO.from(task, tags, isTaskInMyDay(task.getId()), taskList);
     }
 
     @Override
@@ -120,7 +127,14 @@ public class TaskService implements ITaskService {
             taskTagMatchDAO.save(match);
         }
         log.info("createNewTask succeed, task: {}", taskCreateReq);
-        return TaskDTO.from(task, tagList, isTaskInMyDay(taskId));
+        TaskList taskList1 = taskListDAO.findTaskListById(taskListId);
+        if (taskList1 == null) {
+            taskList1 = TaskList.builder()
+                    .id(TaskList.DEFAULT_LIST_ID)
+                    .name("默认清单")
+                    .build();
+        }
+        return TaskDTO.from(task, tagList, isTaskInMyDay(taskId), taskList1);
     }
 
     @Override

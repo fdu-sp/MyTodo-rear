@@ -40,6 +40,8 @@ public class TaskDTO {
 
     private Long taskListId;
 
+    private String taskListName;
+
     private Boolean inMyDay;
 
     private TaskContentInfo taskContentInfo;
@@ -52,7 +54,7 @@ public class TaskDTO {
 
     private Timestamp updateTime;
 
-    public static TaskDTO from(Task task, List<Tag> tags, Boolean inMyDay) {
+    public static TaskDTO from(Task task, List<Tag> tags, Boolean inMyDay, TaskList taskList) {
         return TaskDTO.builder()
                 .id(task.getId())
                 .title(task.getTitle())
@@ -61,6 +63,7 @@ public class TaskDTO {
                 .archived(task.getArchived())
                 .tags(tags)
                 .taskListId(task.getTaskListId())
+                .taskListName(taskList.getName())
                 .inMyDay(inMyDay)
                 .taskContentInfo(task.getTaskContentInfo())
                 .taskPriorityInfo(task.getTaskPriorityInfo())
@@ -80,6 +83,7 @@ public class TaskDTO {
                 .tags(TagDTO.toSimpleRespFromTag(taskDTO.getTags()))
                 .inMyDay(taskDTO.getInMyDay())
                 .taskListId(taskDTO.getTaskListId())
+                .taskListName(taskDTO.getTaskListName())
                 .taskContentInfo(TaskContentInfo.from(taskDTO.getTaskContentInfo()))
                 .taskPriorityInfo(TaskPriorityInfo.from(taskDTO.getTaskPriorityInfo()))
                 .taskTimeInfo(TaskTimeInfo.from(taskDTO.getTaskTimeInfo()))

@@ -27,6 +27,7 @@ public class TaskDetailResp {
     private Boolean archived;
     private List<TagSimpleResp> tags;
     private Long taskListId;
+    private String taskListName;
     private Boolean inMyDay;
     private TaskContentInfoResp taskContentInfo;
     private TaskPriorityInfoResp taskPriorityInfo;
