@@ -68,6 +68,19 @@ public class TaskTimeInfo {
                 .build();
     }
 
+    public static TaskTimeInfo fromTaskTimeInfoResp(Task task, TaskTimeInfoResp taskTimeInfo) {
+        return TaskTimeInfo.builder()
+                .task(task)
+                .endDate(taskTimeInfo.getEndDate())
+                .endTime(taskTimeInfo.getEndTime())
+                .reminderTimestamp(taskTimeInfo.getReminderTimestamp())
+                .activateCountdown(taskTimeInfo.getActivateCountdown())
+                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
+                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
+                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
+                .build();
+    }
+
     /**
      * 返回任务的截止时间，如果没有设置，则返回null
      */

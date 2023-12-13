@@ -1,6 +1,7 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.dto.list.TaskListDTO;
@@ -139,9 +140,20 @@ public class TaskController {
     }
 
     @PostMapping("/api/task/update")
-    public Result updateTask() {
-        // // TODO: 2023/12/3 或许需要拆的更细致一些
-        return ResultFactory.buildSuccessResult("todo...", null);
+    public Result updateTask(@RequestBody @Validated TaskUpdateReq taskUpdateReq) {
+        try {
+            TaskDTO taskDTO = taskService.updateTask(taskUpdateReq);
+            return ResultFactory.buildSuccessResult("更新成功", TaskDTO.toDetailResp(taskDTO));
+        } catch (RuntimeException e) {
+            log.error("updateTask error, taskUpdateReq: {}", taskUpdateReq, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        } catch (NoDataInDataBaseException e) {
+            log.warn("updateTask error, taskUpdateReq: {}", taskUpdateReq, e);
+            return ResultFactory.buildNotFoundResult(e.getMessage());
+        } catch (NewEntityException e) {
+            log.error("updateTask error, taskUpdateReq: {}", taskUpdateReq, e);
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
     }
 
     @PostMapping("/api/task/complete/{task-id}")

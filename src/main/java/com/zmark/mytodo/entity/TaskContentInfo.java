@@ -1,8 +1,8 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.bo.task.resp.inner.TaskContentInfoResp;
+import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,6 +43,13 @@ public class TaskContentInfo {
                 .description(taskContentInfo.getDescription())
                 .createTime(taskContentInfo.getCreateTime().toString())
                 .updateTime(taskContentInfo.getCreateTime().toString())
+                .build();
+    }
+
+    public static TaskContentInfo fromTaskContentInfoResp(Task task, TaskContentInfoResp taskContentInfo) {
+        return TaskContentInfo.builder()
+                .task(task)
+                .description(taskContentInfo.getDescription())
                 .build();
     }
 }

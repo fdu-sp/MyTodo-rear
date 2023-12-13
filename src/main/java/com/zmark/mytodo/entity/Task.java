@@ -2,6 +2,7 @@ package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
@@ -56,6 +57,25 @@ public class Task {
     @Column(nullable = false, name = "update_time")
     @Builder.Default
     private Timestamp updateTime = TimeUtils.now();
+
+    public static Task fromTaskUpdateReq(TaskUpdateReq taskUpdateReq) {
+        Task task = Task.builder()
+                .id(taskUpdateReq.getId())
+                .title(taskUpdateReq.getTitle())
+                .completed(taskUpdateReq.getCompleted())
+                .completedTime(TimeUtils.toTimestamp(taskUpdateReq.getCompletedTime()))
+                .taskListId(taskUpdateReq.getTaskListId())
+                .archived(taskUpdateReq.getArchived())
+                .updateTime(TimeUtils.now())
+                .build();
+        TaskContentInfo taskContentInfo = TaskContentInfo.fromTaskContentInfoResp(task, taskUpdateReq.getTaskContentInfo());
+        TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.fromTaskPriorityInfoResp(task, taskUpdateReq.getTaskPriorityInfo());
+        TaskTimeInfo taskTimeInfo = TaskTimeInfo.fromTaskTimeInfoResp(task, taskUpdateReq.getTaskTimeInfo());
+        task.setTaskContentInfo(taskContentInfo);
+        task.setTaskPriorityInfo(taskPriorityInfo);
+        task.setTaskTimeInfo(taskTimeInfo);
+        return task;
+    }
 
     public void complete() {
         this.completed = true;

@@ -1,6 +1,8 @@
 package com.zmark.mytodo.service.impl;
 
+import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.dao.*;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.*;
@@ -97,17 +99,23 @@ public class TaskService implements ITaskService {
     @Override
     @Transactional
     public TaskDTO createNewTask(TaskCreateReq taskCreateReq) throws NewEntityException, NoDataInDataBaseException {
+        TaskDTO taskDTO = this.saveOrUpdate(Task.fromTaskCreatReq(taskCreateReq), taskCreateReq.getTagNames(), taskCreateReq.getInMyDay());
+        log.info("createNewTask succeed, task: {}", taskCreateReq);
+        return taskDTO;
+    }
+
+    private TaskDTO saveOrUpdate(Task task, List<String> tagNameList, Boolean inMyDay) throws NoDataInDataBaseException, NewEntityException {
         // 检查taskList是否存在
-        Long taskListId = taskCreateReq.getTaskListId();
+        Long taskListId = task.getTaskListId();
         taskListId = taskListId == null ? TaskList.DEFAULT_LIST_ID : taskListId;
         Optional<TaskList> taskList = taskListDAO.findById(taskListId);
         if (taskList.isEmpty()) {
             throw new NoDataInDataBaseException("找不到id为" + taskListId + "的任务清单");
         }
-        taskCreateReq.setTaskListId(taskListId);
-        // 保存tags
+        task.setTaskListId(taskListId);
+        // 保存新增的 tags
         List<Tag> tagList = new ArrayList<>();
-        for (String tagName : taskCreateReq.getTagNames()) {
+        for (String tagName : tagNameList) {
             Tag tag = tagDAO.findByTagName(tagName);
             if (tag == null) {
                 tag = tagService.createNewTag(tagName);
@@ -115,11 +123,15 @@ public class TaskService implements ITaskService {
             tagList.add(tag);
         }
         // 保存task
-        Task task = Task.fromTaskCreatReq(taskCreateReq);
         taskDAO.save(task);
         // 保存 Tags 和 Task 的关联关系
         Long taskId = task.getId();
         for (Tag tag : tagList) {
+            // 如果已经存在关联关系，跳过
+            List<TaskTagMatch> taskTagMatchList = taskTagMatchDAO.findAllByTagIdAndTaskId(tag.getId(), taskId);
+            if (!taskTagMatchList.isEmpty()) {
+                continue;
+            }
             TaskTagMatch match = TaskTagMatch.builder()
                     .taskId(taskId)
                     .tagId(tag.getId())
@@ -127,15 +139,13 @@ public class TaskService implements ITaskService {
             taskTagMatchDAO.save(match);
         }
         // 如果是 MyDayTask，保存 MyDayTask
-        if (taskCreateReq.getInMyDay() != null
-                && taskCreateReq.getInMyDay()
+        if (inMyDay != null && inMyDay
                 && !isTaskInMyDay(taskId)) {
             MyDayTask myDayTask = MyDayTask.builder()
                     .taskId(taskId)
                     .build();
             myDayTaskDAO.save(myDayTask);
         }
-        log.info("createNewTask succeed, task: {}", taskCreateReq);
         TaskList taskList1 = taskListDAO.findTaskListById(taskListId);
         if (taskList1 == null) {
             taskList1 = TaskList.builder()
@@ -144,6 +154,15 @@ public class TaskService implements ITaskService {
                     .build();
         }
         return TaskDTO.from(task, tagList, isTaskInMyDay(taskId), taskList1);
+    }
+
+    @Override
+    @Transactional
+    public TaskDTO updateTask(TaskUpdateReq taskUpdateReq) throws NoDataInDataBaseException, NewEntityException {
+        List<String> tagNameList = taskUpdateReq.getTags().stream().map(TagSimpleResp::getTagPath).toList();
+        TaskDTO taskDTO = this.saveOrUpdate(Task.fromTaskUpdateReq(taskUpdateReq), tagNameList, taskUpdateReq.getInMyDay());
+        log.info("updateTask succeed, task: {}", taskUpdateReq);
+        return taskDTO;
     }
 
     @Override
