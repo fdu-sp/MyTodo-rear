@@ -26,6 +26,8 @@ public class TaskCreateReq {
     @NotNull(message = "任务标签必填")
     private List<String> tagNames;
 
+    private Boolean completed;
+
     /**
      * content description
      */
