@@ -29,6 +29,10 @@ public class TimeUtils {
         return Optional.ofNullable(date).map(Date::toString).orElse(null);
     }
 
+    public static String toString(Time time) {
+        return Optional.ofNullable(time).map(Time::toString).orElse(null);
+    }
+
     public static Date toDate(String date) {
         if (date == null || date.isEmpty()) {
             return null;

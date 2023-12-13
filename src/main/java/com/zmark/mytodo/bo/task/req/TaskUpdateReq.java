@@ -28,7 +28,6 @@ public class TaskUpdateReq {
     private String title;
     @NotNull
     private Boolean completed;
-    @NotNull
     private String completedTime;
     @NotNull
     private Boolean archived;

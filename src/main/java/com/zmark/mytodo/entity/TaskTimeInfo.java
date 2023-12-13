@@ -58,26 +58,26 @@ public class TaskTimeInfo {
 
     public static TaskTimeInfoResp from(TaskTimeInfo taskTimeInfo) {
         return TaskTimeInfoResp.builder()
-                .endDate(taskTimeInfo.getEndDate())
-                .endTime(taskTimeInfo.getEndTime())
-                .reminderTimestamp(taskTimeInfo.getReminderTimestamp())
+                .endDate(TimeUtils.toString(taskTimeInfo.getEndDate()))
+                .endTime(TimeUtils.toString(taskTimeInfo.getEndTime()))
+                .reminderTimestamp(TimeUtils.toString(taskTimeInfo.getReminderTimestamp()))
                 .activateCountdown(taskTimeInfo.getActivateCountdown())
-                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
-                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
-                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
+                .expectedExecutionDate(TimeUtils.toString(taskTimeInfo.getExpectedExecutionDate()))
+                .expectedExecutionStartPeriod(TimeUtils.toString(taskTimeInfo.getExpectedExecutionStartPeriod()))
+                .expectedExecutionEndPeriod(TimeUtils.toString(taskTimeInfo.getExpectedExecutionEndPeriod()))
                 .build();
     }
 
     public static TaskTimeInfo fromTaskTimeInfoResp(Task task, TaskTimeInfoResp taskTimeInfo) {
         return TaskTimeInfo.builder()
                 .task(task)
-                .endDate(taskTimeInfo.getEndDate())
-                .endTime(taskTimeInfo.getEndTime())
-                .reminderTimestamp(taskTimeInfo.getReminderTimestamp())
+                .endDate(TimeUtils.toDate(taskTimeInfo.getEndDate()))
+                .endTime(TimeUtils.toTime(taskTimeInfo.getEndTime()))
+                .reminderTimestamp(TimeUtils.toTimestamp(taskTimeInfo.getReminderTimestamp()))
                 .activateCountdown(taskTimeInfo.getActivateCountdown())
-                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
-                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
-                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
+                .expectedExecutionDate(TimeUtils.toDate(taskTimeInfo.getExpectedExecutionDate()))
+                .expectedExecutionStartPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionStartPeriod()))
+                .expectedExecutionEndPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionEndPeriod()))
                 .build();
     }
 
