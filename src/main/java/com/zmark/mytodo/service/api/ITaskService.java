@@ -45,6 +45,9 @@ public interface ITaskService {
     @Transactional
     TaskDTO updateTask(TaskUpdateReq taskUpdateReq) throws NoDataInDataBaseException, NewEntityException;
 
+    @Transactional
+    void deleteTaskById(Long taskId) throws NoDataInDataBaseException;
+
     /**
      * 标记任务为已完成
      *

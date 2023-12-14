@@ -166,6 +166,23 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    @Transactional
+    public void deleteTaskById(Long taskId) throws NoDataInDataBaseException {
+        Task task = taskDAO.findTaskById(taskId);
+        if (task == null) {
+            throw new NoDataInDataBaseException("找不到id为" + taskId + "的任务");
+        }
+        // 删除 MyDayTask
+        MyDayTask myDayTask = myDayTaskDAO.findMyDayTaskByTaskId(taskId);
+        if (myDayTask != null) {
+            myDayTaskDAO.delete(myDayTask);
+        }
+        // 删除 TaskTagMatch
+        taskTagMatchDAO.deleteAllByTaskId(taskId);
+        taskDAO.delete(task);
+    }
+
+    @Override
     public void completeTask(Long taskId) throws NoDataInDataBaseException {
         Task task = taskDAO.findTaskById(taskId);
         if (task == null) {

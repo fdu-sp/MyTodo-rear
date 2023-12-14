@@ -134,9 +134,17 @@ public class TaskController {
     }
 
     @PostMapping("/api/task/delete/{task-id}")
-    public Result deleteTaskById(@PathVariable("task-id") int taskId) {
-        // todo
-        return ResultFactory.buildSuccessResult("todo...", null);
+    public Result deleteTaskById(@PathVariable("task-id") Long taskId) {
+        try {
+            taskService.deleteTaskById(taskId);
+            return ResultFactory.buildSuccessResult("删除成功", null);
+        } catch (NoDataInDataBaseException e) {
+            log.warn("deleteTaskById error, taskId: {}", taskId, e);
+            return ResultFactory.buildNotFoundResult(e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("deleteTaskById error, taskId: {}", taskId, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
     }
 
     @PostMapping("/api/task/update")
