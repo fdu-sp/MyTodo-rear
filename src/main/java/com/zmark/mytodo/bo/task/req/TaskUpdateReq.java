@@ -32,7 +32,6 @@ public class TaskUpdateReq {
     @NotNull
     private Boolean archived;
     @NotNull
-    @NotEmpty
     private List<TagSimpleResp> tags;
     @NotNull
     private Long taskListId;
