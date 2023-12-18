@@ -1,6 +1,7 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
+import com.zmark.mytodo.bo.list.req.TaskListUpdateReq;
 import com.zmark.mytodo.dto.list.TaskListDTO;
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
@@ -77,6 +78,20 @@ public class TaskListController {
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (Exception e) {
             log.error("创建任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @PostMapping("/api/task-list/update-info")
+    public Result update(@Validated @RequestBody TaskListUpdateReq updateReq) {
+        try {
+            TaskListDTO taskListDTO = taskListService.updateTaskList(updateReq);
+            return ResultFactory.buildSuccessResult(taskListDTO.toSimpleResp());
+        } catch (NoDataInDataBaseException | RepeatedEntityInDatabase e) {
+            log.warn("更新任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(e.getMessage());
+        } catch (Exception e) {
+            log.error("更新任务列表失败！" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }
