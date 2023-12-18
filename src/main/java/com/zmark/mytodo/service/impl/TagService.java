@@ -70,7 +70,7 @@ public class TagService implements ITagService {
         // 按照/分割tag
         String[] tags = tagPath.split("/");
         // 从第一个tag开始，如果不存在，则依次创建tag
-        // 使用事务进行控制，如果重名tag存在于其他层级中，则抛出异常，回滚事务
+        // 如果重名tag存在于其他层级中，则抛出异常，回滚事务
         Tag parentTag = null;
         for (String tagName : tags) {
             Tag tagEntity = tagDAO.findByTagName(tagName);
