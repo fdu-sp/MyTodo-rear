@@ -121,6 +121,11 @@ public class TaskService implements ITaskService {
                 tag = tagService.createNewTag(tagName);
             }
             tagList.add(tag);
+            // 父级tag也和当前任务建立match关系
+            while (tag.getParentTag() != null) {
+                tag = tag.getParentTag();
+                tagList.add(tag);
+            }
         }
         // 保存task
         taskDAO.save(task);
