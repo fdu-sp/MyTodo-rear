@@ -2,6 +2,7 @@ package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zmark.mytodo.bo.task.resp.inner.TaskTimeInfoResp;
+import com.zmark.mytodo.dto.reminder.TaskReminderInfo;
 import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +10,7 @@ import lombok.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -79,6 +81,17 @@ public class TaskTimeInfo {
                 .expectedExecutionStartPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionStartPeriod()))
                 .expectedExecutionEndPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionEndPeriod()))
                 .build();
+    }
+
+    public TaskReminderInfo toTaskReminderInfo() {
+        return TaskReminderInfo.builder()
+                .taskId(task.getId())
+                .reminderTimestamp(reminderTimestamp)
+                .build();
+    }
+
+    public static List<TaskReminderInfo> toTaskReminderInfoList(List<TaskTimeInfo> taskTimeInfoList) {
+        return taskTimeInfoList.stream().map(TaskTimeInfo::toTaskReminderInfo).toList();
     }
 
     /**
