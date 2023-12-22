@@ -103,4 +103,11 @@ public class TimeUtils {
         }
         return Optional.of(timestampStr).map(Timestamp::valueOf).orElse(null);
     }
+
+    /**
+     * 判断timestampAfter是否在timestampBefore之后
+     */
+    public static boolean isAfter(Timestamp timestampBefore, Timestamp timestampAfter) {
+        return timestampAfter != null && timestampBefore != null && timestampAfter.after(timestampBefore);
+    }
 }

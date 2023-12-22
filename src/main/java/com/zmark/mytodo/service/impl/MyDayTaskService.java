@@ -15,6 +15,7 @@ import com.zmark.mytodo.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +29,13 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     private final MyDayTaskDAO myDayTaskDAO;
 
+    private Timestamp timestampBefore;
+
     @Autowired
     public MyDayTaskService(ITaskService taskService, MyDayTaskDAO myDayTaskDAO) {
         this.taskService = taskService;
         this.myDayTaskDAO = myDayTaskDAO;
+        this.timestampBefore = TimeUtils.now();
     }
 
     @Override
@@ -67,6 +71,7 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     @Override
     public List<TaskDTO> getMyDayList() {
+        this.checkAndUpdate();
         List<MyDayTask> myDayTaskList = myDayTaskDAO.findAll();
         List<TaskDTO> taskDTOList = new ArrayList<>();
         for (MyDayTask myDayTask : myDayTaskList) {
@@ -74,6 +79,35 @@ public class MyDayTaskService implements IMyDayTaskService {
             taskDTOList.add(taskDTO);
         }
         return taskDTOList;
+    }
+
+    /*
+     * 更新我的一天列表
+     * */
+    private void checkAndUpdate() {
+        Timestamp timestampNow = TimeUtils.now();
+        if (!TimeUtils.isAfter(timestampBefore, timestampNow)) {
+            return;
+        }
+        // 如果是第二天了，就更新我的一天列表
+        timestampBefore = timestampNow;
+        List<MyDayTask> myDayTaskList = myDayTaskDAO.findAll();
+        for (MyDayTask myDayTask : myDayTaskList) {
+            TaskDTO taskDTO = taskService.findTaskById(myDayTask.getTaskId());
+            if (taskDTO == null) {
+                myDayTaskDAO.delete(myDayTask);
+            }
+        }
+        // 将截止日期为今天的任务添加到我的一天列表中
+        List<TaskDTO> tasksEndToday = taskService.getTasksEndToday();
+        for (TaskDTO taskDTO : tasksEndToday) {
+            if (!myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
+                MyDayTask myDayTask = MyDayTask.builder()
+                        .taskId(taskDTO.getId())
+                        .build();
+                myDayTaskDAO.save(myDayTask);
+            }
+        }
     }
 
     @Override
