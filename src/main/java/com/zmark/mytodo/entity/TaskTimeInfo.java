@@ -1,14 +1,16 @@
 package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zmark.mytodo.utils.TimeUtils;
 import com.zmark.mytodo.bo.task.resp.inner.TaskTimeInfoResp;
+import com.zmark.mytodo.dto.reminder.TaskReminderInfo;
+import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -36,6 +38,10 @@ public class TaskTimeInfo {
     @Builder.Default
     private Time endTime = null;
 
+    @Column(name = "reminder_timestamp")
+    @Builder.Default
+    private Timestamp reminderTimestamp = null;
+
     @Column(name = "activate_countdown")
     @Builder.Default
     private Boolean activateCountdown = false;
@@ -54,13 +60,38 @@ public class TaskTimeInfo {
 
     public static TaskTimeInfoResp from(TaskTimeInfo taskTimeInfo) {
         return TaskTimeInfoResp.builder()
-                .endDate(taskTimeInfo.getEndDate())
-                .endTime(taskTimeInfo.getEndTime())
+                .endDate(TimeUtils.toString(taskTimeInfo.getEndDate()))
+                .endTime(TimeUtils.toString(taskTimeInfo.getEndTime()))
+                .reminderTimestamp(TimeUtils.toString(taskTimeInfo.getReminderTimestamp()))
                 .activateCountdown(taskTimeInfo.getActivateCountdown())
-                .expectedExecutionDate(taskTimeInfo.getExpectedExecutionDate())
-                .expectedExecutionStartPeriod(taskTimeInfo.getExpectedExecutionStartPeriod())
-                .expectedExecutionEndPeriod(taskTimeInfo.getExpectedExecutionEndPeriod())
+                .expectedExecutionDate(TimeUtils.toString(taskTimeInfo.getExpectedExecutionDate()))
+                .expectedExecutionStartPeriod(TimeUtils.toString(taskTimeInfo.getExpectedExecutionStartPeriod()))
+                .expectedExecutionEndPeriod(TimeUtils.toString(taskTimeInfo.getExpectedExecutionEndPeriod()))
                 .build();
+    }
+
+    public static TaskTimeInfo fromTaskTimeInfoResp(Task task, TaskTimeInfoResp taskTimeInfo) {
+        return TaskTimeInfo.builder()
+                .task(task)
+                .endDate(TimeUtils.toDate(taskTimeInfo.getEndDate()))
+                .endTime(TimeUtils.toTime(taskTimeInfo.getEndTime()))
+                .reminderTimestamp(TimeUtils.toTimestamp(taskTimeInfo.getReminderTimestamp()))
+                .activateCountdown(taskTimeInfo.getActivateCountdown())
+                .expectedExecutionDate(TimeUtils.toDate(taskTimeInfo.getExpectedExecutionDate()))
+                .expectedExecutionStartPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionStartPeriod()))
+                .expectedExecutionEndPeriod(TimeUtils.toTime(taskTimeInfo.getExpectedExecutionEndPeriod()))
+                .build();
+    }
+
+    public TaskReminderInfo toTaskReminderInfo() {
+        return TaskReminderInfo.builder()
+                .taskId(task.getId())
+                .reminderTimestamp(reminderTimestamp)
+                .build();
+    }
+
+    public static List<TaskReminderInfo> toTaskReminderInfoList(List<TaskTimeInfo> taskTimeInfoList) {
+        return taskTimeInfoList.stream().map(TaskTimeInfo::toTaskReminderInfo).toList();
     }
 
     /**

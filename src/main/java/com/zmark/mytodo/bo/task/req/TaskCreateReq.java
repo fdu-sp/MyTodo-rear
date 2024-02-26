@@ -26,6 +26,8 @@ public class TaskCreateReq {
     @NotNull(message = "任务标签必填")
     private List<String> tagNames;
 
+    private Boolean completed;
+
     /**
      * content description
      */
@@ -33,6 +35,7 @@ public class TaskCreateReq {
     private String description;
 
     private Long taskListId;
+    private Boolean inMyDay;
 
     /**
      * priority info
@@ -45,6 +48,7 @@ public class TaskCreateReq {
      */
     private String endDate;
     private String endTime;
+    private String reminderTimestamp;
     private Boolean activateCountdown;
     private Date expectedExecutionDate;
     private String expectedExecutionStartPeriod;

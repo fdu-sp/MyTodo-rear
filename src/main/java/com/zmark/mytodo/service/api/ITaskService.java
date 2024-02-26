@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.exception.NewEntityException;
@@ -40,6 +41,12 @@ public interface ITaskService {
      */
     @Transactional
     TaskDTO createNewTask(TaskCreateReq taskCreateReq) throws NewEntityException, NoDataInDataBaseException;
+
+    @Transactional
+    TaskDTO updateTask(TaskUpdateReq taskUpdateReq) throws NoDataInDataBaseException, NewEntityException;
+
+    @Transactional
+    void deleteTaskById(Long taskId) throws NoDataInDataBaseException;
 
     /**
      * 标记任务为已完成

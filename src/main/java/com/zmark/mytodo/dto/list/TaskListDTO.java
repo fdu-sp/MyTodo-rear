@@ -1,11 +1,11 @@
 package com.zmark.mytodo.dto.list;
 
+import com.zmark.mytodo.bo.list.resp.TaskListDetailResp;
+import com.zmark.mytodo.bo.list.resp.TaskListSimpleResp;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.utils.TimeUtils;
-import com.zmark.mytodo.bo.list.resp.TaskListDetailResp;
-import com.zmark.mytodo.bo.list.resp.TaskListSimpleResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +36,17 @@ public class TaskListDTO {
     Timestamp createTime;
 
     Timestamp updateTime;
+
+    public TaskListSimpleDTO toSimpleDTO() {
+        return TaskListSimpleDTO.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .groupId(this.groupId)
+                .createTime(this.createTime)
+                .updateTime(this.updateTime)
+                .build();
+    }
 
     public static TaskListDTO from(TaskList taskList, ITaskService taskService) {
         return TaskListDTO.builder()

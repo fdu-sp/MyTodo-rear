@@ -36,4 +36,13 @@ public class RecommendTaskListDTO {
                 .filter(taskDTO -> !taskDTO.getCompleted())
                 .collect(Collectors.toList());
     }
+
+    public void removeTasksInList(RecommendTaskListDTO preRecommendTaskListDTO) {
+        List<Long> preTaskIds = preRecommendTaskListDTO.getTaskDTOList().stream()
+                .map(TaskDTO::getId)
+                .toList();
+        taskDTOList = taskDTOList.stream()
+                .filter(taskDTO -> !preTaskIds.contains(taskDTO.getId()))
+                .collect(Collectors.toList());
+    }
 }

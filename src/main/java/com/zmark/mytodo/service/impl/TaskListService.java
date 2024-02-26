@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
+import com.zmark.mytodo.bo.list.req.TaskListUpdateReq;
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.dto.list.TaskListDTO;
@@ -86,5 +87,43 @@ public class TaskListService implements ITaskListService {
         } else {
             return taskListDAO.countTaskListsByGroupId(taskGroup.getId());
         }
+    }
+
+    @Override
+    public TaskListDTO updateTaskList(TaskListUpdateReq updateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
+        Optional<TaskList> taskListInDataBase = taskListDAO.findById(updateReq.getId());
+        if (taskListInDataBase.isEmpty()) {
+            throw new NoDataInDataBaseException("TaskList", updateReq.getId());
+        }
+        TaskList taskList = taskListInDataBase.get();
+        
+        // name发生了变化
+        if (isNameChanged(taskList, updateReq.getName())) {
+            TaskList taskListByName = taskListDAO.findByNameAndGroupId(updateReq.getName(), updateReq.getTaskGroupId());
+            if (taskListByName != null) {
+                throw RepeatedEntityInDatabase.RepeatEntityName("TaskList", updateReq.getName());
+            }
+            taskList.setName(updateReq.getName());
+        }
+
+        // 分组发生了变化
+        if (!taskList.getGroupId().equals(updateReq.getTaskGroupId())) {
+            Optional<TaskGroup> taskGroup = taskGroupDAO.findById(updateReq.getTaskGroupId());
+            if (taskGroup.isEmpty()) {
+                throw new NoDataInDataBaseException("TaskGroup", updateReq.getTaskGroupId());
+            }
+            taskList.setGroupId(updateReq.getTaskGroupId());
+        }
+
+        // description发生了变化
+        taskList.setDescription(updateReq.getDescription());
+
+        // 更新数据库
+        taskListDAO.save(taskList);
+        return TaskListDTO.from(taskList, taskService);
+    }
+
+    private boolean isNameChanged(TaskList taskList, String newName) {
+        return !taskList.getName().equals(newName);
     }
 }

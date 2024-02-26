@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TaskListDAO extends JpaRepository<TaskList, Long> {
     TaskList findById(long id);
 
+    TaskList findTaskListById(long id);
+
     TaskList findByNameAndGroupId(String name, long groupId);
 
     long countTaskListsByGroupId(long taskGroupId);

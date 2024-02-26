@@ -2,6 +2,7 @@ package com.zmark.mytodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.utils.TimeUtils;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,6 +58,25 @@ public class Task {
     @Builder.Default
     private Timestamp updateTime = TimeUtils.now();
 
+    public static Task fromTaskUpdateReq(TaskUpdateReq taskUpdateReq) {
+        Task task = Task.builder()
+                .id(taskUpdateReq.getId())
+                .title(taskUpdateReq.getTitle())
+                .completed(taskUpdateReq.getCompleted())
+                .completedTime(TimeUtils.toTimestamp(taskUpdateReq.getCompletedTime()))
+                .taskListId(taskUpdateReq.getTaskListId())
+                .archived(taskUpdateReq.getArchived())
+                .updateTime(TimeUtils.now())
+                .build();
+        TaskContentInfo taskContentInfo = TaskContentInfo.fromTaskContentInfoResp(task, taskUpdateReq.getTaskContentInfo());
+        TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.fromTaskPriorityInfoResp(task, taskUpdateReq.getTaskPriorityInfo());
+        TaskTimeInfo taskTimeInfo = TaskTimeInfo.fromTaskTimeInfoResp(task, taskUpdateReq.getTaskTimeInfo());
+        task.setTaskContentInfo(taskContentInfo);
+        task.setTaskPriorityInfo(taskPriorityInfo);
+        task.setTaskTimeInfo(taskTimeInfo);
+        return task;
+    }
+
     public void complete() {
         this.completed = true;
         this.completedTime = new Timestamp(System.currentTimeMillis());
@@ -78,6 +98,7 @@ public class Task {
         TaskTimeInfo taskTimeInfo = TaskTimeInfo.builder()
                 .endDate(TimeUtils.toDate(req.getEndDate()))
                 .endTime(TimeUtils.toTime(req.getEndTime()))
+                .reminderTimestamp(TimeUtils.toTimestamp(req.getReminderTimestamp()))
                 .activateCountdown(req.getActivateCountdown() != null && req.getActivateCountdown())
                 .expectedExecutionDate(req.getExpectedExecutionDate())
                 .expectedExecutionStartPeriod(TimeUtils.toTime(req.getExpectedExecutionStartPeriod()))
@@ -85,7 +106,7 @@ public class Task {
                 .build();
         Task task = Task.builder()
                 .title(req.getTitle())
-                .completed(false)
+                .completed(req.getCompleted())
                 .completedTime(null)
                 .archived(false)
                 .taskListId(req.getTaskListId() == null ? TaskList.DEFAULT_LIST_ID : req.getTaskListId())

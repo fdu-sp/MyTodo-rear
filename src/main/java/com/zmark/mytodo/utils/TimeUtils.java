@@ -29,12 +29,22 @@ public class TimeUtils {
         return Optional.ofNullable(date).map(Date::toString).orElse(null);
     }
 
+    public static String toString(Time time) {
+        return Optional.ofNullable(time).map(Time::toString).orElse(null);
+    }
+
     public static Date toDate(String date) {
-        return Optional.ofNullable(date).map(Date::valueOf).orElse(null);
+        if (date == null || date.isEmpty()) {
+            return null;
+        }
+        return Optional.of(date).map(Date::valueOf).orElse(null);
     }
 
     public static Time toTime(String time) {
-        return Optional.ofNullable(time)
+        if (time == null || time.isEmpty()) {
+            return null;
+        }
+        return Optional.of(time)
                 .map(s -> {
                     try {
                         return new Time(new SimpleDateFormat("HH:mm:ss").parse(s + ":00").getTime());
@@ -82,5 +92,22 @@ public class TimeUtils {
      */
     public static Date afterDays(int dayNum) {
         return new Date(System.currentTimeMillis() + (long) dayNum * 24 * 60 * 60 * 1000);
+    }
+
+    /**
+     * 解析Timestamp字符串，如果timestampStr为null，则返回null
+     */
+    public static Timestamp toTimestamp(String timestampStr) {
+        if (timestampStr == null || timestampStr.isEmpty()) {
+            return null;
+        }
+        return Optional.of(timestampStr).map(Timestamp::valueOf).orElse(null);
+    }
+
+    /**
+     * 判断timestampAfter是否在timestampBefore之后
+     */
+    public static boolean isAfter(Timestamp timestampBefore, Timestamp timestampAfter) {
+        return timestampAfter != null && timestampBefore != null && timestampAfter.after(timestampBefore);
     }
 }

@@ -37,4 +37,12 @@ public class TaskPriorityInfo {
                 .isUrgent(taskPriorityInfo.getIsUrgent())
                 .build();
     }
+
+    public static TaskPriorityInfo fromTaskPriorityInfoResp(Task task, TaskPriorityInfoResp taskPriorityInfo) {
+        return TaskPriorityInfo.builder()
+                .task(task)
+                .isImportant(taskPriorityInfo.getIsImportant())
+                .isUrgent(taskPriorityInfo.getIsUrgent())
+                .build();
+    }
 }
