@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecommendMyDayResp {
     /**
-     * todo 截止日期为今天的任务--应该自动加入到我的一天
+     * 截止日期为今天,但是没有加入我的一天的任务
      */
     RecommendTaskListResp tasksEndToday;
 
