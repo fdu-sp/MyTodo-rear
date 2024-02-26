@@ -24,4 +24,11 @@ public interface IMyDayTaskService {
     TaskListSimpleDTO getMyDayTaskListSimple();
 
     RecommendMyDayDTO getRecommendTasks();
+
+    /**
+     * 将今日截止的任务添加到我的一天列表
+     *
+     * @return 返回添加到我的一天列表的任务数量
+     */
+    int addTodayDeadlineTaskToMyDayList();
 }

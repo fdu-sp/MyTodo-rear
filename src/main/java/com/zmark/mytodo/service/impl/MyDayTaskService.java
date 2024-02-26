@@ -188,6 +188,25 @@ public class MyDayTaskService implements IMyDayTaskService {
                 .build();
     }
 
+    /**
+     * @return 返回添加到我的一天列表的任务数量
+     */
+    @Override
+    public int addTodayDeadlineTaskToMyDayList() {
+        List<TaskDTO> tasksEndToday = taskService.getTasksEndToday();
+        int count = 0;
+        for (TaskDTO taskDTO : tasksEndToday) {
+            if (!myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
+                MyDayTask myDayTask = MyDayTask.builder()
+                        .taskId(taskDTO.getId())
+                        .build();
+                myDayTaskDAO.save(myDayTask);
+                count++;
+            }
+        }
+        return count;
+    }
+
     private void removeTasksInMyDayList(RecommendTaskListDTO recommendTaskListDTO) {
         List<TaskDTO> taskDTOList = recommendTaskListDTO.getTaskDTOList();
         List<TaskDTO> taskDTOListInMyDayList = getMyDayList();
