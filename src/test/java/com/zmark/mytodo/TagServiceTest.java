@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.*;
  * @date 2023/12/4 16:05
  */
 @Slf4j
-@Disabled("跳过测试以打包")
+//@Disabled("跳过测试以打包")
 @SpringBootTest
 public class TagServiceTest {
     private static Map<String, Tag> existTagMap;
