@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
  */
 @Slf4j
 //@Disabled("跳过测试以打包")
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class TagServiceTest {
     private static Map<String, Tag> existTagMap;
 
