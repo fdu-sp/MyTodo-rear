@@ -25,6 +25,7 @@ import static org.mockito.Mockito.*;
  * @date 2023/12/4 16:05
  */
 @Slf4j
+//@Disabled("跳过测试以打包")
 @SpringBootTest
 public class TagServiceTest {
     private static Map<String, Tag> existTagMap;
