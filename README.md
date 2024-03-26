@@ -7,6 +7,8 @@
 - Java 17
 - Spring Boot 3
 - MySQL 8.0
+- 数据库操作：Jpa
+- 日志：Slf4j
 
 ## 运行指南
 
