@@ -52,7 +52,9 @@ docker run -d --name=mytodo-mysql -p 9003:3306 -v mytodo-mysql-volume:/var/lib/m
 
 - `-d` 将以分离模式运行此容器，以便它在后台运行。
 - `--name` 将名称`mytodo-mysql`分配给容器实例。如果不指定此项，Docker 将生成一个随机名称。
-- `-p` 将 MySQL 容器端口3306绑定到主机上的9003端口（因为我们本机的3306被本机的mysql占用了，所以映射到9003端口）。之后可以在主机上运行的MySQL客户端连接到127.0.0.1:9003
+- `-p` 将 MySQL
+  容器端口3306绑定到主机上的9003端口（因为我们本机的3306被本机的mysql占用了，所以映射到9003端口）。之后可以在主机上运行的MySQL客户端连接到127.0.0.1:
+  9003
 - `-v` 选项将容器卷 ( /var/lib/mysql)内的数据文件夹绑定到`mytodo-mysql-volume`卷，即上一步中创建的本地 Docker 卷
 - `-e` 设置环境变量。这里，我们设置了MySQL容器root用户的密码。
 - 最后的`mytodo-mysql:1.0.0` 是我们用来创建容器的image的名称
@@ -82,17 +84,18 @@ docker run -d --name mytodo-rear -p 8788:8787 --link mytodo-mysql:mysql -e "SERV
 - `-d` :后台运行容器，并返回容器ID
 - `--name` :指定容器名
 - `-p` :指定端口映射
-- `--link 容器名：别名`，这里的别名`mysql`通过环境变量`MYSQL_HOST`传递，它代表着`mysql`连接着容器`mytodo-mysql`，需要注意mytod-mysql是容器应该先被启动
+- `--link 容器名：别名`，这里的别名`mysql`通过环境变量`MYSQL_HOST`传递，它代表着`mysql`连接着容器`mytodo-mysql`
+  ，需要注意mytod-mysql是容器应该先被启动
 - `-e` :指定环境变量，环境变量配置参考下面的表格
 - 最后的`mytodo-rear-deploy:1.0.0`指定镜像
 
 ### 环境变量配置（配置文件`application-prod-docker.properties`）
 
-| 变量名                | 说明           | 默认值      |
-| --------------------- | -------------- | ----------- |
+| 变量名                   | 说明         | 默认值         |
+|-----------------------|------------|-------------|
 | `SERVER_PORT`         | 服务端口       | `8787`      |
 | `MYSQL_HOST`          | MySQL 主机地址 | `localhost` |
-| `MYSQL_PORT`          | MySQL 端口     | `3306`      |
-| `MYSQL_USER_NAME`     | MySQL 用户名   | `root`      |
-| `MYSQL_USER_PASSWORD` | MySQL 密码     | `root`      |
+| `MYSQL_PORT`          | MySQL 端口   | `3306`      |
+| `MYSQL_USER_NAME`     | MySQL 用户名  | `root`      |
+| `MYSQL_USER_PASSWORD` | MySQL 密码   | `root`      |
 | `MYSQL_DATABASE`      | MySQL 数据库名 | `my_todo`   |
