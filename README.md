@@ -26,7 +26,7 @@ mysql> FLUSH PRIVILEGES;
 mysql> quit
 ```
 
-# 使用docker部署
+# 使用docker与docker-compose进行部署
 
 ## 使用docker-compose部署mysql
 
@@ -56,18 +56,18 @@ docker build -t mytodo-rear-deploy:1.0.0 .
 ## 使用docker部署后端
 
 ```shell
-docker run -d --name mytodo-rear -p 8788:8787 --link mytodo-mysql:mysql -e "SERVER_PORT=8787" -e "MYSQL_HOST=mysql" -e "MYSQL_PORT=3306" -e "MYSQL_USER_NAME=root" -e "MYSQL_USER_PASSWORD=root" mytodo-rear-deploy:1.0.0 
+docker run -d --name mytodo-rear -p 8788:8787 --link MyTodo-mysql:mysql -e "SERVER_PORT=8787" -e "MYSQL_HOST=mysql" -e "MYSQL_PORT=3306" -e "MYSQL_USER_NAME=root" -e "MYSQL_USER_PASSWORD=root" mytodo-rear-deploy:1.0.0 
 ```
 
 - `-d` :后台运行容器，并返回容器ID
 - `--name` :指定容器名
 - `-p` :指定端口映射
-- `--link 容器名：别名`，这里的别名`mysql`通过环境变量`MYSQL_HOST`传递，它代表着`mysql`连接着容器`mytodo-mysql`
-  ，需要注意mytod-mysql是容器应该先被启动
+- `--link 容器名：别名`，这里的别名`mysql`通过环境变量`MYSQL_HOST`传递，它代表着`mysql`连接着容器`MyTodo-mysql`
+  ，需要注意 `MyTodo-mysql` 容器应该先被启动；其中`MyTodo-mysql` 是`docker-compose`启动的容器名
 - `-e` :指定环境变量，环境变量配置参考下面的表格
 - 最后的`mytodo-rear-deploy:1.0.0`指定镜像
 
-### 环境变量配置（配置文件`application-prod-docker.properties`）
+### 环境变量配置（见配置文件`application-prod-docker.properties`）
 
 | 变量名                   | 说明         | 默认值         |
 |-----------------------|------------|-------------|
