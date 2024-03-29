@@ -56,6 +56,11 @@ docker build -t mytodo-rear:1.0.0 .
 ## 使用docker部署后端
 
 ```shell
+# 单行命令
+docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8788:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 
+mytodo-rear:1.0.0 
+
+# 多行命令
 docker run -d \
 --add-host=host.docker.internal:host-gateway \
 --name mytodo-rear \
@@ -69,8 +74,7 @@ mytodo-rear:1.0.0
 ```
 
 - `-d` :后台运行容器，并返回容器ID
-- `-add-host=host.docker.internal:host-gateway` : 添加一个自定义的主机到容器中，将容器内部的"host.docker.internal"
-  解析为Docker宿主机的IP地址
+- `-add-host=host.docker.internal:host-gateway` : 添加一个自定义的主机到容器中，将容器内部的`host.docker.internal`解析为Docker宿主机的IP地址
 - `--name` :指定容器名
 - `-p` :指定端口映射
 - `-e` :指定环境变量，环境变量配置参考下面的表格；
