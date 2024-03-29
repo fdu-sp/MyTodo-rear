@@ -28,36 +28,14 @@ mysql> quit
 
 # 使用docker部署
 
-## MySQL docker镜像打包
+## 使用docker-compose部署mysql
+
+启动MySQL-Docker
 
 ```Shell
-cd data
-docker build -t mytodo-mysql:1.0.0 .
+cd mysql-docker
+docker-compose up -d
 ```
-
-## 使用docker部署mysql
-
-1. 设置docker卷来持久化数据库
-
-```Shell
-docker volume create mytodo-mysql-volume
-docker volume ls
-```
-
-2. 运行MySQL Docker容器
-
-```Shell
-docker run -d --name=mytodo-mysql -p 9003:3306 -v mytodo-mysql-volume:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root mytodo-mysql:1.0.0
-```
-
-- `-d` 将以分离模式运行此容器，以便它在后台运行。
-- `--name` 将名称`mytodo-mysql`分配给容器实例。如果不指定此项，Docker 将生成一个随机名称。
-- `-p` 将 MySQL
-  容器端口3306绑定到主机上的9003端口（因为我们本机的3306被本机的mysql占用了，所以映射到9003端口）。之后可以在主机上运行的MySQL客户端连接到127.0.0.1:
-  9003
-- `-v` 选项将容器卷 ( /var/lib/mysql)内的数据文件夹绑定到`mytodo-mysql-volume`卷，即上一步中创建的本地 Docker 卷
-- `-e` 设置环境变量。这里，我们设置了MySQL容器root用户的密码。
-- 最后的`mytodo-mysql:1.0.0` 是我们用来创建容器的image的名称
 
 ## 后端docker镜像打包
 
@@ -67,7 +45,7 @@ docker run -d --name=mytodo-mysql -p 9003:3306 -v mytodo-mysql-volume:/var/lib/m
 spring.profiles.active=prod-docker
 ```
 
-2. 打包jar：maven-->MyTTodo-->生命周期-->package （如果测试无法通过，可能需要使用`@Disabled`注解禁用测试）
+2. 打包jar：maven-->MyTodo-->生命周期-->package （如果测试无法通过，可能需要使用`@Disabled`注解禁用测试）
 
 3. 构建docker镜像
 
