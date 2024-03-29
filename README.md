@@ -53,7 +53,11 @@ spring.profiles.active=prod
 
 ## 使用docker-compose部署mysql
 
-启动MySQL-Docker
+启动MySQL-Docker，会使用sh脚本，如果启动失败，可以通过vscode修改 转换换行符：
+
+- 打开[脚本文件](./mysql-docker/wait-for-it.sh)。
+- 点击底部的换行符显示选项，并选择 "CRLF"（Windows）。
+- 选择 "LF"（Unix）。
 
 ```Shell
 cd mysql-docker
