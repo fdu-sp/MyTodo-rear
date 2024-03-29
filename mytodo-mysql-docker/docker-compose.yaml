@@ -12,7 +12,7 @@ services:
     restart: always
   startup-sql-runner:
     image: mysql:8.0.34
-    container_name: startup-sql-runner
+    container_name: MyTodo-startup-sql-runner
     depends_on:
       - mysql
     links:
