@@ -1,11 +1,13 @@
 package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.MyDayTaskDAO;
+import com.zmark.mytodo.dao.TaskDAO;
 import com.zmark.mytodo.dto.list.RecommendMyDayDTO;
 import com.zmark.mytodo.dto.list.RecommendTaskListDTO;
 import com.zmark.mytodo.dto.list.TaskListSimpleDTO;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.MyDayTask;
+import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
@@ -15,7 +17,7 @@ import com.zmark.mytodo.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +31,16 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     private final MyDayTaskDAO myDayTaskDAO;
 
-    private Timestamp timestampBefore;
+    private final TaskDAO taskDAO;
+
 
     @Autowired
-    public MyDayTaskService(ITaskService taskService, MyDayTaskDAO myDayTaskDAO) {
+    public MyDayTaskService(ITaskService taskService,
+                            MyDayTaskDAO myDayTaskDAO,
+                            TaskDAO taskDAO) {
         this.taskService = taskService;
         this.myDayTaskDAO = myDayTaskDAO;
-        this.timestampBefore = TimeUtils.now();
+        this.taskDAO = taskDAO;
     }
 
     @Override
@@ -69,9 +74,14 @@ public class MyDayTaskService implements IMyDayTaskService {
         myDayTaskDAO.deleteAll();
     }
 
+    /**
+     * `我的一天` 列表中，自动加入：<br/>
+     * 1. 过去没有完成的任务(截止时间)<br/>
+     * 2. 今日截止的任务、设定今日提醒的任务、规划今日执行的任务<br/>
+     */
     @Override
     public List<TaskDTO> getMyDayList() {
-        this.checkAndUpdate();
+        // 在MyDayTaskScheduler中，会定时更新我的一天
         List<MyDayTask> myDayTaskList = myDayTaskDAO.findAll();
         List<TaskDTO> taskDTOList = new ArrayList<>();
         for (MyDayTask myDayTask : myDayTaskList) {
@@ -79,35 +89,6 @@ public class MyDayTaskService implements IMyDayTaskService {
             taskDTOList.add(taskDTO);
         }
         return taskDTOList;
-    }
-
-    /*
-     * 更新我的一天列表
-     * */
-    private void checkAndUpdate() {
-        Timestamp timestampNow = TimeUtils.now();
-        if (!TimeUtils.isAfter(timestampBefore, timestampNow)) {
-            return;
-        }
-        // 如果是第二天了，就更新我的一天列表
-        timestampBefore = timestampNow;
-        List<MyDayTask> myDayTaskList = myDayTaskDAO.findAll();
-        for (MyDayTask myDayTask : myDayTaskList) {
-            TaskDTO taskDTO = taskService.findTaskById(myDayTask.getTaskId());
-            if (taskDTO == null) {
-                myDayTaskDAO.delete(myDayTask);
-            }
-        }
-        // 将截止日期为今天的任务添加到我的一天列表中
-        List<TaskDTO> tasksEndToday = taskService.getTasksEndToday();
-        for (TaskDTO taskDTO : tasksEndToday) {
-            if (!myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
-                MyDayTask myDayTask = MyDayTask.builder()
-                        .taskId(taskDTO.getId())
-                        .build();
-                myDayTaskDAO.save(myDayTask);
-            }
-        }
     }
 
     @Override
@@ -125,12 +106,14 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     /**
      * 推荐任务列表：(都是没有完成的任务，并且不在我的一天列表中，并且不重复)
+     * todo:
      * <p>
-     * 1. 截止日期为今天的任务 <br/>
-     * 2. 截止日期为之后三天的任务 <br/>
-     * 3. 截止日期为之后四到七天的任务 <br/>
-     * 4. 已经过期，但是没有完成的任务 <br/>
-     * 5. 最新一天创建的任务 <br/>
+     * 截止日期为之后三天的任务 <br/>
+     * 截止日期为之后四到七天的任务 <br/>
+     * 过去截止的任务 <br/>
+     * 过去提醒的任务 <br/>
+     * 过去规划的任务 <br/>
+     * 最近三天创建的任务 <br/>
      */
     @Override
     public RecommendMyDayDTO getRecommendTasks() {
@@ -192,13 +175,26 @@ public class MyDayTaskService implements IMyDayTaskService {
      * @return 返回添加到我的一天列表的任务数量
      */
     @Override
-    public int addTodayDeadlineTaskToMyDayList() {
-        List<TaskDTO> tasksEndToday = taskService.getTasksEndToday();
+    public int updateMyDayTaskList() {
+        this.myDayTaskDAO.deleteAll();
+        Date today = TimeUtils.today();
+        // 今日截止的任务
+        List<Task> tasksEndToday = taskDAO.findAllByTaskTimeInfo_EndDate(today);
+        // 设定今日提醒的任务
+        List<Task> tasksReminderToday = taskDAO.findAllTasksOfReminderByDate(today);
+        // 规划今日执行的任务
+        List<Task> tasksExpectedToday = taskDAO.findAllByTaskTimeInfo_ExpectedExecutionDate(today);
+        return addToMyDayList(tasksEndToday) +
+                addToMyDayList(tasksReminderToday) +
+                addToMyDayList(tasksExpectedToday);
+    }
+
+    private int addToMyDayList(List<Task> taskList) {
         int count = 0;
-        for (TaskDTO taskDTO : tasksEndToday) {
-            if (!myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
+        for (Task task : taskList) {
+            if (!myDayTaskDAO.existsByTaskId(task.getId())) {
                 MyDayTask myDayTask = MyDayTask.builder()
-                        .taskId(taskDTO.getId())
+                        .taskId(task.getId())
                         .build();
                 myDayTaskDAO.save(myDayTask);
                 count++;
@@ -206,6 +202,7 @@ public class MyDayTaskService implements IMyDayTaskService {
         }
         return count;
     }
+
 
     private void removeTasksInMyDayList(RecommendTaskListDTO recommendTaskListDTO) {
         List<TaskDTO> taskDTOList = recommendTaskListDTO.getTaskDTOList();

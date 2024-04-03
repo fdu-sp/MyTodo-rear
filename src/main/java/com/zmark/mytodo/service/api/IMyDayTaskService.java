@@ -26,9 +26,12 @@ public interface IMyDayTaskService {
     RecommendMyDayDTO getRecommendTasks();
 
     /**
-     * 将今日截止的任务添加到我的一天列表
+     * 在新的一天到达后才执行<br/>
+     * 1. 清空我的一天列表<br/>
+     * 2. 加入今日截止的任务、设定今日提醒的任务、规划今日执行的任务<br/>
+     * 任务是否完成不重要
      *
      * @return 返回添加到我的一天列表的任务数量
      */
-    int addTodayDeadlineTaskToMyDayList();
+    int updateMyDayTaskList();
 }

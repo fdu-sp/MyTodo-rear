@@ -26,14 +26,14 @@ public class MyDayTaskScheduler {
     }
 
     /**
-     * 每天凌晨0点执行，清空我的一天列表，加入截止日期为今日的任务
+     * 每天凌晨0点执行：更新我的一天列表<br/>
      */
     @Scheduled(cron = "0 0 0 * * *")
     public void updateMyDayTaskList() {
         log.info("时间到达凌晨0点，清空我的一天列表");
         myDayTaskService.clearMyDayList();
-        log.info("目前时间为：{}，准备加入截止日期为今日的任务", TimeUtils.today());
-        int taskAdded = myDayTaskService.addTodayDeadlineTaskToMyDayList();
-        log.info("加入截止日期为今日的任务，共{}个", taskAdded);
+        log.info("目前时间为：{}，准备更新我的一天列表", TimeUtils.today());
+        int taskAdded = myDayTaskService.updateMyDayTaskList();
+        log.info("加入{}个今日任务到我的一天中", taskAdded);
     }
 }
