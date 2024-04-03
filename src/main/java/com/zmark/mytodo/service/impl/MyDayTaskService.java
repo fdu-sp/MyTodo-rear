@@ -117,14 +117,14 @@ public class MyDayTaskService implements IMyDayTaskService {
         // 截止日期为之后三天的任务
         RecommendTaskListDTO tasksEndInThreeDays = RecommendTaskListDTO.builder()
                 .title("三天内")
-                .taskDTOList(taskService.getTasksEndBetweenDate(TimeUtils.afterDays(1), TimeUtils.afterDays(3)))
+                .taskDTOList(taskService.getUncompletedTasksEndBetweenDate(TimeUtils.afterDays(1), TimeUtils.afterDays(3)))
                 .build();
         tasksEndInThreeDays.removeCompletedTasks();
         this.removeTasksInMyDayList(tasksEndInThreeDays);
         // 截止日期为之后四到七天的任务
         RecommendTaskListDTO tasksEndInFourToSevenDays = RecommendTaskListDTO.builder()
                 .title("未来")
-                .taskDTOList(taskService.getTasksEndBetweenDate(TimeUtils.afterDays(4), TimeUtils.afterDays(7)))
+                .taskDTOList(taskService.getUncompletedTasksEndBetweenDate(TimeUtils.afterDays(4), TimeUtils.afterDays(7)))
                 .build();
         tasksEndInFourToSevenDays.removeCompletedTasks();
         this.removeTasksInMyDayList(tasksEndInFourToSevenDays);

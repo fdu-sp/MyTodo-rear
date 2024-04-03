@@ -224,14 +224,9 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public List<TaskDTO> getTasksEndBetweenDate(Date endDateStart, Date endDateEnd) {
-        List<TaskTimeInfo> taskTimeInfoList
-                = taskTimeInfoDAO
-                .findAllByEndDateIsGreaterThanEqualAndEndDateIsLessThanEqual(endDateStart, endDateEnd);
-        return taskTimeInfoList.stream()
-                .map(TaskTimeInfo::getTask)
-                .map(this::toDTO)
-                .toList();
+    public List<TaskDTO> getUncompletedTasksEndBetweenDate(Date endDateStart, Date endDateEnd) {
+        return taskDAO.findAllByEndDateBetweenAndTaskComplete(endDateStart, endDateEnd, false)
+                .stream().map(this::toDTO).toList();
     }
 
     private List<TaskDTO> getUncompletedTasksEndBefore(Date date) {

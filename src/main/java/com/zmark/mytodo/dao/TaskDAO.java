@@ -17,6 +17,13 @@ public interface TaskDAO extends JpaRepository<Task, Long> {
      */
     List<Task> findAllByTaskTimeInfo_EndDate(Date endDate);
 
+    @Query("SELECT task " +
+            "FROM Task task " +
+            "WHERE DATE(task.taskTimeInfo.endDate) >= DATE(:date1) AND DATE(task.taskTimeInfo.endDate) <= DATE(:date2)" +
+            " AND task.completed = :complete")
+    List<Task> findAllByEndDateBetweenAndTaskComplete(@Param("date1") Date date1, @Param("date2") Date date2, @Param("complete") Boolean complete);
+
+
     /**
      * 预期执行日期为expectedExecutionDate的所有任务
      */
@@ -48,7 +55,6 @@ public interface TaskDAO extends JpaRepository<Task, Long> {
             "WHERE DATE(task.taskTimeInfo.expectedExecutionDate) < DATE(:date) " +
             " AND task.completed = :complete")
     List<Task> findAllByExpectedDateBeforeAndTaskComplete(@Param("date") Date date, @Param("complete") Boolean complete);
-
 
     List<Task> findAllByCreateTimeIsGreaterThanEqualAndCreateTimeIsLessThanEqual(Timestamp start, Timestamp end);
 }
