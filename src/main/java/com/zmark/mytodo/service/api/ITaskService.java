@@ -73,11 +73,11 @@ public interface ITaskService {
      * 截止日期在指定日期之间的任务
      */
     List<TaskDTO> getTasksEndBetweenDate(Date endDateStart, Date endDateEnd);
-
+    
     /**
-     * 已经过期，但是没有完成的任务
+     * 已经过期（截止日期、提醒时间、规划执行时间），但是没有完成的任务
      */
-    List<TaskDTO> getUncompletedTasksEndBeforeToday();
+    List<TaskDTO> getUncompletedTasksBefore(Date date);
 
     /**
      * 指定时间段内创建的任务

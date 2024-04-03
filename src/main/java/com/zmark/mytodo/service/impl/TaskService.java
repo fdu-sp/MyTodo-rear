@@ -234,14 +234,45 @@ public class TaskService implements ITaskService {
                 .toList();
     }
 
+    private List<TaskDTO> getUncompletedTasksEndBefore(Date date) {
+        return taskDAO.findAllByEndDateBeforeAndTaskComplete(date, false)
+                .stream().map(this::toDTO).toList();
+    }
+
+    /**
+     * 已经过了提醒时间，但是没有完成的任务
+     *
+     * @param date
+     */
+    private List<TaskDTO> getUncompletedTasksReminderBefore(Date date) {
+        return taskDAO.findAllByReminderDateBeforeAndTaskComplete(date, false)
+                .stream().map(this::toDTO).toList();
+    }
+
+    /**
+     * 已经过了规划执行时间，但是没有完成的任务
+     *
+     * @param date
+     */
+    private List<TaskDTO> getUncompletedTasksExpectedBefore(Date date) {
+        return taskDAO.findAllByExpectedDateBeforeAndTaskComplete(date, false)
+                .stream().map(this::toDTO).toList();
+    }
+
+    /**
+     * 已经过期（截止日期、提醒时间、规划执行时间），但是没有完成的任务
+     *
+     * @param date
+     */
     @Override
-    public List<TaskDTO> getUncompletedTasksEndBeforeToday() {
-        List<TaskTimeInfo> taskTimeInfoList
-                = taskTimeInfoDAO.findAllByEndDateIsLessThanAndTaskCompleted(TimeUtils.today(), false);
-        return taskTimeInfoList.stream()
-                .map(TaskTimeInfo::getTask)
-                .map(this::toDTO)
-                .toList();
+    public List<TaskDTO> getUncompletedTasksBefore(Date date) {
+        List<TaskDTO> endBefore = this.getUncompletedTasksEndBefore(date);
+        List<TaskDTO> remindBefore = this.getUncompletedTasksReminderBefore(date);
+        List<TaskDTO> expectedBefore = this.getUncompletedTasksExpectedBefore(date);
+        List<TaskDTO> tasksBefore = new ArrayList<>(endBefore);
+        tasksBefore.addAll(remindBefore);
+        tasksBefore.addAll(expectedBefore);
+        return tasksBefore;
     }
 
     @Override

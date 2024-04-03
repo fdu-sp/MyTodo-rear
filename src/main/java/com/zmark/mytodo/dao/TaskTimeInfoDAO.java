@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface TaskTimeInfoDAO extends JpaRepository<TaskTimeInfo, Long> {
     List<TaskTimeInfo> findAllByEndDateIsGreaterThanEqualAndEndDateIsLessThanEqual(Date endDateStart, Date endDateEnd);
-
-    List<TaskTimeInfo> findAllByEndDateIsLessThanAndTaskCompleted(Date endDate, Boolean completed);
-
+    
     List<TaskTimeInfo> findAllByReminderTimestampNotNullAndTask_Completed(Boolean completed);
 }

@@ -30,5 +30,25 @@ public interface TaskDAO extends JpaRepository<Task, Long> {
             "WHERE DATE(task.taskTimeInfo.reminderTimestamp) = DATE(:date)")
     List<Task> findAllTasksOfReminderByDate(@Param("date") Date date);
 
+    @Query("SELECT task " +
+            "FROM Task task " +
+            "WHERE DATE(task.taskTimeInfo.endDate) < DATE(:date) " +
+            " AND task.completed = :complete")
+    List<Task> findAllByEndDateBeforeAndTaskComplete(@Param("date") Date date, @Param("complete") Boolean complete);
+
+
+    @Query("SELECT task " +
+            "FROM Task task " +
+            "WHERE DATE(task.taskTimeInfo.reminderTimestamp) < DATE(:date) " +
+            " AND task.completed = :complete")
+    List<Task> findAllByReminderDateBeforeAndTaskComplete(@Param("date") Date date, @Param("complete") Boolean complete);
+
+    @Query("SELECT task " +
+            "FROM Task task " +
+            "WHERE DATE(task.taskTimeInfo.expectedExecutionDate) < DATE(:date) " +
+            " AND task.completed = :complete")
+    List<Task> findAllByExpectedDateBeforeAndTaskComplete(@Param("date") Date date, @Param("complete") Boolean complete);
+
+
     List<Task> findAllByCreateTimeIsGreaterThanEqualAndCreateTimeIsLessThanEqual(Timestamp start, Timestamp end);
 }
