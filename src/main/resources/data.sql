@@ -40,14 +40,14 @@ VALUES (3, 3, 1, 1);
 
 
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
-                            expected_execution_start_period, expected_execution_end_period)
-VALUES (1, 1, '2023-10-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00');
+                            expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
+VALUES (1, 1, '2023-10-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00', '2024-04-03 12:23:23');
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
-                            expected_execution_start_period, expected_execution_end_period)
-VALUES (2, 2, '2023-12-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00');
+                            expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
+VALUES (2, 2, '2023-12-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00', '2024-04-05 12:23:23');
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
-                            expected_execution_start_period, expected_execution_end_period)
-VALUES (3, 3, '2023-12-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00');
+                            expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
+VALUES (3, 3, '2023-12-20', '23:59:59', 0, '2023-12-09', '08:00:00', '12:00:00', '2024-04-02 12:23:23');
 
 
 INSERT INTO tag (id, tag_name, parent_tag_id, create_time, update_time)
