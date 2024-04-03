@@ -12,10 +12,19 @@ import java.util.List;
 public interface TaskDAO extends JpaRepository<Task, Long> {
     Task findTaskById(Long id);
 
+    /**
+     * 截止日期为endDate的所有任务
+     */
     List<Task> findAllByTaskTimeInfo_EndDate(Date endDate);
 
+    /**
+     * 预期执行日期为expectedExecutionDate的所有任务
+     */
     List<Task> findAllByTaskTimeInfo_ExpectedExecutionDate(Date expectedExecutionDate);
 
+    /**
+     * 提示日期为date的所有任务
+     */
     @Query("SELECT task " +
             "FROM Task task " +
             "WHERE DATE(task.taskTimeInfo.reminderTimestamp) = DATE(:date)")
