@@ -148,7 +148,7 @@ public class MyDayTaskService implements IMyDayTaskService {
         return RecommendMyDayDTO.builder()
                 .tasksEndInThreeDays(tasksEndInThreeDays)
                 .tasksEndInFourToSevenDays(tasksEndInFourToSevenDays)
-                .uncompletedTasksEndBeforeToday(uncompletedTasksEndBeforeToday)
+                .uncompletedTasksBeforeToday(uncompletedTasksEndBeforeToday)
                 .latestCreatedTasks(latestCreatedTasks)
                 .build();
     }
