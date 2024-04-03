@@ -188,7 +188,12 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     private void removeTasksInMyDayList(RecommendTaskListDTO recommendTaskListDTO) {
         List<TaskDTO> taskDTOList = recommendTaskListDTO.getTaskDTOList();
-        List<TaskDTO> taskDTOListInMyDayList = getMyDayList();
-        taskDTOList.removeAll(taskDTOListInMyDayList);
+        List<TaskDTO> cleanedTaskDTOList = new ArrayList<>();
+        for (TaskDTO taskDTO : taskDTOList) {
+            if (!myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
+                cleanedTaskDTOList.add(taskDTO);
+            }
+        }
+        recommendTaskListDTO.setTaskDTOList(cleanedTaskDTOList);
     }
 }
