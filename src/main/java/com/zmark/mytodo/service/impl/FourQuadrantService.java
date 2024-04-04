@@ -48,8 +48,8 @@ public class FourQuadrantService implements IFourQuadrantService {
 
     private FourQuadrantDetailResp covertFrom(List<TaskDTO> taskDTOList, TaskListSimpleDTO taskListSimpleDTO) {
         OneQuadrantDetailResp urgentAndImportant = new OneQuadrantDetailResp("紧急且重要");
-        OneQuadrantDetailResp urgentAndNotImportant = new OneQuadrantDetailResp("紧急不重要");
-        OneQuadrantDetailResp notUrgentAndImportant = new OneQuadrantDetailResp("不紧急但重要");
+        OneQuadrantDetailResp urgentButNotImportant = new OneQuadrantDetailResp("紧急不重要");
+        OneQuadrantDetailResp notUrgentButImportant = new OneQuadrantDetailResp("不紧急但重要");
         OneQuadrantDetailResp notUrgentAndNotImportant = new OneQuadrantDetailResp("不紧急不重要");
         taskDTOList.forEach(taskDTO -> {
             TaskPriorityInfo taskPriorityInfo = taskDTO.getTaskPriorityInfo();
@@ -57,9 +57,9 @@ public class FourQuadrantService implements IFourQuadrantService {
                     && taskPriorityInfo.getIsUrgent()) {
                 urgentAndImportant.addTask(taskDTO);
             } else if (taskPriorityInfo.getIsImportant()) {
-                notUrgentAndImportant.addTask(taskDTO);
+                notUrgentButImportant.addTask(taskDTO);
             } else if (taskPriorityInfo.getIsUrgent()) {
-                urgentAndNotImportant.addTask(taskDTO);
+                urgentButNotImportant.addTask(taskDTO);
             } else {
                 notUrgentAndNotImportant.addTask(taskDTO);
             }
@@ -67,8 +67,8 @@ public class FourQuadrantService implements IFourQuadrantService {
         return FourQuadrantDetailResp.builder()
                 .taskListInfo(taskListSimpleDTO.toSimpleResp())
                 .urgentAndImportant(urgentAndImportant)
-                .urgentAndNotImportant(urgentAndNotImportant)
-                .notUrgentAndImportant(notUrgentAndImportant)
+                .urgentAndNotImportant(urgentButNotImportant)
+                .notUrgentAndImportant(notUrgentButImportant)
                 .notUrgentAndNotImportant(notUrgentAndNotImportant)
                 .build();
     }
