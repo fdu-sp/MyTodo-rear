@@ -45,7 +45,6 @@ public class FourQuadrantServiceTest {
      */
     private static List<TaskListDTO> taskListInDB;
     private static List<TaskDTO> myDayTaskList;
-    private static TaskListSimpleDTO myDayTaskListSimple;
     private static long taskId = 0L;
 
     @MockBean
@@ -64,11 +63,6 @@ public class FourQuadrantServiceTest {
         // 初始化模拟数据
         taskListInDB = new ArrayList<>();
         myDayTaskList = new ArrayList<>();
-        myDayTaskListSimple = TaskListSimpleDTO.builder()
-                .id(1L)
-                .name("我的一天")
-                .description("我的一天")
-                .build();
     }
 
     @BeforeEach
@@ -76,11 +70,6 @@ public class FourQuadrantServiceTest {
         // 清空模拟数据
         taskListInDB.clear();
         myDayTaskList.clear();
-        myDayTaskListSimple = TaskListSimpleDTO.builder()
-                .id(1L)
-                .name("我的一天")
-                .description("我的一天")
-                .build();
         taskId = 0L;
         // 重置模拟对象
         reset(taskListService, myDayTaskService);
@@ -100,7 +89,12 @@ public class FourQuadrantServiceTest {
         when(myDayTaskService.getMyDayList())
                 .thenReturn(myDayTaskList);
         when(myDayTaskService.getMyDayTaskListSimple())
-                .thenReturn(myDayTaskListSimple);
+                .thenAnswer(invocationOnMock -> TaskListSimpleDTO.builder()
+                        .id(1L)
+                        .name("我的一天")
+                        .count((long) myDayTaskList.size())
+                        .description("我的一天")
+                        .build());
     }
 
     private TaskListDTO createTaskList() {
@@ -177,7 +171,6 @@ public class FourQuadrantServiceTest {
         addTask(anotherListId, false, true);
         addTask(anotherListId, false, false);
 
-
         // When
         FourQuadrantDetailResp resp = fourQuadrantService.getFourQuadrantDetailByList(listId);
 
@@ -203,6 +196,49 @@ public class FourQuadrantServiceTest {
     }
 
     /**
+     * 向指定的清单中添加指定优先级的任务，并加入到我的一天
+     *
+     * @param taskListId  清单ID
+     * @param isImportant 是否重要
+     *                    true: 重要
+     *                    false: 不重要
+     * @param isUrgent    是否紧急
+     *                    true: 紧急
+     *                    false: 不紧急
+     */
+    private TaskDTO addTaskToMyDayList(long taskListId, boolean isImportant, boolean isUrgent) {
+        if (taskListId >= taskListInDB.size()) {
+            throw new IllegalArgumentException("清单ID不存在");
+        }
+        TaskListDTO taskListDTO = taskListInDB.get((int) taskListId);
+        TaskPriorityInfo taskPriorityInfo = TaskPriorityInfo.builder()
+                .isImportant(isImportant)
+                .isUrgent(isUrgent)
+                .build();
+        TaskDTO taskDTO = TaskDTO.builder()
+                .id(taskId)
+                .title("任务" + taskId)
+                .taskListId(taskListId)
+                .taskListName(taskListDTO.getName())
+                .taskPriorityInfo(taskPriorityInfo)
+                .taskContentInfo(TaskContentInfo.builder()
+                        .description("任务" + taskId)
+                        .build())
+                .taskTimeInfo(TaskTimeInfo.builder()
+                        .endDate(TimeUtils.today())
+                        .build())
+                .tags(new ArrayList<>())
+                .build();
+        taskId++;
+        // 加入到指定清单
+        taskListDTO.getTaskDTOList().add(taskDTO);
+        // 加入我的一天
+        myDayTaskList.add(taskDTO);
+        return taskDTO;
+    }
+
+
+    /**
      * 场景2：后端自动化测试-处理“我的一天”中的四象限数据<br/>
      * - Given 用户已经添加了多个带有不同优先级的任务<br/>
      * - When 系统处理“我的一天”视图中的任务数据<br/>
@@ -210,6 +246,41 @@ public class FourQuadrantServiceTest {
      */
     @Test
     public void test_getFourQuadrantDetailByMyDay() {
+        TaskListDTO list1 = createTaskList();
+        long listId = list1.getId();
+        long anotherListId = createTaskList().getId();
+        // Given
+        TaskDTO urgentAndImportantTask1 = addTaskToMyDayList(listId, true, true);
+        TaskDTO urgentAndImportantTask2 = addTaskToMyDayList(listId, true, true);
+        TaskDTO notUrgentButImportantTask = addTaskToMyDayList(listId, true, false);
+        TaskDTO urgentButNotImportantTask = addTaskToMyDayList(listId, false, true);
+        TaskDTO notUrgentAndNotImportantTask = addTaskToMyDayList(listId, false, false);
 
+        addTask(anotherListId, true, true);
+        addTask(anotherListId, true, true);
+        addTask(anotherListId, true, false);
+        addTask(anotherListId, false, true);
+        addTask(anotherListId, false, false);
+
+        // When
+        FourQuadrantDetailResp resp = fourQuadrantService.getFourQuadrantDetailByMyDay();
+
+        // Then
+        // 断言四象限数据
+        TaskListSimpleResp taskListInfo = resp.getTaskListInfo();
+        OneQuadrantDetailResp urgentAndImportant = resp.getUrgentAndImportant();
+        OneQuadrantDetailResp urgentAndNotImportant = resp.getUrgentAndNotImportant();
+        OneQuadrantDetailResp notUrgentAndImportant = resp.getNotUrgentAndImportant();
+        OneQuadrantDetailResp notUrgentAndNotImportant = resp.getNotUrgentAndNotImportant();
+        assertEquals("我的一天中任务数量不正确", 5L, taskListInfo.getCount());
+        assertEquals("紧急且重要任务数量不正确", 2, urgentAndImportant.getTasks().size());
+        assertTrue("紧急且重要任务不包含目标任务1", urgentAndImportant.getTasks().stream().anyMatch(task -> task.getId().equals(urgentAndImportantTask1.getId())));
+        assertTrue("紧急且重要任务不包含目标任务2", urgentAndImportant.getTasks().stream().anyMatch(task -> task.getId().equals(urgentAndImportantTask2.getId())));
+        assertEquals("紧急不重要任务数量不正确", 1, urgentAndNotImportant.getTasks().size());
+        assertTrue("紧急不重要任务不包含目标任务", urgentAndNotImportant.getTasks().stream().anyMatch(task -> task.getId().equals(urgentButNotImportantTask.getId())));
+        assertEquals("不紧急但重要任务数量不正确", 1, notUrgentAndImportant.getTasks().size());
+        assertTrue("不紧急但重要任务不包含目标任务", notUrgentAndImportant.getTasks().stream().anyMatch(task -> task.getId().equals(notUrgentButImportantTask.getId())));
+        assertEquals("不紧急不重要任务数量不正确", 1, notUrgentAndNotImportant.getTasks().size());
+        assertTrue("不紧急不重要任务不包含目标任务", notUrgentAndNotImportant.getTasks().stream().anyMatch(task -> task.getId().equals(notUrgentAndNotImportantTask.getId())));
     }
 }
