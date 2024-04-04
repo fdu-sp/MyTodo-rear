@@ -43,6 +43,7 @@ public class TaskListDTO {
                 .name(this.name)
                 .description(this.description)
                 .groupId(this.groupId)
+                .count((long) this.taskDTOList.size())
                 .createTime(this.createTime)
                 .updateTime(this.updateTime)
                 .build();
