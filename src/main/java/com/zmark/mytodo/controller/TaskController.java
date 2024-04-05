@@ -1,6 +1,7 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskQueryByTagsReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
@@ -95,6 +96,17 @@ public class TaskController {
     @GetMapping("/api/task/simple/get-all-tasks/{tag-id}")
     public Result getAllTasksWithSimpleInfoByTag(@PathVariable("tag-id") Long tagId) {
         List<TaskDTO> taskDTOList = taskService.findAllByTag(tagId);
+        return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskDTOList));
+    }
+
+    /**
+     * 根据标签过滤（同时具有多个标签的）待办事项
+     *
+     * @param tagIdList 标签id列表（必填）
+     */
+    @PostMapping("/api/task/simple/get-all-tasks-by-tags")
+    public Result getAllTasksWithSimpleInfoByTags(@Validated @RequestBody TaskQueryByTagsReq tagIdList) {
+        List<TaskDTO> taskDTOList = taskService.findAllByTags(tagIdList);
         return ResultFactory.buildSuccessResult(TaskDTO.toSimpleResp(taskDTOList));
     }
 

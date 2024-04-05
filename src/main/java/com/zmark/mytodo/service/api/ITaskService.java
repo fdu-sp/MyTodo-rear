@@ -1,6 +1,7 @@
 package com.zmark.mytodo.service.api;
 
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskQueryByTagsReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
@@ -30,6 +31,10 @@ public interface ITaskService {
      */
     List<TaskDTO> findAllByTag(Long tagId);
 
+    /**
+     * 根据标签过滤（同时具有多个标签的）待办事项
+     */
+    List<TaskDTO> findAllByTags(TaskQueryByTagsReq queryReq);
 
     List<TaskDTO> findAllTasks();
 

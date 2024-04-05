@@ -2,6 +2,7 @@ package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
+import com.zmark.mytodo.bo.task.req.TaskQueryByTagsReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
 import com.zmark.mytodo.dao.*;
 import com.zmark.mytodo.dto.task.TaskDTO;
@@ -87,6 +88,26 @@ public class TaskService implements ITaskService {
             return new ArrayList<>();
         }
         List<Task> taskList = this.findAllTasksByTag(tag);
+        return taskList.stream().map(this::toDTO).toList();
+    }
+
+    @Override
+    public List<TaskDTO> findAllByTags(TaskQueryByTagsReq queryReq) {
+        // 根据标签过滤（同时具有多个标签的）待办事项
+        List<Long> tagList = queryReq.getTagIds();
+        List<Task> taskList = new ArrayList<>();
+        for (Long tagId : tagList) {
+            Tag tag = tagDAO.findTagById(tagId);
+            if (tag == null) {
+                continue;
+            }
+            List<Task> tasks = this.findAllTasksByTag(tag);
+            if (taskList.isEmpty()) {
+                taskList.addAll(tasks);
+            } else {
+                taskList.retainAll(tasks);
+            }
+        }
         return taskList.stream().map(this::toDTO).toList();
     }
 
