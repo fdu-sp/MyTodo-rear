@@ -13,4 +13,6 @@ public interface TaskTagMatchDAO extends JpaRepository<TaskTagMatch, Long> {
     List<TaskTagMatch> findAllByTaskId(Long taskId);
 
     void deleteAllByTaskId(Long taskId);
+
+    void deleteAllByTagId(Long tagId);
 }

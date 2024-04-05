@@ -3,6 +3,7 @@ package com.zmark.mytodo.service.api;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -52,5 +53,5 @@ public interface ITagService {
      * @param tagName tag的名字
      */
     @Transactional
-    void deleteTagByName(String tagName);
+    void deleteTagByName(String tagName) throws NoDataInDataBaseException;
 }

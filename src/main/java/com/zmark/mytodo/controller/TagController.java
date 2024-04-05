@@ -1,12 +1,12 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.bo.tag.req.TagCreateReq;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.impl.TagService;
-import com.zmark.mytodo.bo.tag.req.TagCreateReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -116,9 +116,7 @@ public class TagController {
     }
 
     /**
-     * TODO: 2023/12/5
-     *
-     * @see com.zmark.mytodo.service.api.ITagService#deleteTagByName(String) 未完成
+     * @param tagName 某一个层级的tag，即不包含"/"的tag名字
      */
     @DeleteMapping("/api/tag/delete-tag-by-name/{tag-name}")
     public Result deleteTagByName(@PathVariable("tag-name") String tagName) {

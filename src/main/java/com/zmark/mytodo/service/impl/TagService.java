@@ -1,9 +1,11 @@
 package com.zmark.mytodo.service.impl;
 
 import com.zmark.mytodo.dao.TagDAO;
+import com.zmark.mytodo.dao.TaskTagMatchDAO;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
 import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,12 @@ import java.util.List;
 @Service
 public class TagService implements ITagService {
     private final TagDAO tagDAO;
+    private final TaskTagMatchDAO taskTagMatchDAO;
 
     @Autowired
-    public TagService(TagDAO tagDAO) {
+    public TagService(TagDAO tagDAO, TaskTagMatchDAO taskTagMatchDAO) {
         this.tagDAO = tagDAO;
+        this.taskTagMatchDAO = taskTagMatchDAO;
     }
 
     @Override
@@ -111,12 +115,22 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public void deleteTagByName(String tagName) {
-        // todo
+    @Transactional
+    public void deleteTagByName(String tagName) throws NoDataInDataBaseException {
+        Tag tagInDB = tagDAO.findByTagName(tagName);
+        if (tagInDB == null) {
+            throw new NoDataInDataBaseException("tag [" + tagName + "] 不存在");
+        }
+        this.deleteTag(tagInDB);
+    }
+
+    private void deleteTag(Tag tag) {
         // 删除 Match
-
+        taskTagMatchDAO.deleteAllByTagId(tag.getId());
         // 删除 子tag
-
+        List<Tag> childrenTagList = tagDAO.findTagsByParentTagId(tag.getId());
+        childrenTagList.forEach(this::deleteTag);
         // 删除 tag
+        tagDAO.delete(tag);
     }
 }
