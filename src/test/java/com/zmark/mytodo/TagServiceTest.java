@@ -26,28 +26,36 @@ import static org.mockito.Mockito.*;
  * @date 2023/12/4 16:05
  */
 @Slf4j
-//@Disabled("跳过测试以打包")
 @ExtendWith(SpringExtension.class)
 public class TagServiceTest {
+    /**
+     * Monica数据库中的数据
+     */
     private static Map<String, Tag> existTagMap;
-
-    private TagService tagService;
 
     @MockBean
     private TagDAO tagDAO;
 
+    /**
+     * 被测对象
+     */
+    private TagService tagService;
+
     @BeforeAll
-    static void beforeAll() {
-        log.info("TagServiceTest start");
+    static void init() {
+        // 初始化模拟数据
         existTagMap = new HashMap<>();
     }
 
     @BeforeEach
     void setUp() {
+        // 清空模拟数据
         existTagMap.clear();
+        // 重置模拟对象
         reset(tagDAO);
+        // 初始化被测对象
         tagService = new TagService(tagDAO);
-
+        // 设置模拟对象的行为
         when(tagDAO.findByTagName(anyString())).thenAnswer(invocation -> {
             String tagName = invocation.getArgument(0);
             return existTagMap.get(tagName);
