@@ -35,6 +35,7 @@ public interface ITagService {
      *                例如：<br/>
      *                1. tag1/tag2/tag3<br/>
      * @throws NewEntityException 如果重名tag存在于其他层级中，则抛出异常
+     * @return 返回最后一个tag
      */
     @Transactional
     Tag createNewTag(String tagPath) throws NewEntityException;

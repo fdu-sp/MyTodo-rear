@@ -69,6 +69,7 @@ public class TagService implements ITagService {
 
     /**
      * 内部辅助方法，用于创建新的tag
+     * @return 返回最后一个tag
      */
     private Tag creatNew(String tagPath) throws NewEntityException {
         // 按照/分割tag
