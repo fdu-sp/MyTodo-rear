@@ -1,8 +1,10 @@
 package com.zmark.mytodo;
 
 import com.zmark.mytodo.dao.TagDAO;
+import com.zmark.mytodo.dao.TaskTagMatchDAO;
 import com.zmark.mytodo.dto.tag.TagDTO;
 import com.zmark.mytodo.entity.Tag;
+import com.zmark.mytodo.entity.TaskTagMatch;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.service.impl.TagService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 /**
  * @author ZMark
@@ -31,10 +35,17 @@ public class TagServiceTest {
     /**
      * Monica数据库中的数据
      */
-    private static Map<String, Tag> existTagMap;
+    private static Map<String, Tag> existTagInDB;
+    /**
+     * key: TaskTagMatchId<br/>
+     * value: TaskTagMatch
+     */
+    private static Map<Long, TaskTagMatch> existTaskTagMatchInDB;
 
     @MockBean
     private TagDAO tagDAO;
+    @MockBean
+    private TaskTagMatchDAO taskTagMatchDAO;
 
     /**
      * 被测对象
@@ -44,75 +55,104 @@ public class TagServiceTest {
     @BeforeAll
     static void init() {
         // 初始化模拟数据
-        existTagMap = new HashMap<>();
+        existTagInDB = new HashMap<>();
+        existTaskTagMatchInDB = new HashMap<>();
     }
 
     @BeforeEach
     void setUp() {
         // 清空模拟数据
-        existTagMap.clear();
+        existTagInDB.clear();
+        existTaskTagMatchInDB.clear();
         // 重置模拟对象
-        reset(tagDAO);
+        reset(tagDAO, taskTagMatchDAO);
         // 初始化被测对象
-        tagService = new TagService(tagDAO);
+        tagService = new TagService(tagDAO, taskTagMatchDAO);
         // 设置模拟对象的行为
+        // mock TagDAO
         when(tagDAO.findByTagName(anyString())).thenAnswer(invocation -> {
             String tagName = invocation.getArgument(0);
-            return existTagMap.get(tagName);
+            return existTagInDB.get(tagName);
         });
         when(tagDAO.save(any(Tag.class))).thenAnswer(invocation -> {
             Tag tag = invocation.getArgument(0);
-            tag.setId((long) existTagMap.size());
-            existTagMap.put(tag.getTagName(), tag);
+            tag.setId((long) existTagInDB.size());
+            existTagInDB.put(tag.getTagName(), tag);
             log.info("tag {} saved", tag.getTagName());
             return tag;
         });
         when(tagDAO.findAll()).thenAnswer(invocation -> {
             log.info("findAll invoked");
-            return existTagMap.values().stream().toList();
+            return existTagInDB.values().stream().toList();
         });
         when(tagDAO.findTagsByParentTagId(anyLong())).thenAnswer(invocation -> {
             Long parentTagId = invocation.getArgument(0);
             log.info("findTagsByParentTagId invoked, parentTagId: {}", parentTagId);
-            return existTagMap.values().stream()
+            return existTagInDB.values().stream()
                     .filter(tag -> tag.getParentTagId() != null && tag.getParentTagId().equals(parentTagId))
                     .toList();
         });
         when(tagDAO.findAllByParentTagIsNull()).thenAnswer(invocation -> {
             log.info("findAllByParentTagIsNull invoked");
-            return existTagMap.values().stream()
+            return existTagInDB.values().stream()
                     .filter(tag -> tag.getParentTagId() == null)
                     .toList();
         });
         when(tagDAO.findTagById(anyLong())).thenAnswer(invocation -> {
             Long tagId = invocation.getArgument(0);
             log.info("findTagById invoked, tagId: {}", tagId);
-            return existTagMap.values().stream()
+            return existTagInDB.values().stream()
                     .filter(tag -> tag.getId().equals(tagId))
                     .findFirst()
                     .orElse(null);
+        });
+        doAnswer(invocation -> {
+            Tag tag = invocation.getArgument(0);
+            existTagInDB.remove(tag.getTagName());
+            log.info("tag {} deleted", tag.getTagName());
+            return null; // 对于void方法，这里的null将被忽略
+        }).when(tagDAO).delete(any(Tag.class));
+        // mock TaskTagMatchDAO
+        doAnswer(invocation -> {
+            Long tagId = invocation.getArgument(0);
+            log.info("deleteAllByTagId invoked, tagId: {}", tagId);
+            existTaskTagMatchInDB.values().removeIf(taskTagMatch -> taskTagMatch.getTagId().equals(tagId));
+            return null; // 对于void方法，这里的null将被忽略
+        }).when(taskTagMatchDAO).deleteAllByTagId(anyLong());
+        when(taskTagMatchDAO.save(any(TaskTagMatch.class))).thenAnswer(invocationOnMock -> {
+            TaskTagMatch entity = invocationOnMock.getArgument(0);
+            if (entity.getId() == null) {
+                entity.setId((long) existTaskTagMatchInDB.size());
+            }
+            existTaskTagMatchInDB.put(entity.getId(), entity);
+            log.info("taskTagMatch {} saved", entity.getId());
+            return entity;
+        });
+        when(taskTagMatchDAO.findAll()).thenAnswer(invocation -> {
+            log.info("findAll invoked");
+            return existTaskTagMatchInDB.values().stream().toList();
         });
     }
 
     @Test
     void testCreateNewTagNormal() {
-        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag3"));
+        assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag3"));
         verify(tagDAO, times(3)).findByTagName(anyString());
         verify(tagDAO, times(3)).save(any(Tag.class));
 
-        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag4"));
+        assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag4"));
         verify(tagDAO, times(6)).findByTagName(anyString());
         verify(tagDAO, times(4)).save(any(Tag.class));
 
-        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag5"));
+        assertDoesNotThrow(() -> tagService.createNewTag("tag1/tag2/tag5"));
         verify(tagDAO, times(9)).findByTagName(anyString());
         verify(tagDAO, times(5)).save(any(Tag.class));
 
-        Assertions.assertDoesNotThrow(() -> tagService.createNewTag("tag/tag6/tag7"));
+        assertDoesNotThrow(() -> tagService.createNewTag("tag/tag6/tag7"));
         verify(tagDAO, times(12)).findByTagName(anyString());
         verify(tagDAO, times(8)).save(any(Tag.class));
 
-        Assertions.assertEquals(8, existTagMap.size());
+        Assertions.assertEquals(8, existTagInDB.size());
     }
 
     @Test
@@ -275,5 +315,57 @@ public class TagServiceTest {
         // 测试：
         firstLevelTagsWithAllChildren = tagService.findFirstLevelTagsWithAllChildren();
         Assertions.assertEquals(3, firstLevelTagsWithAllChildren.size());
+    }
+
+    /**
+     * @see TagService#deleteTagByName(String)
+     */
+    @Test
+    public void test_deleteTag() throws NewEntityException {
+        // 准备数据：
+        Tag tag1 = tagService.createNewTag("大学");
+        Tag tagA = tagService.createNewTag("大学/课程/智能移动平台开发");
+        Tag tagB = tagService.createNewTag("大学/课程/软件设计");
+        Tag tagC = tagService.createNewTag("大学/课程/数据库设计（H）");
+        Tag tagD = tagService.createNewTag("大学/课程/操作系统（H）");
+        Tag tagE = tagService.createNewTag("大学/课程/操作系统（H）/操作系统实验");
+        Tag tag2 = tagService.createNewTag("大学2");
+        Tag tagF = tagService.createNewTag("大学2/课程sdf");
+
+        taskTagMatchDAO.save(TaskTagMatch.builder().tagId(tag1.getId()).taskId(1L).build());
+        taskTagMatchDAO.save(TaskTagMatch.builder().tagId(tagA.getId()).taskId(2L).build());
+        taskTagMatchDAO.save(TaskTagMatch.builder().tagId(tag2.getId()).taskId(2L).build());
+        taskTagMatchDAO.save(TaskTagMatch.builder().tagId(tagF.getId()).taskId(2L).build());
+        assertEquals("测试前tagInDB数量不正确", 9, existTagInDB.size());
+        assertEquals("测试前matchInDB数量不正确", 4, existTaskTagMatchInDB.size());
+
+        // 测试：
+        // 删除一个tag，但不会删除match和子tag
+        assertDoesNotThrow(() -> tagService.deleteTagByName(tagB.getTagName()));
+        List<Tag> tagList = tagDAO.findAll();
+        assertEquals("删除了tag-<" + tagB.getTagName() + ">后tag总数量不正确", 8, tagList.size());
+        List<TaskTagMatch> taskTagMatchList = taskTagMatchDAO.findAll();
+        assertEquals("删除了tag-<" + tagB.getTagName() + ">后match总数量不正确", 4, taskTagMatchList.size());
+
+        // 删除一个tag，会删除match和子tag
+        assertDoesNotThrow(() -> tagService.deleteTagByName(tag1.getTagName()));
+        tagList = tagDAO.findAll();
+        assertEquals("删除了tag-<" + tag1.getTagName() + ">后tag总数量不正确", 2, tagList.size());
+        taskTagMatchList = taskTagMatchDAO.findAll();
+        assertEquals("删除了tag-<" + tagB.getTagName() + ">后match总数量不正确", 2, taskTagMatchList.size());
+
+        // 删除一个末端的tag，会删除match，不会删除子tag（因为没有子tag）
+        assertDoesNotThrow(() -> tagService.deleteTagByName(tagF.getTagName()));
+        tagList = tagDAO.findAll();
+        assertEquals("删除了tag-<" + tagF.getTagName() + ">后tag总数量不正确", 1, tagList.size());
+        taskTagMatchList = taskTagMatchDAO.findAll();
+        assertEquals("删除了tag-<" + tagB.getTagName() + ">后match总数量不正确", 1, taskTagMatchList.size());
+
+        // 删除最后的tag
+        assertDoesNotThrow(() -> tagService.deleteTagByName(tag2.getTagName()));
+        tagList = tagDAO.findAll();
+        assertEquals("删除了tag-<" + tag2.getTagName() + ">后tag总数量不正确", 0, tagList.size());
+        taskTagMatchList = taskTagMatchDAO.findAll();
+        assertEquals("删除了tag-<" + tag2.getTagName() + ">后match总数量不正确", 0, taskTagMatchList.size());
     }
 }
