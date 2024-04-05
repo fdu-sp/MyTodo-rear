@@ -113,12 +113,6 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/api/task/simple/get-all-tasks/{tag-id}/{status}")
-    public Result getAllTasksByTagAndStatus(@PathVariable("tag-id") Long tagId, @PathVariable("status") String status) {
-        // todo
-        return ResultFactory.buildSuccessResult("todo...", null);
-    }
-
     @PostMapping("/api/task/create-new-task")
     public Result createNewTask(@Validated @RequestBody TaskCreateReq taskCreateReq) {
         try {
