@@ -4,6 +4,7 @@ import com.zmark.mytodo.dao.TaskTimeInfoDAO;
 import com.zmark.mytodo.dto.reminder.TaskReminderInfo;
 import com.zmark.mytodo.entity.TaskTimeInfo;
 import com.zmark.mytodo.service.api.IReminderService;
+import com.zmark.mytodo.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,8 @@ public class ReminderService implements IReminderService {
 
     @Override
     public List<TaskReminderInfo> getTaskReminderInfoList() {
-        List<TaskTimeInfo> taskTimeInfoRespList = taskTimeInfoDAO.findAllByReminderTimestampNotNullAndTask_Completed(false);
+        // TODO 在后端获取时间，会不会刚好错过提醒时间？
+        List<TaskTimeInfo> taskTimeInfoRespList = taskTimeInfoDAO.findAllByReminderTimestampAfterAndTask_Completed(TimeUtils.now(), false);
         return TaskTimeInfo.toTaskReminderInfoList(taskTimeInfoRespList);
     }
 }
