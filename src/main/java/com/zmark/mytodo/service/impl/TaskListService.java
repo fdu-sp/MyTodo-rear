@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 /**
  * @author ZMark
  * @date 2023/12/7 19:26
@@ -42,7 +40,7 @@ public class TaskListService implements ITaskListService {
 
     @Override
     public TaskListDTO findById(long taskListId) throws NoDataInDataBaseException {
-        TaskList taskList = taskListDAO.findById(taskListId);
+        TaskList taskList = taskListDAO.findTaskListById(taskListId);
         if (taskList == null) {
             throw new NoDataInDataBaseException("TaskList", taskListId);
         }
@@ -91,12 +89,10 @@ public class TaskListService implements ITaskListService {
 
     @Override
     public TaskListDTO updateTaskList(TaskListUpdateReq updateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
-        Optional<TaskList> taskListInDataBase = taskListDAO.findById(updateReq.getId());
-        if (taskListInDataBase.isEmpty()) {
+        TaskList taskList = taskListDAO.findTaskListById(updateReq.getId());
+        if (taskList == null) {
             throw new NoDataInDataBaseException("TaskList", updateReq.getId());
         }
-        TaskList taskList = taskListInDataBase.get();
-        
         // name发生了变化
         if (isNameChanged(taskList, updateReq.getName())) {
             TaskList taskListByName = taskListDAO.findByNameAndGroupId(updateReq.getName(), updateReq.getTaskGroupId());
@@ -108,8 +104,8 @@ public class TaskListService implements ITaskListService {
 
         // 分组发生了变化
         if (!taskList.getGroupId().equals(updateReq.getTaskGroupId())) {
-            Optional<TaskGroup> taskGroup = taskGroupDAO.findById(updateReq.getTaskGroupId());
-            if (taskGroup.isEmpty()) {
+            TaskGroup taskGroup = taskGroupDAO.findTaskGroupById(updateReq.getTaskGroupId());
+            if (taskGroup == null) {
                 throw new NoDataInDataBaseException("TaskGroup", updateReq.getTaskGroupId());
             }
             taskList.setGroupId(updateReq.getTaskGroupId());

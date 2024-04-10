@@ -11,5 +11,7 @@ public interface TaskGroupDAO extends JpaRepository<TaskGroup, Long> {
 
     TaskGroup findById(long id);
 
+    TaskGroup findTaskGroupById(long id);
+
     TaskGroup findByName(String name);
 }

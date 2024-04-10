@@ -21,7 +21,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author ZMark
@@ -129,8 +128,8 @@ public class TaskService implements ITaskService {
         // 检查taskList是否存在
         Long taskListId = task.getTaskListId();
         taskListId = taskListId == null ? TaskList.DEFAULT_LIST_ID : taskListId;
-        Optional<TaskList> taskList = taskListDAO.findById(taskListId);
-        if (taskList.isEmpty()) {
+        TaskList taskList = taskListDAO.findTaskListById(taskListId);
+        if (taskList == null) {
             throw new NoDataInDataBaseException("找不到id为" + taskListId + "的任务清单");
         }
         task.setTaskListId(taskListId);
