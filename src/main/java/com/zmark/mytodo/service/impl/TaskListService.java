@@ -54,8 +54,8 @@ public class TaskListService implements ITaskListService {
         String name = creatReq.getName();
         Long taskGroupId =
                 creatReq.getTaskGroupId() == null ? TaskGroup.DEFAULT_GROUP_ID : creatReq.getTaskGroupId();
-        Optional<TaskGroup> taskGroup = taskGroupDAO.findById(taskGroupId);
-        if (taskGroup.isEmpty()) {
+        TaskGroup taskGroup = taskGroupDAO.findById(taskGroupId.longValue());
+        if (taskGroup == null) {
             if (taskGroupId.equals(TaskGroup.DEFAULT_GROUP_ID)) {
                 log.warn("创建任务列表失败！默认任务组不存在！");
             }
