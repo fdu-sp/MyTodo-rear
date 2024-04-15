@@ -101,39 +101,47 @@ public class TaskServiceTest {
         String description = "aaaaa不许拖延";
         Long taskListId = 1L;
         Boolean inMyDay = true;
-        taskCreateReqSuccess = new TaskCreateReq();
-        taskCreateReqSuccess .setTitle(title);
-        taskCreateReqSuccess .setDescription(description);
-        taskCreateReqSuccess .setTaskListId(taskListId);
-        taskCreateReqSuccess .setInMyDay(inMyDay);
-        taskCreateReqSuccess .setTagNames(tagNames);
-        taskCreateReqFail = new TaskCreateReq();
-        taskCreateReqFail.setTitle(title);
-        taskCreateReqFail.setDescription(description);
-        taskCreateReqFail.setTaskListId(2L);
-        taskCreateReqFail.setInMyDay(inMyDay);
-        taskCreateReqFail.setTagNames(tagNames);
-        taskUpdateReqSuccess = new TaskUpdateReq();
-        taskUpdateReqSuccess.setTitle("好耶 快写完测试了");
-        taskUpdateReqSuccess.setTaskListId(taskListId);
-        taskUpdateReqSuccess.setInMyDay(inMyDay);
-        List<TagSimpleResp> tags = new ArrayList<>();
-        tags.add(new TagSimpleResp(0L,"啊啊啊啊","啊啊啊啊"));
-        taskUpdateReqSuccess.setId(0L);
-        taskUpdateReqSuccess.setTags(tags);
-        taskUpdateReqSuccess.setTaskContentInfo(new TaskContentInfoResp());
-        taskUpdateReqSuccess.setTaskTimeInfo(new TaskTimeInfoResp());
-        taskUpdateReqSuccess.setTaskPriorityInfo(new TaskPriorityInfoResp());
-        taskUpdateReqFail = new TaskUpdateReq();
-        taskUpdateReqFail.setTitle(title);
-        taskUpdateReqFail.setTaskListId(2L); //不存在的id
-        taskUpdateReqFail.setInMyDay(inMyDay);
-        taskUpdateReqFail.setTags(tags);
-        taskUpdateReqFail.setId(0L);
-        taskUpdateReqFail.setTaskContentInfo(new TaskContentInfoResp());
-        taskUpdateReqFail.setTaskTimeInfo(new TaskTimeInfoResp());
-        taskUpdateReqFail.setTaskPriorityInfo(new TaskPriorityInfoResp());
+        // 创建成功的任务创建请求
+        taskCreateReqSuccess = TaskCreateReq.builder()
+                .title("今天搞懂软件实践的测试")
+                .tagNames(List.of("啊啊啊啊"))
+                .description("aaaaa不许拖延")
+                .taskListId(1L)
+                .inMyDay(true)
+                .build();
 
+        // 创建失败的任务创建请求
+        taskCreateReqFail = TaskCreateReq.builder()
+                .title("今天搞懂软件实践的测试")
+                .tagNames(List.of("啊啊啊啊"))
+                .description("aaaaa不许拖延")
+                .taskListId(2L) // 无效的taskListId
+                .inMyDay(true)
+                .build();
+
+// 创建成功的任务更新请求
+        taskUpdateReqSuccess = TaskUpdateReq.builder()
+                .title("好耶 快写完测试了")
+                .id(0L) // 假设的有效的任务ID
+                .taskListId(1L)
+                .inMyDay(true)
+                .tags(List.of(new TagSimpleResp(0L, "啊啊啊啊", "啊啊啊啊"))) // 假设的有效的标签对象
+                .taskContentInfo(new TaskContentInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskPriorityInfo(new TaskPriorityInfoResp())
+                .build();
+
+
+        // 创建失败的任务更新请求
+        taskUpdateReqFail = TaskUpdateReq.builder()
+                .title("今天搞懂软件实践的测试")
+                .id(0L) // 假设的无效的任务ID
+                .taskListId(2L) // 无效的taskListId
+                .tags(List.of(new TagSimpleResp(0L, "啊啊啊啊", "啊啊啊啊"))) // 假设的有效的标签对象
+                .taskContentInfo(new TaskContentInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskPriorityInfo(new TaskPriorityInfoResp())
+                .build();
     }
 
     @BeforeEach
