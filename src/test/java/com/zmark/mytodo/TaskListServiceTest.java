@@ -226,7 +226,6 @@ public class TaskListServiceTest {
         if (taskGroupId > taskGroupInDB.size()) {
             throw new IllegalArgumentException("分组ID不存在");
         }
-//        TaskGroup taskGroup = taskGroupInDB.get((int) taskGroupId - 1); // taskGroupId从1开始
         long taskListId = taskListInDB.size() + 1;  // taskListId也从1开始（不同分组的清单共享id变量）
         TaskList taskList = TaskList.builder()
                 .id(taskListId)
@@ -273,6 +272,49 @@ public class TaskListServiceTest {
         assertEquals(newName, taskListAfterUpdate.getName());
         assertEquals(newDescription, taskListAfterUpdate.getDescription());
         assertEquals(newGroupId, taskListAfterUpdate.getGroupId());
+    }
+
+    @Test
+    public void testUpdateTaskListException() {
+        TaskListUpdateReq updateReq;
+        String newName = "我是新的清单";
+        String newDescription = "抵达next level";
+
+        // 更新失败：清单不存在
+        try {
+            updateReq = new TaskListUpdateReq(1L, newName, newDescription, DEFAULT_GROUP_ID);
+            taskListService.updateTaskList(updateReq);
+            log.info("清单更新成功");
+        } catch (Exception e) {
+            log.error("清单更新失败", e);
+        }
+
+        // 创建默认分组
+        createTaskGroup();
+        assertEquals(1, taskGroupInDB.size());
+        // 新建两个默认分组中的清单
+        addTaskList(DEFAULT_GROUP_ID);  // name: 清单1  description: 清单的自我修养  groupId: 1L
+        addTaskList(DEFAULT_GROUP_ID);  // name: 清单2  description: 清单的自我修养  groupId: 1L
+        assertEquals(2, taskListInDB.size());
+
+        // 更新失败：同一分组下的清单名字不能相同
+        try {
+            updateReq = new TaskListUpdateReq(1L, "清单2", newDescription, DEFAULT_GROUP_ID);
+            taskListService.updateTaskList(updateReq);
+            log.info("清单更新成功");
+        } catch (Exception e) {
+            log.error("清单更新失败", e);
+        }
+
+        // 更新失败：不存在分组2
+        try {
+            updateReq = new TaskListUpdateReq(1L, newName, newDescription, 2L);
+            taskListService.updateTaskList(updateReq);
+            log.info("清单更新成功");
+        } catch (Exception e) {
+            log.error("清单更新失败", e);
+        }
+
     }
 
 }
