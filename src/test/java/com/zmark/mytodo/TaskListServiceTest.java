@@ -175,7 +175,7 @@ public class TaskListServiceTest {
             taskListService.createNewTaskList(taskListCreateReq);
             log.info("分组1#清单1创建成功");
         } catch (Exception e) {
-            log.error("分组1#清单1创建失败", e);
+            log.warn("分组1#清单1创建失败", e);
         }
 
         // 添加分组
@@ -217,7 +217,7 @@ public class TaskListServiceTest {
             taskListService.createNewTaskList(taskListCreateReq);
             log.info("分组2#清单1创建成功");
         } catch (Exception e) {
-            log.error("分组2#清单1创建失败", e);
+            log.warn("分组2#清单1创建失败", e);
         }
     }
 
@@ -286,7 +286,7 @@ public class TaskListServiceTest {
             taskListService.updateTaskList(updateReq);
             log.info("清单更新成功");
         } catch (Exception e) {
-            log.error("清单更新失败", e);
+            log.warn("清单更新失败", e);
         }
 
         // 创建默认分组
@@ -303,7 +303,7 @@ public class TaskListServiceTest {
             taskListService.updateTaskList(updateReq);
             log.info("清单更新成功");
         } catch (Exception e) {
-            log.error("清单更新失败", e);
+            log.warn("清单更新失败", e);
         }
 
         // 更新失败：不存在分组2
@@ -312,7 +312,7 @@ public class TaskListServiceTest {
             taskListService.updateTaskList(updateReq);
             log.info("清单更新成功");
         } catch (Exception e) {
-            log.error("清单更新失败", e);
+            log.warn("清单更新失败", e);
         }
 
     }
