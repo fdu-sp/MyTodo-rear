@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Violette
  * @date 2024/4/10 0:44
- * @see com.zmark.mytodo.service.impl.TaskListService 被测试的类
+ * @see TaskListService 被测对象
  */
 
 @Slf4j
@@ -40,6 +40,8 @@ public class TaskListServiceTest {
      */
     private static List<TaskGroup> taskGroupInDB;
     private static List<TaskList> taskListInDB;
+    private static long taskGroupId;  // 当前累计分组id
+    public final static Long DEFAULT_GROUP_ID = 1L;
 
     @MockBean
     TaskService taskService;
@@ -57,7 +59,7 @@ public class TaskListServiceTest {
 
     @BeforeAll
     static void init() {
-        // 初始化模拟数据
+        // 初始化模拟的数据库
         taskGroupInDB = new ArrayList<>();
         taskListInDB = new ArrayList<>();
     }
@@ -67,6 +69,7 @@ public class TaskListServiceTest {
         // 清空模拟数据
         taskGroupInDB.clear();
         taskListInDB.clear();
+        taskGroupId = 1L;  // 默认分组id为1
         // 重置模拟对象
         reset(taskService, taskListDAO, taskGroupDAO);
         // 初始化被测对象
@@ -77,13 +80,13 @@ public class TaskListServiceTest {
                 .thenAnswer(invocation -> {
                     // 模拟返回数据
                     int taskGroupId = ((Long) invocation.getArgument(0)).intValue();
-                    log.info("taskGroupId = {}", taskGroupId);
-                    log.info("taskGroupInDB.size() = {}", taskGroupInDB.size());
-                    if (taskGroupId >= taskGroupInDB.size()) {
+//                    log.info("taskGroupId = {}", taskGroupId);
+//                    log.info("taskGroupInDB.size() = {}", taskGroupInDB.size());
+                    if (taskGroupId > taskGroupInDB.size()) {
                         throw new NoDataInDataBaseException("TaskGroup", taskGroupId);
                     }
-                    log.info("taskGroupInDB.get(taskGroupId) = {}", taskGroupInDB.get(taskGroupId).toString());
-                    return taskGroupInDB.get(taskGroupId);
+//                    log.info("taskGroupInDB.get(taskGroupId) = {}", taskGroupInDB.get(taskGroupId).toString());
+                    return taskGroupInDB.get(taskGroupId - 1);  // taskGroupId从1开始
                 });
         when(taskListDAO.findByNameAndGroupId(anyString(), anyLong()))
                 .thenAnswer(invocationOnMock -> {
@@ -105,32 +108,41 @@ public class TaskListServiceTest {
                 });
     }
 
-    private TaskGroup createTaskGroup() {
+    private void createTaskGroup() {
         TaskGroup taskGroup = TaskGroup.builder()
-                .id((long) taskGroupInDB.size())
+                .id(taskGroupId++)
                 .name("分组" + taskGroupInDB.size())
                 .description("分组" + taskGroupInDB.size())
                 .taskLists(new ArrayList<>())
                 .build();
         taskGroupInDB.add(taskGroup);
-        return taskGroup;
+//        return taskGroup;
     }
 
     @Test
     public void testCreateNewTaskListNormal() {
+        // 添加默认分组
         createTaskGroup();
 
-        log.info("taskGroupInDB.size()={}", taskGroupInDB.size());
-        log.info(taskGroupInDB.toString());
-
-        TaskListCreateReq taskListCreateReq = new TaskListCreateReq("清单1", "测试", 0L);
-        assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReq));
+        // 添加清单，设置分组为默认分组
+        TaskListCreateReq taskListCreateReqWithDefaultGroup = new TaskListCreateReq("清单1", "测试", DEFAULT_GROUP_ID);
+        assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithDefaultGroup));
 
         verify(taskGroupDAO, times(1)).findById(anyLong());
         verify(taskListDAO, times(1)).findByNameAndGroupId(anyString(), anyLong());
         verify(taskListDAO, times(1)).save(any(TaskList.class));
 
         assertEquals(1, taskListInDB.size());
+
+        // 添加清单，不指定分组，service函数会自动选择默认分组
+        TaskListCreateReq taskListCreateReqWithNullGroup = new TaskListCreateReq("清单2", "测试", null);
+        assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithNullGroup));
+
+        verify(taskGroupDAO, times(2)).findById(anyLong());
+        verify(taskListDAO, times(2)).findByNameAndGroupId(anyString(), anyLong());
+        verify(taskListDAO, times(2)).save(any(TaskList.class));
+
+        assertEquals(2, taskListInDB.size());
     }
 
 
