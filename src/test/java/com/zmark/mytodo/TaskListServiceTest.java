@@ -1,12 +1,12 @@
 package com.zmark.mytodo;
 
 import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
+import com.zmark.mytodo.bo.list.req.TaskListUpdateReq;
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.impl.TaskListService;
 import com.zmark.mytodo.service.impl.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class TaskListServiceTest {
     private static List<TaskGroup> taskGroupInDB;
     private static List<TaskList> taskListInDB;
     private static long taskGroupId;  // 当前累计分组id
-    public final static Long DEFAULT_GROUP_ID = 1L;
+    public final static long DEFAULT_GROUP_ID = 1L;
 
     @MockBean
     TaskService taskService;
@@ -77,14 +77,22 @@ public class TaskListServiceTest {
         taskListService =
                 new TaskListService(taskListDAO, taskGroupDAO, taskService);
         // 设置模拟对象行为
-        when(taskGroupDAO.findById(anyLong()))  // 这里的 anyLong是基元类型
-                .thenAnswer(invocation -> {
+        when(taskGroupDAO.findTaskGroupById(anyLong()))  // 这里的 anyLong是基元类型
+                .thenAnswer(invocationOnMock -> {
                     // 模拟返回数据
-                    int taskGroupId = ((Long) invocation.getArgument(0)).intValue();
+                    int taskGroupId = ((Long) invocationOnMock.getArgument(0)).intValue();
                     if (taskGroupId > taskGroupInDB.size()) {
                         throw new NoDataInDataBaseException("TaskGroup", taskGroupId);
                     }
                     return taskGroupInDB.get(taskGroupId - 1);  // taskGroupId从1开始
+                });
+        when(taskListDAO.findTaskListById(anyLong()))
+                .thenAnswer(invocationOnMock -> {
+                    int taskListId = ((Long) invocationOnMock.getArgument(0)).intValue();
+                    if (taskListId > taskListInDB.size()) {
+                        throw new NoDataInDataBaseException("TaskList", taskListId);
+                    }
+                    return taskListInDB.get(taskListId - 1);  // taskListId也从1开始
                 });
         when(taskListDAO.findByNameAndGroupId(anyString(), anyLong()))
                 .thenAnswer(invocationOnMock -> {
@@ -99,9 +107,14 @@ public class TaskListServiceTest {
         when(taskListDAO.save(any(TaskList.class)))
                 .thenAnswer(invocationOnMock -> {
                     TaskList taskList = invocationOnMock.getArgument(0);
-                    taskList.setId((long) taskListInDB.size());
-                    taskListInDB.add(taskList);
-                    log.info("task list {} saved", taskList.getName());
+                    if (taskList.getId() != null) {  // update
+                        taskListInDB.set((int) ((long) taskList.getId() - 1), taskList);
+                        log.info("task list group{}#{} updated", taskList.getGroupId(), taskList.getName());
+                    } else {  // insert
+                        taskList.setId((long) taskListInDB.size() + 1); // FIX
+                        taskListInDB.add(taskList);
+                        log.info("task list group{}#{} saved", taskList.getGroupId(), taskList.getName());
+                    }
                     return taskList;
                 });
     }
@@ -120,6 +133,8 @@ public class TaskListServiceTest {
 
     /**
      * 创建清单
+     *
+     * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
      */
 
     @Test
@@ -132,7 +147,7 @@ public class TaskListServiceTest {
         TaskListCreateReq taskListCreateReqWithDefaultGroup = new TaskListCreateReq("清单1", "测试", null);
         assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithDefaultGroup));
 
-        verify(taskGroupDAO, times(1)).findById(anyLong());
+        verify(taskGroupDAO, times(1)).findTaskGroupById(anyLong());
         verify(taskListDAO, times(1)).findByNameAndGroupId(anyString(), anyLong());
         verify(taskListDAO, times(1)).save(any(TaskList.class));
 
@@ -142,7 +157,7 @@ public class TaskListServiceTest {
         TaskListCreateReq taskListCreateReqWithAnotherGroup = new TaskListCreateReq("清单2", "测试", 2L);
         assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithAnotherGroup));
 
-        verify(taskGroupDAO, times(2)).findById(anyLong());
+        verify(taskGroupDAO, times(2)).findTaskGroupById(anyLong());
         verify(taskListDAO, times(2)).findByNameAndGroupId(anyString(), anyLong());
         verify(taskListDAO, times(2)).save(any(TaskList.class));
 
@@ -206,5 +221,58 @@ public class TaskListServiceTest {
         }
     }
 
+
+    private void addTaskList(long taskGroupId) {
+        if (taskGroupId > taskGroupInDB.size()) {
+            throw new IllegalArgumentException("分组ID不存在");
+        }
+//        TaskGroup taskGroup = taskGroupInDB.get((int) taskGroupId - 1); // taskGroupId从1开始
+        long taskListId = taskListInDB.size() + 1;  // taskListId也从1开始（不同分组的清单共享id变量）
+        TaskList taskList = TaskList.builder()
+                .id(taskListId)
+                .name("清单" + taskListId)
+                .groupId(taskGroupId)
+                .description("清单的自我修养")
+                .build();
+        taskListInDB.add(taskList);
+        log.info("task list group{}#list{} saved", taskGroupId, taskListId);
+    }
+
+
+    /**
+     * 修改清单信息
+     *
+     * @see TaskListService#updateTaskList(TaskListUpdateReq)
+     */
+    @Test
+    public void testUpdateTaskListNormal() {
+        // 创建分组
+        createTaskGroup();
+        createTaskGroup();
+        assertEquals(2, taskGroupInDB.size());
+        // 新建一个在默认分组中的清单
+        addTaskList(1L);  // name: 清单1  description: 清单的自我修养  groupId: 1L
+        assertEquals(1, taskListInDB.size());
+
+        // 更新清单名字、描述、所属分组
+        String newName = "我是新的清单";
+        String newDescription = "抵达next level";
+        Long newGroupId = 2L;
+        TaskListUpdateReq updateReq = new TaskListUpdateReq(1L, newName, newDescription, newGroupId);
+        assertDoesNotThrow(() -> taskListService.updateTaskList(updateReq));
+
+        verify(taskListDAO, times(1)).findTaskListById(anyLong());
+        verify(taskGroupDAO, times(1)).findTaskGroupById(anyLong());
+        verify(taskListDAO, times(1)).findByNameAndGroupId(anyString(), anyLong());
+        verify(taskListDAO, times(1)).save(any(TaskList.class));
+
+        assertEquals(1, taskListInDB.size());
+
+        // 验证信息是否被成功更新
+        TaskList taskListAfterUpdate = taskListInDB.get(0);
+        assertEquals(newName, taskListAfterUpdate.getName());
+        assertEquals(newDescription, taskListAfterUpdate.getDescription());
+        assertEquals(newGroupId, taskListAfterUpdate.getGroupId());
+    }
 
 }
