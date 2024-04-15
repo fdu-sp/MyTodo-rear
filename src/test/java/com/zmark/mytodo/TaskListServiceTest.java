@@ -6,6 +6,7 @@ import com.zmark.mytodo.dao.TaskListDAO;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.impl.TaskListService;
 import com.zmark.mytodo.service.impl.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -80,12 +81,9 @@ public class TaskListServiceTest {
                 .thenAnswer(invocation -> {
                     // 模拟返回数据
                     int taskGroupId = ((Long) invocation.getArgument(0)).intValue();
-//                    log.info("taskGroupId = {}", taskGroupId);
-//                    log.info("taskGroupInDB.size() = {}", taskGroupInDB.size());
                     if (taskGroupId > taskGroupInDB.size()) {
                         throw new NoDataInDataBaseException("TaskGroup", taskGroupId);
                     }
-//                    log.info("taskGroupInDB.get(taskGroupId) = {}", taskGroupInDB.get(taskGroupId).toString());
                     return taskGroupInDB.get(taskGroupId - 1);  // taskGroupId从1开始
                 });
         when(taskListDAO.findByNameAndGroupId(anyString(), anyLong()))
@@ -116,16 +114,22 @@ public class TaskListServiceTest {
                 .taskLists(new ArrayList<>())
                 .build();
         taskGroupInDB.add(taskGroup);
-//        return taskGroup;
+        log.info("task group {} saved", taskGroupInDB.size());
     }
+
+
+    /**
+     * 创建清单
+     */
 
     @Test
     public void testCreateNewTaskListNormal() {
-        // 添加默认分组
+        // 添加分组
+        createTaskGroup();  // 默认分组，id为1
         createTaskGroup();
 
-        // 添加清单，设置分组为默认分组
-        TaskListCreateReq taskListCreateReqWithDefaultGroup = new TaskListCreateReq("清单1", "测试", DEFAULT_GROUP_ID);
+        // 添加清单，不指定分组，service函数会自动选择默认分组
+        TaskListCreateReq taskListCreateReqWithDefaultGroup = new TaskListCreateReq("清单1", "测试", null);
         assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithDefaultGroup));
 
         verify(taskGroupDAO, times(1)).findById(anyLong());
@@ -134,15 +138,72 @@ public class TaskListServiceTest {
 
         assertEquals(1, taskListInDB.size());
 
-        // 添加清单，不指定分组，service函数会自动选择默认分组
-        TaskListCreateReq taskListCreateReqWithNullGroup = new TaskListCreateReq("清单2", "测试", null);
-        assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithNullGroup));
+        // 添加清单，指定分组为第二个
+        TaskListCreateReq taskListCreateReqWithAnotherGroup = new TaskListCreateReq("清单2", "测试", 2L);
+        assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithAnotherGroup));
 
         verify(taskGroupDAO, times(2)).findById(anyLong());
         verify(taskListDAO, times(2)).findByNameAndGroupId(anyString(), anyLong());
         verify(taskListDAO, times(2)).save(any(TaskList.class));
 
         assertEquals(2, taskListInDB.size());
+    }
+
+    @Test
+    public void testCreateNewTaskListException() {
+        TaskListCreateReq taskListCreateReq;
+
+        // 创建失败：当前不存在默认分组
+        try {
+            log.info("尝试创建分组1#清单1");
+            taskListCreateReq = new TaskListCreateReq("清单1", "测试", null);
+            taskListService.createNewTaskList(taskListCreateReq);
+            log.info("分组1#清单1创建成功");
+        } catch (Exception e) {
+            log.error("分组1#清单1创建失败", e);
+        }
+
+        // 添加分组
+        createTaskGroup();  // 默认分组，id为1
+        createTaskGroup();
+
+        try {
+            log.info("尝试创建分组1#清单1");
+            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 1L);
+            taskListService.createNewTaskList(taskListCreateReq);
+            log.info("分组1#清单1创建成功");
+        } catch (Exception e) {
+            log.error("分组1#清单1创建失败", e);
+        }
+
+        try {
+            log.info("尝试创建分组2#清单1");
+            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 2L);
+            taskListService.createNewTaskList(taskListCreateReq);
+            log.info("分组2#清单1创建成功");
+        } catch (Exception e) {
+            log.error("分组2#清单1创建失败", e);
+        }
+
+        // 创建失败：当前只有2个分组
+        try {
+            log.info("尝试创建分组3#清单1");
+            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 3L);
+            taskListService.createNewTaskList(taskListCreateReq);
+            log.info("分组3#清单1创建成功");
+        } catch (Exception e) {
+            log.warn("创建清单失败：", e);
+        }
+
+        // 创建失败：同一分组下不能有同名清单
+        try {
+            log.info("尝试创建分组2#清单1");
+            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 1L);
+            taskListService.createNewTaskList(taskListCreateReq);
+            log.info("分组2#清单1创建成功");
+        } catch (Exception e) {
+            log.error("分组2#清单1创建失败", e);
+        }
     }
 
 
