@@ -24,9 +24,10 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.*;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 /**
  * @author zouzouyi
@@ -128,7 +129,7 @@ public class ReminderServiceTest {
 
         //1. given 用户已经添加了带有提醒时间信息的任务
         // 准备task数据
-        TaskDTO taskDTO1 = saveReminderTask(createTimeStamp1,remindTimeStamp1);
+        TaskDTO taskDTO1 = saveReminderTask(createTimeStamp1, remindTimeStamp1);
         TaskDTO taskDTO2 = saveReminderTask(createTimeStamp2,remindTimeStamp2);
         TaskDTO taskDTO3 = saveReminderTask(createTimeStamp3,remindTimeStamp3);
         TaskDTO taskDTO4 = saveReminderTask(createTimeStamp4,remindTimeStamp4);
