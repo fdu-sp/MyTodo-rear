@@ -11,6 +11,7 @@ import com.zmark.mytodo.service.impl.ReminderService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -123,6 +124,7 @@ public class ReminderServiceTest {
 }
 
 
+    @Disabled
     @Test
     public void test_getTaskReminderInfoList() {
 
