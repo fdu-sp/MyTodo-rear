@@ -343,53 +343,50 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void test_createTaskSuccess() {
+    public void test_createTaskSuccess() throws NewEntityException, NoDataInDataBaseException {
         //1.Given 用户需要创建待办事项
         //beforeAll已经准备好数据
 
 
-        try {
-            //2. When 调用taskService的createNewTask
-            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
+        //2. When 调用taskService的createNewTask
+        TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
 
-            //3. Then task创建成功
-            // 验证 tagsInDB 的大小为 1
-            Assertions.assertEquals(1, tagsInDB.size());
-            // 验证 taskTagMatchesInDB 的大小为 1
-            Assertions.assertEquals(1, taskTagMatchesInDB.size());
-            // 验证 myDayTasksInDB 的大小为 1
-            Assertions.assertEquals(1, myDayTasksInDB.size());
-            // 验证 tasksInDB 的大小也为 1
-            Assertions.assertEquals(1, tasksInDB.size());
+        //3. Then task创建成功
+        // 验证 tagsInDB 的大小为 1
+        Assertions.assertEquals(1, tagsInDB.size());
+        // 验证 taskTagMatchesInDB 的大小为 1
+        Assertions.assertEquals(1, taskTagMatchesInDB.size());
+        // 验证 myDayTasksInDB 的大小为 1
+        Assertions.assertEquals(1, myDayTasksInDB.size());
+        // 验证 tasksInDB 的大小也为 1
+        Assertions.assertEquals(1, tasksInDB.size());
 
-            // 验证 taskTagMatchesInDB 里面的 taskId 和 tagId 能和 tagsInDB、tasksInDB 对应上
-            for (TaskTagMatch match : taskTagMatchesInDB) {
-                Long matchedTaskId = match.getTaskId();
-                Long matchedTagId = match.getTagId();
+        // 验证 taskTagMatchesInDB 里面的 taskId 和 tagId 能和 tagsInDB、tasksInDB 对应上
+        for (TaskTagMatch match : taskTagMatchesInDB) {
+            Long matchedTaskId = match.getTaskId();
+            Long matchedTagId = match.getTagId();
 
-                // 检查 taskId 是否存在于 tasksInDB 中
-                boolean taskIdExists = false;
-                for (Task task : tasksInDB) {
-                    if (task.getId().equals(matchedTaskId)) {
-                        taskIdExists = true;
-                        break;
-                    }
+            // 检查 taskId 是否存在于 tasksInDB 中
+            boolean taskIdExists = false;
+            for (Task task : tasksInDB) {
+                if (task.getId().equals(matchedTaskId)) {
+                    taskIdExists = true;
+                    break;
                 }
-                assertTrue("The task with id " + matchedTaskId + " was not found in tasksInDB.", taskIdExists);
-
-                // 检查 tagId 是否存在于 tagsInDB 中
-                boolean tagIdExists = false;
-                for (Tag tag : tagsInDB) {
-                    if (tag.getId().equals(matchedTagId)) {
-                        tagIdExists = true;
-                        break;
-                    }
-                }
-                assertTrue("The tag with id " + matchedTagId + " was not found in tagsInDB.", tagIdExists);
             }
-        } catch (NewEntityException | NoDataInDataBaseException e) {
-            e.printStackTrace();
+            assertTrue("The task with id " + matchedTaskId + " was not found in tasksInDB.", taskIdExists);
+
+            // 检查 tagId 是否存在于 tagsInDB 中
+            boolean tagIdExists = false;
+            for (Tag tag : tagsInDB) {
+                if (tag.getId().equals(matchedTagId)) {
+                    tagIdExists = true;
+                    break;
+                }
+            }
+            assertTrue("The tag with id " + matchedTagId + " was not found in tagsInDB.", tagIdExists);
         }
+
     }
 
     @Test
@@ -405,28 +402,24 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void test_updateTaskSuccess() {
-        try {
-            //1. Given用户要修改待办事项
-            //准备好数据，创建待办事项
-            taskService.createNewTask(taskCreateReqSuccess);
+    public void test_updateTaskSuccess() throws NewEntityException, NoDataInDataBaseException {
+        //1. Given用户要修改待办事项
+        //准备好数据，创建待办事项
+        taskService.createNewTask(taskCreateReqSuccess);
 
-            //2.When 调用函数进行修改
-            taskService.updateTask(taskUpdateReqSuccess);
+        //2.When 调用函数进行修改
+        taskService.updateTask(taskUpdateReqSuccess);
 
-            //3. 断言
-            // 断言tasksInDB中对应id的任务的title已经被更新
-            Task updatedTask = tasksInDB.stream()
-                    .filter(task -> task.getId().equals(taskUpdateReqSuccess.getId()))
-                    .findFirst()
-                    .orElse(null); // 获取更新后的任务对象，如果不存在则返回null
+        //3. 断言
+        // 断言tasksInDB中对应id的任务的title已经被更新
+        Task updatedTask = tasksInDB.stream()
+                .filter(task -> task.getId().equals(taskUpdateReqSuccess.getId()))
+                .findFirst()
+                .orElse(null); // 获取更新后的任务对象，如果不存在则返回null
 
-            assertNotNull("The task should exist after update.", updatedTask);
-            assertEquals("The title of the task should be updated to '好耶 快写完测试了'.", "好耶 快写完测试了", updatedTask.getTitle());
+        assertNotNull("The task should exist after update.", updatedTask);
+        assertEquals("The title of the task should be updated to '好耶 快写完测试了'.", "好耶 快写完测试了", updatedTask.getTitle());
 
-        } catch (NewEntityException | NoDataInDataBaseException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -462,25 +455,16 @@ public class TaskServiceTest {
             //3. Then 断言检查
             Assertions.assertEquals("找不到id为2的任务", e.getMessage());
         }
-
-
     }
 
     @Test
-    public void test_deleteTaskFailed() {
+    public void test_deleteTaskFailed() throws NewEntityException, NoDataInDataBaseException {
         //先创建好任务
-        try {
-            //1. Given 作为用户，我希望能删除待办事项，以便管理我的工作和生活
-            //已有创建好的待办事项
-            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
+        //1. Given 作为用户，我希望能删除待办事项，以便管理我的工作和生活
+        //已有创建好的待办事项
+        TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
 
-            //2. 调用删除函数
-            taskService.deleteTaskById(taskDTO.getId());
-
-
-        } catch (NewEntityException | NoDataInDataBaseException e) {
-            e.printStackTrace();
-        }
-
+        //2. 调用删除函数
+        taskService.deleteTaskById(taskDTO.getId());
     }
 }
