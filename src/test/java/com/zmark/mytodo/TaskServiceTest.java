@@ -12,33 +12,24 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.*;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.service.impl.TagService;
 import com.zmark.mytodo.service.impl.TaskService;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.stubbing.Answer;
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.*;
-import static org.mockito.Mockito.reset;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.util.AssertionErrors.*;
 
 
 /**
@@ -60,7 +51,7 @@ public class TaskServiceTest {
     @MockBean
     private TaskListDAO taskListDAO;
     @MockBean
-    private TaskTimeInfoDAO  taskTimeInfoDAO;
+    private TaskTimeInfoDAO taskTimeInfoDAO;
     @MockBean
     private MyDayTaskDAO myDayTaskDAO;
     @MockBean
@@ -73,12 +64,12 @@ public class TaskServiceTest {
     private static List<Tag> tagsInDB;
     private static List<TaskTagMatch> taskTagMatchesInDB;
     private static List<MyDayTask> myDayTasksInDB;
-    private static List<Task>  tasksInDB;
+    private static List<Task> tasksInDB;
 
-    private static TaskCreateReq taskCreateReqSuccess ; //模拟的数据 方便插入、修改和删除
+    private static TaskCreateReq taskCreateReqSuccess; //模拟的数据 方便插入、修改和删除
     private static TaskCreateReq taskCreateReqFail;
 
-    private static TaskUpdateReq taskUpdateReqSuccess ; //模拟的数据 方便插入、修改和删除
+    private static TaskUpdateReq taskUpdateReqSuccess; //模拟的数据 方便插入、修改和删除
     private static TaskUpdateReq taskUpdateReqFail;
 
 
@@ -95,7 +86,7 @@ public class TaskServiceTest {
         taskList.setName("高级web");
         taskListsInDB.add(taskList);
 
-        String title  = "今天搞懂软件实践的测试";
+        String title = "今天搞懂软件实践的测试";
         List<String> tagNames = new ArrayList<>();
         tagNames.add("啊啊啊啊");
         String description = "aaaaa不许拖延";
@@ -119,7 +110,7 @@ public class TaskServiceTest {
                 .inMyDay(true)
                 .build();
 
-// 创建成功的任务更新请求
+        // 创建成功的任务更新请求
         taskUpdateReqSuccess = TaskUpdateReq.builder()
                 .title("好耶 快写完测试了")
                 .id(0L) // 假设的有效的任务ID
@@ -159,8 +150,8 @@ public class TaskServiceTest {
 
         //指定mock对象的行为
 
-        /**
-         * 模拟taskListDAO
+        /*
+          模拟taskListDAO
          */
         when(taskListDAO.findTaskListById(anyLong())).thenAnswer(invocationOnMock -> {
             Long id = invocationOnMock.getArgument(0);
@@ -174,11 +165,9 @@ public class TaskServiceTest {
         });
 
 
-        /**
-         * 模拟tagDAO
+        /*
+          模拟tagDAO
          */
-
-
         // 通过遍历tagsInDB来查找具有特定名称的Tag
         when(tagDAO.findByTagName(anyString())).thenAnswer(invocation -> {
             String tagName = invocation.getArgument(0);
@@ -190,8 +179,8 @@ public class TaskServiceTest {
             return null; // 如果没有找到具有该名称的Tag，则返回null
         });
 
-        /**
-         * 模拟taskDAO
+        /*
+          模拟taskDAO
          */
         doAnswer(invocation -> {
             Task task = invocation.getArgument(0); // 获取 save 方法的第一个参数
@@ -224,8 +213,8 @@ public class TaskServiceTest {
             return null;
         }).when(taskDAO).delete(any(Task.class));
 
-        /**
-         * 模拟tagService
+        /*
+          模拟tagService
          */
         // 自定义方法，创建新的Tag实体
         when(tagService.createNewTag(anyString())).thenAnswer(invocation -> {
@@ -253,8 +242,8 @@ public class TaskServiceTest {
             // 返回最后一个tag
             return parentTag;
         });
-        /**
-         * 模拟taskTagMatchDAO
+        /*
+          模拟taskTagMatchDAO
          */
         // Mock findAllByTagIdAndTaskId 方法的实现
         when(taskTagMatchDAO.findAllByTagIdAndTaskId(anyLong(), anyLong())).thenAnswer(invocation -> {
@@ -276,10 +265,10 @@ public class TaskServiceTest {
         when(taskTagMatchDAO.save(any(TaskTagMatch.class))).thenAnswer(invocation -> {
             TaskTagMatch match = invocation.getArgument(0); // 获取传入的TaskTagMatch对象
             // 根据taskTagMatchesInDB列表的当前大小设置id
-            match.setId((long)(taskTagMatchesInDB.size())); // 假设id从1开始
+            match.setId((long) (taskTagMatchesInDB.size())); // 假设id从1开始
             // 将传入的TaskTagMatch对象添加到taskTagMatchesInDB列表中
             taskTagMatchesInDB.add(match);
-//            System.out.println(match);
+            // System.out.println(match);
             // 通常，save方法会返回被保存的对象，这里我们返回传入的TaskTagMatch对象
             return match;
         });
@@ -292,8 +281,8 @@ public class TaskServiceTest {
             return null;
         }).when(taskTagMatchDAO).deleteAllByTaskId(anyLong());
 
-        /**
-         * 模拟 myDayTaskDAO
+        /*
+          模拟 myDayTaskDAO
          */
         // Mock findMyDayTaskByTaskId 方法的实现
         when(myDayTaskDAO.findMyDayTaskByTaskId(anyLong())).thenAnswer(invocation -> {
@@ -307,12 +296,12 @@ public class TaskServiceTest {
             return null; // 如果没有找到匹配的MyDayTask，返回null
         });
 
-// Mock save 方法的实现
+        // Mock save 方法的实现
         when(myDayTaskDAO.save(any(MyDayTask.class))).thenAnswer(invocation -> {
             MyDayTask myDayTask = invocation.getArgument(0); // 获取传入的MyDayTask对象
             // 根据myDayTasksInDB列表的当前大小设置id
             if (myDayTask.getId() == null) {
-                myDayTask.setId((long)myDayTasksInDB.size()); // 假设id从1开始
+                myDayTask.setId((long) myDayTasksInDB.size()); // 假设id从1开始
             }
             // 将MyDayTask对象添加到myDayTasksInDB列表中
             myDayTasksInDB.add(myDayTask);
@@ -330,8 +319,9 @@ public class TaskServiceTest {
         }).when(myDayTaskDAO).delete(any(MyDayTask.class));
 
     }
+
     private Tag createNewTagEntity(String tagName, Tag parentTag) {
-        long newId = tagsInDB.size() ; // 假设id从0开始
+        long newId = tagsInDB.size(); // 假设id从0开始
         Tag newTag = Tag.builder()
                 .tagName(tagName)
                 .parentTag(parentTag)
@@ -341,6 +331,7 @@ public class TaskServiceTest {
         tagsInDB.add(newTag); // 将新创建的Tag添加到tagsInDB列表中
         return newTag;
     }
+
     // 自定义方法，根据tagName在tagsInDB副本中查找Tag
     private Tag findTagByTagName(List<Tag> tagList, String tagName) {
         for (Tag tag : tagList) {
@@ -352,14 +343,14 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void test_createTaskSuccess(){
+    public void test_createTaskSuccess() {
         //1.Given 用户需要创建待办事项
         //beforeAll已经准备好数据
 
 
         try {
             //2. When 调用taskService的createNewTask
-            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess );
+            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
 
             //3. Then task创建成功
             // 验证 tagsInDB 的大小为 1
@@ -399,7 +390,6 @@ public class TaskServiceTest {
         } catch (NewEntityException | NoDataInDataBaseException e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
@@ -408,14 +398,14 @@ public class TaskServiceTest {
         try {
             taskService.createNewTask(taskCreateReqFail);
             fail("Expected NewEntityException to be thrown");
-        }catch (NewEntityException | NoDataInDataBaseException e) {
+        } catch (NewEntityException | NoDataInDataBaseException e) {
             // 验证抛出的异常类型
-            Assertions.assertEquals( "找不到id为" + taskCreateReqFail.getTaskListId() + "的任务清单", e.getMessage());
+            Assertions.assertEquals("找不到id为" + taskCreateReqFail.getTaskListId() + "的任务清单", e.getMessage());
         }
     }
 
     @Test
-    public void test_updateTaskSuccess(){
+    public void test_updateTaskSuccess() {
         try {
             //1. Given用户要修改待办事项
             //准备好数据，创建待办事项
@@ -434,12 +424,13 @@ public class TaskServiceTest {
             assertNotNull("The task should exist after update.", updatedTask);
             assertEquals("The title of the task should be updated to '好耶 快写完测试了'.", "好耶 快写完测试了", updatedTask.getTitle());
 
-        }catch(NewEntityException | NoDataInDataBaseException e){
+        } catch (NewEntityException | NoDataInDataBaseException e) {
             e.printStackTrace();
         }
     }
+
     @Test
-    public void test_updateTaskFailed(){
+    public void test_updateTaskFailed() {
         try {
             //1. Given用户要修改待办事项
             //准备好数据，创建待办事项
@@ -449,16 +440,16 @@ public class TaskServiceTest {
             taskService.updateTask(taskUpdateReqFail);
 
 
-        }catch (NewEntityException | NoDataInDataBaseException e) {
+        } catch (NewEntityException | NoDataInDataBaseException e) {
             // 验证抛出的异常类型
             //3. 断言
-            Assertions.assertEquals( "找不到id为" + taskUpdateReqFail.getTaskListId() + "的任务清单", e.getMessage());
+            Assertions.assertEquals("找不到id为" + taskUpdateReqFail.getTaskListId() + "的任务清单", e.getMessage());
         }
     }
 
 
     @Test
-    public void test_deleteTaskSuccess(){
+    public void test_deleteTaskSuccess() {
         //先创建好任务
         try {
             //1. Given 作为用户，我希望能删除待办事项，以便管理我的工作和生活
@@ -466,35 +457,30 @@ public class TaskServiceTest {
             //2. When 调用删除函数
             taskService.deleteTaskById(2L);
 
-        }catch (NoDataInDataBaseException e) {
+        } catch (NoDataInDataBaseException e) {
             // 验证抛出的异常类型
             //3. Then 断言检查
-            Assertions.assertEquals( "找不到id为2的任务", e.getMessage());
+            Assertions.assertEquals("找不到id为2的任务", e.getMessage());
         }
-
 
 
     }
 
     @Test
-    public void test_deleteTaskFailed(){
+    public void test_deleteTaskFailed() {
         //先创建好任务
         try {
             //1. Given 作为用户，我希望能删除待办事项，以便管理我的工作和生活
             //已有创建好的待办事项
-            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess );
+            TaskDTO taskDTO = taskService.createNewTask(taskCreateReqSuccess);
 
             //2. 调用删除函数
             taskService.deleteTaskById(taskDTO.getId());
 
 
-
-
-        }catch (NewEntityException | NoDataInDataBaseException e) {
+        } catch (NewEntityException | NoDataInDataBaseException e) {
             e.printStackTrace();
         }
 
     }
-
-
 }
