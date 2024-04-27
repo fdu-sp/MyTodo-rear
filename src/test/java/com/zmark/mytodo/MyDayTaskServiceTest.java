@@ -199,6 +199,7 @@ public class MyDayTaskServiceTest {
     }
 
     /**
+     * 用户故事：我的一天任务列表<br/>
      * 测试场景：后端自动化测试-我的一天自动添加任务<br>
      * - Given 用户已经添加了多个带有不同时间信息的任务<br>
      * - When 到达新的一天（设定为具体的某个时间点T）<br>
@@ -292,6 +293,7 @@ public class MyDayTaskServiceTest {
     }
 
     /**
+     * 用户故事：今日建议<br/>
      * 后端自动化测试-显示当天任务的建议<br/>
      * - Given 用户已经添加了多个带有不同时间信息的任务<br/>
      * - When 到达新的一天（设定为具体的某个时间点T）<br/>
