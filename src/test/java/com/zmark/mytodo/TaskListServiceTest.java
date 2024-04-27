@@ -4,6 +4,8 @@ import com.zmark.mytodo.bo.list.req.TaskListCreateReq;
 import com.zmark.mytodo.bo.list.req.TaskListUpdateReq;
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.dao.TaskListDAO;
+import com.zmark.mytodo.dto.list.TaskListDTO;
+import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
@@ -132,11 +134,10 @@ public class TaskListServiceTest {
 
 
     /**
-     * 创建清单
+     * 用户故事：任务清单的创建
      *
      * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
      */
-
     @Test
     public void testCreateNewTaskListNormal() {
         // 添加分组
@@ -164,6 +165,11 @@ public class TaskListServiceTest {
         assertEquals(2, taskListInDB.size());
     }
 
+    /**
+     * 用户故事：任务清单的创建
+     *
+     * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
+     */
     @Test
     public void testCreateNewTaskListException() {
         TaskListCreateReq taskListCreateReq;
@@ -220,8 +226,7 @@ public class TaskListServiceTest {
             log.warn("分组2#清单1创建失败", e);
         }
     }
-
-
+    
     private void addTaskList(long taskGroupId) {
         if (taskGroupId > taskGroupInDB.size()) {
             throw new IllegalArgumentException("分组ID不存在");
@@ -237,9 +242,8 @@ public class TaskListServiceTest {
         log.info("task list group{}#list{} saved", taskGroupId, taskListId);
     }
 
-
     /**
-     * 修改清单信息
+     * 用户故事：任务清单的维护
      *
      * @see TaskListService#updateTaskList(TaskListUpdateReq)
      */
@@ -274,6 +278,11 @@ public class TaskListServiceTest {
         assertEquals(newGroupId, taskListAfterUpdate.getGroupId());
     }
 
+    /**
+     * 用户故事：任务清单的维护
+     *
+     * @see TaskListService#updateTaskList(TaskListUpdateReq)
+     */
     @Test
     public void testUpdateTaskListException() {
         TaskListUpdateReq updateReq;
@@ -317,4 +326,34 @@ public class TaskListServiceTest {
 
     }
 
+    /**
+     * 用户故事：按照任务清单查看任务
+     *
+     * @see TaskListService#findById(long)
+     */
+    @Test
+    public void test_findById_normal() {
+        // Given 用户已经创建了多个任务，并将它们分配到了不同的任务清单中
+        // 分组1 有两个清单：清单1、清单2
+        // 清单1 有两个任务：任务1、任务2
+        // 清单2 有两个任务：任务3、任务4
+        createTaskGroup();  // 默认分组，id为1
+        List<Task> taskList1 = new ArrayList<>();
+        taskList1.add(Task.builder().id(1L).title("任务1").taskListId(1L).build());
+        taskList1.add(Task.builder().id(2L).title("任务2").taskListId(1L).build());
+        taskListInDB.add(TaskList.builder().id(1L).name("清单1").groupId(1L)
+                .taskList(taskList1).build());
+        List<Task> taskList2 = new ArrayList<>();
+        taskList2.add(Task.builder().id(3L).title("任务3").taskListId(2L).build());
+        taskList2.add(Task.builder().id(4L).title("任务4").taskListId(2L).build());
+        taskListInDB.add(TaskList.builder().id(2L).name("清单2").groupId(1L)
+                .taskList(taskList2).build());
+
+        // When 用户选择一个特定的任务清单进行查看
+        TaskListDTO taskListDTO1 = assertDoesNotThrow(() -> taskListService.findById(1L));
+        TaskListDTO taskListDTO2 = assertDoesNotThrow(() -> taskListService.findById(2L));
+        // Then 系统应该仅显示该特定清单内的任务列表
+        assertEquals(2, taskListDTO1.getTaskDTOList().size());
+        assertEquals(2, taskListDTO2.getTaskDTOList().size());
+    }
 }
