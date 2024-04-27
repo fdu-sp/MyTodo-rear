@@ -120,7 +120,7 @@ public class TaskListServiceTest {
                 });
     }
 
-    private void createTaskGroup() {
+    private TaskGroup createTaskGroup() {
         TaskGroup taskGroup = TaskGroup.builder()
                 .id(taskGroupId++)
                 .name("分组" + taskGroupInDB.size())
@@ -129,6 +129,7 @@ public class TaskListServiceTest {
                 .build();
         taskGroupInDB.add(taskGroup);
         log.info("task group {} saved", taskGroupInDB.size());
+        return taskGroup;
     }
 
 
@@ -223,7 +224,7 @@ public class TaskListServiceTest {
         }
     }
 
-    private void addTaskList(long taskGroupId) {
+    private TaskList addTaskList(long taskGroupId) {
         if (taskGroupId > taskGroupInDB.size()) {
             throw new IllegalArgumentException("分组ID不存在");
         }
@@ -236,6 +237,7 @@ public class TaskListServiceTest {
                 .build();
         taskListInDB.add(taskList);
         log.info("task list group{}#list{} saved", taskGroupId, taskListId);
+        return taskList;
     }
 
     /**
@@ -323,6 +325,49 @@ public class TaskListServiceTest {
             assertInstanceOf(NoDataInDataBaseException.class, e);
             log.warn("清单更新失败", e);
         }
+    }
+
+    /**
+     * 用户故事：为清单划分分组
+     *
+     * @see TaskListService#updateTaskList(TaskListUpdateReq)
+     */
+    @Test
+    public void test_assignTaskListToGroup() throws NoDataInDataBaseException, RepeatedEntityInDatabase {
+        // Given 用户已经创建了多个清单，以及几个特定的分组
+        // 有三个分组
+        // 分组1 有两个清单：清单1、清单2
+        TaskGroup group1 = createTaskGroup();  // 默认分组，id为1
+        TaskGroup group2 = createTaskGroup();
+        TaskGroup group3 = createTaskGroup();
+        // 分组1 有4个清单
+        TaskList list1 = addTaskList(group1.getId()); // 清单1
+        TaskList list2 = addTaskList(group1.getId()); // 清单2
+        TaskList list3 = addTaskList(group1.getId()); // 清单3
+        TaskList list4 = addTaskList(group1.getId()); // 清单4
+
+        assertEquals(4, taskListInDB.size());
+        assertEquals(3, taskGroupInDB.size());
+
+        // When 用户将多个清单分配给不同的分组后，按分组查看清单
+        // 清单3 分配给 分组2
+        taskListService.updateTaskList(TaskListUpdateReq.builder()
+                .id(list3.getId()).taskGroupId(group2.getId()).build());
+        // 清单4 分配给 分组3
+        taskListService.updateTaskList(TaskListUpdateReq.builder()
+                .id(list4.getId()).taskGroupId(group3.getId()).build());
+
+        // Then 进行验证
+        // 分组1 有2个清单 清单1、清单2
+        assertEquals(2, taskListInDB.stream().filter(taskList -> taskList.getGroupId().equals(group1.getId())).count());
+        assertTrue(taskListInDB.stream().anyMatch(taskList -> taskList.getId().equals(list1.getId())));
+        assertTrue(taskListInDB.stream().anyMatch(taskList -> taskList.getId().equals(list2.getId())));
+        // 分组2 有1个清单 清单3
+        assertEquals(1, taskListInDB.stream().filter(taskList -> taskList.getGroupId().equals(group2.getId())).count());
+        assertTrue(taskListInDB.stream().anyMatch(taskList -> taskList.getId().equals(list3.getId())));
+        // 分组3 有1个清单 清单4
+        assertEquals(1, taskListInDB.stream().filter(taskList -> taskList.getGroupId().equals(group3.getId())).count());
+        assertTrue(taskListInDB.stream().anyMatch(taskList -> taskList.getId().equals(list4.getId())));
     }
 
     /**
