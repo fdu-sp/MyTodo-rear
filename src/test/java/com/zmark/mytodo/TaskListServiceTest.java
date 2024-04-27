@@ -33,7 +33,6 @@ import static org.mockito.Mockito.*;
  * @date 2024/4/10 0:44
  * @see TaskListService 被测对象
  */
-
 @Slf4j
 @ExtendWith(SpringExtension.class)
 public class TaskListServiceTest {
@@ -226,7 +225,7 @@ public class TaskListServiceTest {
             log.warn("分组2#清单1创建失败", e);
         }
     }
-    
+
     private void addTaskList(long taskGroupId) {
         if (taskGroupId > taskGroupInDB.size()) {
             throw new IllegalArgumentException("分组ID不存在");
