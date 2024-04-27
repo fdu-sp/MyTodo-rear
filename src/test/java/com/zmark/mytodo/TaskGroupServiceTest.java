@@ -74,11 +74,10 @@ public class TaskGroupServiceTest {
     }
 
     /**
-     * 创建新分组
+     * 用户故事：任务分组的创建
      *
      * @see TaskGroupService#createNew(TaskGroupCreateReq)
      */
-
     @Test
     public void testCreateNewTaskGroupNormal() {
         TaskGroupCreateReq createReq = new TaskGroupCreateReq("分组1", "我是新分组");
@@ -90,6 +89,11 @@ public class TaskGroupServiceTest {
         assertEquals(1, taskGroupInDB.size());
     }
 
+    /**
+     * 用户故事：任务分组的创建
+     *
+     * @see TaskGroupService#createNew(TaskGroupCreateReq)
+     */
     @Test
     public void testCreateNewTaskGroupException() throws RepeatedEntityInDatabase {
         TaskGroupCreateReq createReq;
@@ -112,5 +116,4 @@ public class TaskGroupServiceTest {
             log.warn("创建分组失败：", e);
         }
     }
-
 }
