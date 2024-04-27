@@ -3,6 +3,7 @@ package com.zmark.mytodo;
 import com.zmark.mytodo.bo.group.req.TaskGroupCreateReq;
 import com.zmark.mytodo.dao.TaskGroupDAO;
 import com.zmark.mytodo.entity.TaskGroup;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.impl.TaskGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,13 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -93,16 +91,13 @@ public class TaskGroupServiceTest {
     }
 
     @Test
-    public void testCreateNewTaskGroupException() {
+    public void testCreateNewTaskGroupException() throws RepeatedEntityInDatabase {
         TaskGroupCreateReq createReq;
 
-        try {
-            createReq = new TaskGroupCreateReq("分组1", "我是新分组");
-            taskGroupService.createNew(createReq);
-            log.info("成功创建分组：{}", createReq.getName());
-        } catch (Exception e) {
-            log.error("创建分组失败", e);
-        }
+        createReq = new TaskGroupCreateReq("分组1", "我是新分组");
+        taskGroupService.createNew(createReq);
+        log.info("成功创建分组：{}", createReq.getName());
+
 
         assertEquals(1, taskGroupInDB.size());
 
@@ -111,10 +106,11 @@ public class TaskGroupServiceTest {
             createReq = new TaskGroupCreateReq("分组1", "我是同名分组");
             taskGroupService.createNew(createReq);
             log.info("成功创建分组：{}", createReq.getName());
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(RepeatedEntityInDatabase.class, e);
             log.warn("创建分组失败：", e);
         }
     }
-
 
 }
