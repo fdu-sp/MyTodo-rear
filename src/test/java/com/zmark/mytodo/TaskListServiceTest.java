@@ -9,6 +9,7 @@ import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.TaskGroup;
 import com.zmark.mytodo.entity.TaskList;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.service.impl.TaskListService;
 import com.zmark.mytodo.service.impl.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -170,7 +170,7 @@ public class TaskListServiceTest {
      * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
      */
     @Test
-    public void testCreateNewTaskListException() {
+    public void testCreateNewTaskListException() throws NoDataInDataBaseException, RepeatedEntityInDatabase {
         TaskListCreateReq taskListCreateReq;
 
         // 创建失败：当前不存在默认分组
@@ -178,8 +178,9 @@ public class TaskListServiceTest {
             log.info("尝试创建分组1#清单1");
             taskListCreateReq = new TaskListCreateReq("清单1", "测试", null);
             taskListService.createNewTaskList(taskListCreateReq);
-            log.info("分组1#清单1创建成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(NoDataInDataBaseException.class, e);
             log.warn("分组1#清单1创建失败", e);
         }
 
@@ -187,23 +188,15 @@ public class TaskListServiceTest {
         createTaskGroup();  // 默认分组，id为1
         createTaskGroup();
 
-        try {
-            log.info("尝试创建分组1#清单1");
-            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 1L);
-            taskListService.createNewTaskList(taskListCreateReq);
-            log.info("分组1#清单1创建成功");
-        } catch (Exception e) {
-            log.error("分组1#清单1创建失败", e);
-        }
+        log.info("尝试创建分组1#清单1");
+        taskListCreateReq = new TaskListCreateReq("清单1", "测试", 1L);
+        taskListService.createNewTaskList(taskListCreateReq);
+        log.info("分组1#清单1创建成功");
 
-        try {
-            log.info("尝试创建分组2#清单1");
-            taskListCreateReq = new TaskListCreateReq("清单1", "测试", 2L);
-            taskListService.createNewTaskList(taskListCreateReq);
-            log.info("分组2#清单1创建成功");
-        } catch (Exception e) {
-            log.error("分组2#清单1创建失败", e);
-        }
+        log.info("尝试创建分组2#清单1");
+        taskListCreateReq = new TaskListCreateReq("清单1", "测试", 2L);
+        taskListService.createNewTaskList(taskListCreateReq);
+        log.info("分组2#清单1创建成功");
 
         // 创建失败：当前只有2个分组
         try {
@@ -211,7 +204,9 @@ public class TaskListServiceTest {
             taskListCreateReq = new TaskListCreateReq("清单1", "测试", 3L);
             taskListService.createNewTaskList(taskListCreateReq);
             log.info("分组3#清单1创建成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(NoDataInDataBaseException.class, e);
             log.warn("创建清单失败：", e);
         }
 
@@ -221,7 +216,9 @@ public class TaskListServiceTest {
             taskListCreateReq = new TaskListCreateReq("清单1", "测试", 1L);
             taskListService.createNewTaskList(taskListCreateReq);
             log.info("分组2#清单1创建成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(RepeatedEntityInDatabase.class, e);
             log.warn("分组2#清单1创建失败", e);
         }
     }
@@ -293,7 +290,9 @@ public class TaskListServiceTest {
             updateReq = new TaskListUpdateReq(1L, newName, newDescription, DEFAULT_GROUP_ID);
             taskListService.updateTaskList(updateReq);
             log.info("清单更新成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(NoDataInDataBaseException.class, e);
             log.warn("清单更新失败", e);
         }
 
@@ -309,8 +308,9 @@ public class TaskListServiceTest {
         try {
             updateReq = new TaskListUpdateReq(1L, "清单2", newDescription, DEFAULT_GROUP_ID);
             taskListService.updateTaskList(updateReq);
-            log.info("清单更新成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(RepeatedEntityInDatabase.class, e);
             log.warn("清单更新失败", e);
         }
 
@@ -318,11 +318,11 @@ public class TaskListServiceTest {
         try {
             updateReq = new TaskListUpdateReq(1L, newName, newDescription, 2L);
             taskListService.updateTaskList(updateReq);
-            log.info("清单更新成功");
+            fail();
         } catch (Exception e) {
+            assertInstanceOf(NoDataInDataBaseException.class, e);
             log.warn("清单更新失败", e);
         }
-
     }
 
     /**
