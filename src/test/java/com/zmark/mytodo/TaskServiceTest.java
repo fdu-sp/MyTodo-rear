@@ -80,24 +80,13 @@ public class TaskServiceTest {
         taskTagMatchesInDB = new ArrayList<>();
         myDayTasksInDB = new ArrayList<>();
         tasksInDB = new ArrayList<>();
-        //初始化添加1个默认清单
-        TaskList taskList = new TaskList();
-        taskList.setId(1L);
-        taskList.setName("高级web");
-        taskListsInDB.add(taskList);
 
-        String title = "今天搞懂软件实践的测试";
-        List<String> tagNames = new ArrayList<>();
-        tagNames.add("啊啊啊啊");
-        String description = "aaaaa不许拖延";
-        Long taskListId = 1L;
-        Boolean inMyDay = true;
         // 创建成功的任务创建请求
         taskCreateReqSuccess = TaskCreateReq.builder()
                 .title("今天搞懂软件实践的测试")
                 .tagNames(List.of("啊啊啊啊"))
                 .description("aaaaa不许拖延")
-                .taskListId(1L)
+                .taskListId(TaskList.DEFAULT_LIST_ID)
                 .inMyDay(true)
                 .build();
 
@@ -114,7 +103,7 @@ public class TaskServiceTest {
         taskUpdateReqSuccess = TaskUpdateReq.builder()
                 .title("好耶 快写完测试了")
                 .id(0L) // 假设的有效的任务ID
-                .taskListId(1L)
+                .taskListId(TaskList.DEFAULT_LIST_ID)
                 .inMyDay(true)
                 .tags(List.of(new TagSimpleResp(0L, "啊啊啊啊", "啊啊啊啊"))) // 假设的有效的标签对象
                 .taskContentInfo(new TaskContentInfoResp())
@@ -138,16 +127,20 @@ public class TaskServiceTest {
     @BeforeEach
     void setUp() throws NewEntityException {
         //清空数据
+        taskListsInDB.clear();
         tagsInDB.clear();
         taskTagMatchesInDB.clear();
         myDayTasksInDB.clear();
         tasksInDB.clear();
+        //初始化添加1个默认清单
+        TaskList defaultTaskList = new TaskList();
+        defaultTaskList.setId(TaskList.DEFAULT_LIST_ID);
+        defaultTaskList.setName("默认清单");
+        taskListsInDB.add(defaultTaskList);
         //重置
         reset(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService);
         //初始化被测对象
         taskService = new TaskService(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService);
-
-
         //指定mock对象的行为
 
         /*
@@ -160,10 +153,9 @@ public class TaskServiceTest {
                     return taskList;
                 }
             }
-            // 如果没有找到，返回一个空的Optional对象
+            // 如果没有找到，返回 null
             return null;
         });
-
 
         /*
           模拟tagDAO
@@ -187,9 +179,32 @@ public class TaskServiceTest {
             if (task.getId() == null) {
                 task.setId((long) (tasksInDB.size())); // 简单的 ID 分配逻辑
             }
+            Task oldTask = tasksInDB.stream()
+                    .filter(t -> t.getId().equals(task.getId()))
+                    .findFirst()
+                    .orElse(null);
+            Long oldTaskListId = oldTask == null ? null : oldTask.getTaskListId();
+            if (oldTask != null) {
+                tasksInDB.remove(oldTask);
+            }
             // 现在添加或更新任务到模拟的数据库中
-            tasksInDB.removeIf(t -> t.getId().equals(task.getId())); // 移除旧的同ID任务（如果存在）
-            tasksInDB.add(task); // 添加更新后的任务
+            // 添加更新后的任务
+            tasksInDB.add(task);
+            // 更新任务清单中的任务
+            if (oldTaskListId != null) {
+                // 移除旧清单中的任务
+                taskListsInDB.stream()
+                        .filter(taskList -> taskList.getId().equals(oldTaskListId))
+                        .findFirst()
+                        .ifPresent(taskList -> taskList.getTaskList().removeIf(t -> t.getId().equals(task.getId())));
+            }
+            // 添加新清单中的任务
+            taskListsInDB.stream()
+                    .filter(taskList -> taskList.getId().equals(task.getTaskListId()))
+                    .findFirst()
+                    .ifPresent(taskList -> {
+                        taskList.getTaskList().add(task);
+                    });
             return null; // 由于是 void 方法，返回 null
         }).when(taskDAO).save(any(Task.class));
 
@@ -466,5 +481,81 @@ public class TaskServiceTest {
 
         //2. 调用删除函数
         taskService.deleteTaskById(taskDTO.getId());
+    }
+
+
+    /**
+     * 用户故事：为待办事项划分清单
+     *
+     * @see TaskService#updateTask(TaskUpdateReq)
+     */
+    @Test
+    public void test_assignTaskToList() throws NewEntityException, NoDataInDataBaseException {
+        // Given 用户已经创建了多个任务，以及几个特定的清单
+        // 创建了 两个清单：清单1 和 清单2
+        TaskList taskList1 = TaskList.builder()
+                .id(2L)
+                .name("清单1")
+                .build();
+        taskListsInDB.add(taskList1);
+        TaskList taskList2 = TaskList.builder()
+                .id(3L)
+                .name("清单2")
+                .build();
+        taskListsInDB.add(taskList2);
+        // 创建了 三个任务：任务1、任务2 和 任务3 都位于默认清单（id为1）中
+        TaskDTO task1 = taskService.createNewTask(TaskCreateReq.builder()
+                .title("任务1")
+                .tagNames(new ArrayList<>())
+                .taskListId(1L)
+                .description("任务1的描述")
+                .build());
+        TaskDTO task2 = taskService.createNewTask(TaskCreateReq.builder()
+                .title("任务2")
+                .tagNames(new ArrayList<>())
+                .taskListId(1L)
+                .description("任务2的描述")
+                .build());
+        TaskDTO task3 = taskService.createNewTask(TaskCreateReq.builder()
+                .title("任务3")
+                .tagNames(new ArrayList<>())
+                .taskListId(1L)
+                .description("任务3的描述")
+                .build());
+        // 验证默认清单中有3个任务
+        TaskList defaultList = taskListDAO.findTaskListById(TaskList.DEFAULT_LIST_ID);
+        assertEquals("默认清单中应该有3个任务", 3, defaultList.getTaskList().size());
+        // When 用户将多个任务分配给不同的特定清单后，按清单查看任务
+        // 将任务1分配给 清单1
+        taskService.updateTask(TaskUpdateReq.builder()
+                .id(task1.getId())
+                .tags(new ArrayList<>())
+                .taskContentInfo(new TaskContentInfoResp())
+                .taskPriorityInfo(new TaskPriorityInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskListId(2L)
+                .build());
+        // 将任务2分配给 清单2
+        taskService.updateTask(TaskUpdateReq.builder()
+                .id(task2.getId())
+                .tags(new ArrayList<>())
+                .taskContentInfo(new TaskContentInfoResp())
+                .taskPriorityInfo(new TaskPriorityInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskListId(3L)
+                .build());
+        // Then 系统的特定清单中会有特定的任务
+        // 默认清单（id为1）中不再包含任务1、任务2，但有 任务3
+        defaultList = taskListDAO.findTaskListById(TaskList.DEFAULT_LIST_ID);
+        assertEquals("默认清单中应该有1个任务", 1, defaultList.getTaskList().size());
+        assertTrue("默认清单中应包含任务3", defaultList.getTaskList().stream().anyMatch(task -> task.getId().equals(task3.getId())));
+        // 清单1（id为2）中包含 任务1
+        TaskList list1 = taskListDAO.findTaskListById(2L);
+        assertEquals("清单1中应该有1个任务", 1, list1.getTaskList().size());
+        assertTrue("清单1中应包含任务1", list1.getTaskList().stream().anyMatch(task -> task.getId().equals(task1.getId())));
+        // 清单2（id为3）中包含 任务2
+        TaskList list2 = taskListDAO.findTaskListById(3L);
+        assertEquals("清单2中应该有1个任务", 1, list2.getTaskList().size());
+        assertTrue("清单2中应包含任务2", list2.getTaskList().stream().anyMatch(task -> task.getId().equals(task2.getId())));
     }
 }
