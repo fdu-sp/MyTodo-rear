@@ -1,6 +1,6 @@
 package com.zmark.mytodo;
 
-
+import static org.junit.jupiter.api.Assertions.assertAll;
 import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
@@ -26,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -219,6 +220,11 @@ public class TaskServiceTest {
             }
             return null; // 如果没有找到匹配的Task，返回null
         });
+        //Mock findAll
+        when(taskDAO.findAll()).thenAnswer(invocation -> {
+            return tasksInDB; // 返回数据库的所有待办事项
+        });
+
 
         // Mock taskDAO.delete 方法的实现
         doAnswer(invocation -> {
@@ -558,4 +564,72 @@ public class TaskServiceTest {
         assertEquals("清单2中应该有1个任务", 1, list2.getTaskList().size());
         assertTrue("清单2中应包含任务2", list2.getTaskList().stream().anyMatch(task -> task.getId().equals(task2.getId())));
     }
+
+    /**
+     * 用户故事：查看待办事项列表
+     */
+    @Test
+    public void test_findAllTasks() throws NewEntityException, NoDataInDataBaseException {
+        //given: 我希望能够查看我的所有待办事项列表
+        //准备数据
+        // 创建成功的任务创建请求
+        TaskCreateReq task1 = TaskCreateReq.builder()
+                .title("交作业")
+                .tagNames(List.of("啊啊啊啊"))
+                .description("加油")
+                .taskListId(TaskList.DEFAULT_LIST_ID)
+                .inMyDay(true)
+                .build();
+        TaskCreateReq task2 = TaskCreateReq.builder()
+                .title("AIA")
+                .tagNames(List.of("啊啊啊啊"))
+                .description("加油")
+                .taskListId(TaskList.DEFAULT_LIST_ID)
+                .inMyDay(true)
+                .build();
+        taskService.createNewTask(task1);
+        taskService.createNewTask(task2);
+        //when:调用taskService的findAll方法
+        List<TaskDTO> taskDTOList = taskService.findAllTasks();
+        //then：查看所有的待办事项
+        Assertions.assertEquals(2, taskDTOList.size());
+
+        // 验证 taskDTOList 中的每个 TaskDTO 对象都能在 tasksInDB 中找到对应的 Task 对象
+        for (TaskDTO taskDTO : taskDTOList) {
+            boolean found = tasksInDB.stream()
+                    .anyMatch(taskInDB -> taskInDB.getId().equals(taskDTO.getId()));
+            assertTrue("The task with ID " + taskDTO.getId() + " should exist in the database.", found);
+
+        }
+    }
+
+
+    /**
+     * 用户故事：查看待办任务详情
+     */
+    @Test
+    public void test_getTaskDetail() throws NewEntityException, NoDataInDataBaseException {
+        //given: 我希望能够查看我的所有待办事项详细信息
+        //准备数据
+        TaskCreateReq task = TaskCreateReq.builder()
+                .title("交作业")
+                .tagNames(List.of("啊啊啊啊"))
+                .description("加油")
+                .taskListId(TaskList.DEFAULT_LIST_ID)
+                .inMyDay(true)
+                .build();
+        TaskDTO taskDTO = taskService.createNewTask(task);
+        //when 调用查询
+        TaskDTO findTaskDTO = taskService.findTaskById(taskDTO.getId());
+        //then 查看信息，断言信息是否一样
+
+        assertAll(
+                () -> assertEquals("The task list IDs should be equal", taskDTO.getTaskListId(), findTaskDTO.getTaskListId()),
+                () -> assertEquals("The inMyDay values should be equal", taskDTO.getInMyDay(), findTaskDTO.getInMyDay()),
+                () -> assertEquals("The titles should be equal",taskDTO.getTitle(), findTaskDTO.getTitle())
+
+        );
+
+    }
+
 }
