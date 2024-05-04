@@ -10,5 +10,6 @@ import java.util.List;
  * @date 2024/5/4 15:17
  */
 public interface TimerDAO extends JpaRepository<Timer, Long> {
+    Timer findTimerById(Long id);
     List<Timer> findByEndTimeIsNull();
 }

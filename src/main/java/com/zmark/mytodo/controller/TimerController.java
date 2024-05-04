@@ -1,10 +1,12 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
+import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITimerService;
@@ -41,6 +43,20 @@ public class TimerController {
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
             log.error("createNewTimer error, timerCreateReq: {}", timerCreateReq, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @PostMapping("/api/timer/update-timer")
+    public Result updateTimer(@Validated @RequestBody TimerUpdateReq timerUpdateReq) {
+        try {
+            timerService.updateTimer(timerUpdateReq);
+            return ResultFactory.buildSuccessResult();
+        } catch (RepeatedEntityInDatabase | NoDataInDataBaseException e) {
+            log.error("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
+            return ResultFactory.buildFailResult(e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }

@@ -66,6 +66,9 @@ VALUES (1, 1, 5),
        (2, 2, 3),
        (3, 3, 3);
 
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (1, 1, '2024-05-04 15:02:03', null, 0);
+
 -- Task 4
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
 VALUES (4, '计算机网络作业', 0, null, 0, '2023-12-05 17:30:00', '2023-12-05 17:30:00');

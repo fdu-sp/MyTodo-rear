@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Violette
- * @date 2024/5/4 15:55
+ * @date 2024/5/5 0:15
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimerCreateReq {
-    @NotNull(message = "关联任务id必填")
-    private Long taskId;
+public class TimerUpdateReq {
+    @NotNull(message = "计时器id必填")
+    private Long id;
 
-    @NotNull(message = "计时器开始时间必填")
-    @NotEmpty(message = "计时器开始时间不能为空")
-    private String startTime; // "2024-05-04 15:00:00"的timestamp格式
+    @NotNull(message = "计时器结束时间必填")
+    @NotEmpty(message = "计时器结束时间不能为空")
+    private String endTime; // "2024-05-05 15:00:00"的timestamp格式
 }
