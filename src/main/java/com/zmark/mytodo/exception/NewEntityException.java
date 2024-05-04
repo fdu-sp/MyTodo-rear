@@ -36,10 +36,5 @@ public class NewEntityException extends Exception {
     public NewEntityException(Exception e) {
         super(e);
     }
-
-
-    public static NewEntityException RepeatEntityName(String entityClassName, String name) {
-        return new NewEntityException(String.format("已存在name为%s的%s", name, entityClassName));
-    }
 }
 
