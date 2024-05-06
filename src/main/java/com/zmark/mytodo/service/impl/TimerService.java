@@ -5,6 +5,7 @@ import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.dao.TaskDAO;
 import com.zmark.mytodo.dao.TimerDAO;
 import com.zmark.mytodo.dto.timer.TimerDTO;
+import com.zmark.mytodo.dto.timer.TimerDayDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.exception.NewEntityException;
@@ -102,5 +103,10 @@ public class TimerService implements ITimerService {
             Timer timer = timers.get(0);
             return TimerDTO.from(timer);
         }
+    }
+
+    @Override
+    public List<TimerDayDTO> getTimerWeekAnalysis() {
+        return null;
     }
 }

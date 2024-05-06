@@ -1,6 +1,7 @@
 package com.zmark.mytodo.dto.timer;
 
 import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
+import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -9,10 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
- * 用于TimerService传递数据的DTO
- *
  * @author Violette
  * @date 2024/5/4 22:23
  * @see Timer 对应的实体类

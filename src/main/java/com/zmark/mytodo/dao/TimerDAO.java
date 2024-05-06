@@ -12,4 +12,5 @@ import java.util.List;
 public interface TimerDAO extends JpaRepository<Timer, Long> {
     Timer findTimerById(Long id);
     List<Timer> findByEndTimeIsNull();
+//    List<Timer> findAllByStartTime
 }

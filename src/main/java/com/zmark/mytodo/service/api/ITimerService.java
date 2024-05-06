@@ -3,10 +3,13 @@ package com.zmark.mytodo.service.api;
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.dto.timer.TimerDTO;
+import com.zmark.mytodo.dto.timer.TimerDayDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Violette
@@ -37,8 +40,10 @@ public interface ITimerService {
     /**
      * 获取当前正在计时的计时器
      *
-     * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
      * @return 当前正在计时的计时器，若没有则将其中字段设为null（默认）即可
+     * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
      */
     TimerDTO getCurrentTimer() throws RuntimeException;
+
+    List<TimerDayDTO> getTimerWeekAnalysis();
 }

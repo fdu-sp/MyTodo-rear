@@ -7,8 +7,12 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ZMark
@@ -112,10 +116,48 @@ public class TimeUtils {
         return timestampAfter != null && timestampBefore != null && timestampAfter.after(timestampBefore);
     }
 
+    /**
+     * 获取hour小时后的时间
+     */
     public static Timestamp addHour(Timestamp timestamp, Integer hour) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(timestamp.getTime()));
         calendar.add(Calendar.HOUR_OF_DAY, hour);
         return new Timestamp(calendar.getTimeInMillis());
+    }
+
+    /**
+     * 判断两个时间戳是否在同一天
+     */
+    public static Boolean isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+        LocalDate date1 = timestamp1.toLocalDateTime().toLocalDate();
+        LocalDate date2 = timestamp2.toLocalDateTime().toLocalDate();
+        return date1.equals(date2);
+    }
+
+    /**
+     * 获取两个时间戳相差的分钟数
+     */
+    public static Long minutesDiff(Timestamp timestamp1, Timestamp timestamp2) {
+        long diffInMillis = Math.abs(timestamp1.getTime() - timestamp2.getTime());
+        return TimeUnit.MINUTES.convert(diffInMillis, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * 获取给定时间戳距离当天0点的分钟数
+     */
+    public static long minutesSinceMidnight(Timestamp timestamp) {
+        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+        LocalDateTime midnight = localDateTime.toLocalDate().atStartOfDay();
+        return ChronoUnit.MINUTES.between(midnight, localDateTime);
+    }
+
+    /**
+     * 获取当前时间戳距离当天24点的分钟数
+     */
+    public static long minutesUntilMidnight(Timestamp timestamp) {
+        LocalDateTime localDateTime = timestamp.toLocalDateTime();
+        LocalDateTime midnight = localDateTime.toLocalDate().plusDays(1).atStartOfDay();
+        return ChronoUnit.MINUTES.between(localDateTime, midnight);
     }
 }
