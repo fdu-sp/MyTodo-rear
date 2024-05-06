@@ -18,7 +18,7 @@ public interface ITimerService {
      * 如果创建成功，返回新创建的计时器DTO
      *
      * @param timerCreateReq 创建计时器的请求
-     * @throws NewEntityException 如果创建失败，抛出异常（当前已有计时器存在，或者对已完成的任务创建计时器）
+     * @throws NewEntityException        如果创建失败，抛出异常（当前已有计时器存在，或者对已完成的任务创建计时器）
      * @throws NoDataInDataBaseException 如果关联的任务不存在，抛出异常
      */
     @Transactional
@@ -29,8 +29,15 @@ public interface ITimerService {
      *
      * @param timerUpdateReq 更新计时器的请求
      * @throws NoDataInDataBaseException 如果对应的计时器或关联的任务不存在，抛出异常
-     * @throws RepeatedEntityInDatabase 如果计时器的结束时间已经被设置，抛出异常
+     * @throws RepeatedEntityInDatabase  如果计时器的结束时间已经被设置，抛出异常
      */
     @Transactional
     TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase;
+
+    /**
+     * 返回当前正在计时的计时器，若没有则将其中字段设为null（默认）即可
+     *
+     * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
+     */
+    TimerDTO getCurrentTimer() throws RuntimeException;
 }

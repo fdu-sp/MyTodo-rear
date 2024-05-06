@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用于TimerService传递数据的DTO

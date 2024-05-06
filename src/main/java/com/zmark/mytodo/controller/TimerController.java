@@ -1,7 +1,9 @@
 package com.zmark.mytodo.controller;
 
+import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
+import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
 import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.exception.NewEntityException;
@@ -14,9 +16,7 @@ import com.zmark.mytodo.service.impl.TimerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Violette
@@ -61,5 +61,16 @@ public class TimerController {
         }
     }
 
+    @GetMapping("/api/timer/get-current-timer")
+    public Result getCurrentTimer() {
+        try {
+            TimerDTO timerDTO = timerService.getCurrentTimer();
+            TimerSimpleResp respData = TimerDTO.toSimpleResp(timerDTO);
+            return ResultFactory.buildSuccessResult(respData);
+        } catch (Exception e) {
+            log.error("getCurrentTimer error", e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
 
 }

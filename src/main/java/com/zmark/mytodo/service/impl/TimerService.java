@@ -49,7 +49,7 @@ public class TimerService implements ITimerService {
         }
         // 只能对未完成的任务进行计时
         if (task.getCompleted()) {
-            throw new NewEntityException("创建计时器失败！不能对已完成的任务进行计时！");
+            throw new NewEntityException("创建计时器失败！该任务已完成");
         }
 
         Timer timer = Timer.fromTimerCreateReq(createReq);
@@ -83,5 +83,24 @@ public class TimerService implements ITimerService {
 
         timerDAO.save(timer);
         return TimerDTO.from(timer);
+    }
+
+    @Override
+    public TimerDTO getCurrentTimer() throws RuntimeException {
+        List<Timer> timers = timerDAO.findByEndTimeIsNull();
+        if (timers.isEmpty()) {
+            // 当前不存在正在计时的计时器
+            Timer timer = Timer.builder().build();
+            log.info("null timer = {}", timer);
+            return TimerDTO.from(timer);
+        } else if (timers.size() > 1) {
+            // 有多于1个正在计时的计时器
+            // 新建计时器时会检查，出现多个正在计时的计时器有可能是由于并发或其他不可控因素导致的
+            throw new RuntimeException("后台错误！有多个正在计时的计时器！");
+        } else {
+            // 有1个正在计时的计时器
+            Timer timer = timers.get(0);
+            return TimerDTO.from(timer);
+        }
     }
 }
