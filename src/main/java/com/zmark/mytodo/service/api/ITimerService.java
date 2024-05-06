@@ -7,6 +7,7 @@ import com.zmark.mytodo.dto.timer.TimerDayDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
+import com.zmark.mytodo.exception.UpdateEntityException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,10 +33,10 @@ public interface ITimerService {
      *
      * @param timerUpdateReq 更新计时器的请求
      * @throws NoDataInDataBaseException 如果对应的计时器或关联的任务不存在，抛出异常
-     * @throws RepeatedEntityInDatabase  如果计时器的结束时间已经被设置，抛出异常
+     * @throws UpdateEntityException     如果计时器的结束时间已经被设置，或是将要设置的结束时间早于开始时间，抛出异常
      */
     @Transactional
-    TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase;
+    TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, UpdateEntityException;
 
     /**
      * 获取当前正在计时的计时器

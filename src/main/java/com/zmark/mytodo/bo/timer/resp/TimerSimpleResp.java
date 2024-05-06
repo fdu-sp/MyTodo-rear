@@ -18,5 +18,5 @@ import lombok.NoArgsConstructor;
 public class TimerSimpleResp {
     private Long id;
     private Long taskId;
-    private String startTime;
+    private String startTimestamp;
 }

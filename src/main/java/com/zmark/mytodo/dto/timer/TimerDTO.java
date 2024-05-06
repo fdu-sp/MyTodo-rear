@@ -40,7 +40,7 @@ public class TimerDTO {
         return TimerSimpleResp.builder()
                 .id(timerDTO.getId())
                 .taskId(timerDTO.getTaskId())
-                .startTime(TimeUtils.toString(timerDTO.getStartTime()))
+                .startTimestamp(TimeUtils.toString(timerDTO.getStartTime()))
                 .build();
     }
 }

@@ -11,12 +11,14 @@ import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
+import com.zmark.mytodo.exception.UpdateEntityException;
 import com.zmark.mytodo.service.api.ITimerService;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -59,7 +61,7 @@ public class TimerService implements ITimerService {
     }
 
     @Override
-    public TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase {
+    public TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, UpdateEntityException {
         // 对应的计时器必须存在
         Long timerId = timerUpdateReq.getId();
         Timer timer = timerDAO.findTimerById(timerId);
@@ -68,10 +70,14 @@ public class TimerService implements ITimerService {
         }
         // 计时器的结束时间已经被设置
         if (timer.getEndTimestamp() != null) {
-            throw new RepeatedEntityInDatabase("该计时器已被结束！请勿重复操作！");
+            throw new UpdateEntityException("该计时器已被结束！请勿重复操作！");
         }
-        // 设置计时器结束时间
-        timer.setEndTimestamp(TimeUtils.toTimestamp(timerUpdateReq.getEndTimestamp()));
+        // 计时器结束时间晚于开始时间
+        Timestamp endTimestamp = TimeUtils.toTimestamp(timerUpdateReq.getEndTimestamp());
+        if (endTimestamp.before(timer.getStartTimestamp())) {
+            throw new UpdateEntityException("计时器结束时间不能早于开始时间！");
+        }
+        timer.setEndTimestamp(endTimestamp);
         // 检查该任务在本次计时期间是否被完成，若完成则更新计时器完成状态
         Long taskId = timer.getTaskId();
         Task task = taskDAO.findTaskById(taskId);

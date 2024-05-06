@@ -7,6 +7,7 @@ import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
+import com.zmark.mytodo.exception.UpdateEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITimerService;
@@ -50,7 +51,7 @@ public class TimerController {
         try {
             timerService.updateTimer(timerUpdateReq);
             return ResultFactory.buildSuccessResult();
-        } catch (RepeatedEntityInDatabase | NoDataInDataBaseException e) {
+        } catch (UpdateEntityException | NoDataInDataBaseException e) {
             log.error("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
