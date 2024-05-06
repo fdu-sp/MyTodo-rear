@@ -1,10 +1,8 @@
 package com.zmark.mytodo.controller;
 
-import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
-import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
