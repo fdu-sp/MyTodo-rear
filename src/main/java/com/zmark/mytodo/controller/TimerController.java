@@ -3,7 +3,9 @@ package com.zmark.mytodo.controller;
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
+import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
 import com.zmark.mytodo.dto.timer.TimerDTO;
+import com.zmark.mytodo.dto.timer.TimerDayDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
@@ -16,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Violette
@@ -68,6 +72,18 @@ public class TimerController {
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getCurrentTimer error", e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @GetMapping("/api/timer/get-timer-week-analysis")
+    public Result getTimerWeekAnalysis() {
+        try {
+            List<TimerDayDTO> timerDayDTOList = timerService.getTimerWeekAnalysis();
+            TimerWeekAnalysisResp respData = TimerDayDTO.toWeekAnalysisResp(timerDayDTOList);
+            return ResultFactory.buildSuccessResult(respData);
+        } catch (Exception e) {
+            log.error("getTimerWeekAnalysis error", e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }

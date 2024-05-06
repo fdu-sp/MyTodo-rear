@@ -1,5 +1,6 @@
 package com.zmark.mytodo.dto.timer;
 
+import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -7,10 +8,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Violette
@@ -32,16 +34,13 @@ public class TimerDayDTO {
         Timestamp startTime = timer.getStartTimestamp();
         Timestamp endTime = timer.getEndTimestamp();
 
-//        Long timeDiffInMinutes = TimeUtils.minutesDiff(startTime, endTime);
-//        System.out.println("timeDiffInMinutes = " + timeDiffInMinutes.toString());
-
         Timestamp currTime = startTime;
         while (currTime.before(endTime)) {
             if (TimeUtils.isSameDay(currTime, endTime)) {
                 // 计时器在同一天内开始和结束
                 timerDayDTOList.add(
                         TimerDayDTO.builder()
-                                .day(currTime)
+                                .day(TimeUtils.getStartOfDay(currTime))  // 忽略小时、分、秒信息
                                 .focusTime(TimeUtils.minutesDiff(currTime, endTime))
                                 .build()
                 );
@@ -49,15 +48,32 @@ public class TimerDayDTO {
             } else {
                 timerDayDTOList.add(
                         TimerDayDTO.builder()
-                                .day(currTime)
+                                .day(TimeUtils.getStartOfDay(currTime))
                                 .focusTime(TimeUtils.minutesUntilMidnight(currTime)) // 当前时间到今晚24点的分钟数
                                 .build()
                 );
+                System.out.println("to end time = " + TimeUtils.minutesUntilMidnight(currTime));
                 // 将当前时间更新为第二天0点
                 currTime = Timestamp.valueOf(currTime.toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay());
+                System.out.println("new currTime = " + currTime);
             }
         }
 
         return timerDayDTOList;
+    }
+
+    public static TimerWeekAnalysisResp toWeekAnalysisResp(List<TimerDayDTO> timerDayDTOList) {
+        return TimerWeekAnalysisResp.builder()
+                .dayFocusTime(
+                        timerDayDTOList.stream()
+                                .collect(Collectors.toMap(
+                                        t -> TimeUtils.toString(t.getDay()),
+                                        TimerDayDTO::getFocusTime,
+                                        Long::sum  // 累加同一天的专注时间
+                                ))
+                )
+                .build();
+
+
     }
 }

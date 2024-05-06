@@ -3,6 +3,7 @@ package com.zmark.mytodo.dao;
 import com.zmark.mytodo.entity.Timer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ import java.util.List;
  */
 public interface TimerDAO extends JpaRepository<Timer, Long> {
     Timer findTimerById(Long id);
+
     List<Timer> findByEndTimestampIsNull();
-//    List<Timer> findAllByStartTime
+
+    List<Timer> findAllByStartTimestampBetweenAndEndTimestampIsNotNull(Timestamp startTimestamp, Timestamp endTimestamp);
 }

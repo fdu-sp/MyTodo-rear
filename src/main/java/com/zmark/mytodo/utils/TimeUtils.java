@@ -127,6 +127,19 @@ public class TimeUtils {
     }
 
     /**
+     * 获取当天0点的时间戳
+     */
+    public static Date getStartOfDay(Timestamp timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(timestamp.getTime()));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return new Date(calendar.getTimeInMillis());
+    }
+
+    /**
      * 判断两个时间戳是否在同一天
      */
     public static Boolean isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
@@ -141,15 +154,6 @@ public class TimeUtils {
     public static Long minutesDiff(Timestamp timestamp1, Timestamp timestamp2) {
         long diffInMillis = Math.abs(timestamp1.getTime() - timestamp2.getTime());
         return TimeUnit.MINUTES.convert(diffInMillis, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * 获取给定时间戳距离当天0点的分钟数
-     */
-    public static long minutesSinceMidnight(Timestamp timestamp) {
-        LocalDateTime localDateTime = timestamp.toLocalDateTime();
-        LocalDateTime midnight = localDateTime.toLocalDate().atStartOfDay();
-        return ChronoUnit.MINUTES.between(midnight, localDateTime);
     }
 
     /**

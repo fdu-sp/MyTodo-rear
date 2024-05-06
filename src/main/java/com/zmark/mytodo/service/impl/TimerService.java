@@ -10,7 +10,6 @@ import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.exception.UpdateEntityException;
 import com.zmark.mytodo.service.api.ITimerService;
 import com.zmark.mytodo.utils.TimeUtils;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,6 +113,16 @@ public class TimerService implements ITimerService {
 
     @Override
     public List<TimerDayDTO> getTimerWeekAnalysis() {
-        return null;
+        // 查找近一周所有计时器
+        // TODO: 目前只根据开始时间查找，没有检查结束时间可能在一周内的
+        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.before(7), TimeUtils.now());
+        System.out.println("timers = " + timers.toString());
+        // 统计每个计时器的信息（专注日期及专注时长），考虑一个计时器横框多天的情况
+        List<TimerDayDTO> timerDayDTOList = new ArrayList<>();
+        for (Timer timer : timers) {
+            timerDayDTOList.addAll(TimerDayDTO.from(timer));
+        }
+        System.out.println("timerDayDTOList = " + timerDayDTOList.toString());
+        return timerDayDTOList;
     }
 }
