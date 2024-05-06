@@ -17,12 +17,19 @@ VALUES (2, '智能移动平台应用开发', 2),
        (8, '数据库设计（H）', 2),
        (9, '分布式系统', 2);
 
-INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
-VALUES (1, '概率论与数理统计HW11', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
-INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
-VALUES (2, '《安卓开发》Lab4', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
-INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
-VALUES (3, '《安卓开发》Lab3', 0, null, 0, '2023-12-05 16:16:05', '2023-12-05 16:16:05');
+# INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+# VALUES (1, '概率论与数理统计HW11', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+# INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+# VALUES (2, '《安卓开发》Lab4', 0, null, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+# INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
+# VALUES (3, '《安卓开发》Lab3', 0, null, 0, '2023-12-05 16:16:05', '2023-12-05 16:16:05');
+
+INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
+VALUES (1, '概率论与数理统计HW11', 0, null, 2, 1, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
+VALUES (2, '《安卓开发》Lab4', 0, null, 2, 0, '2023-12-05 16:15:21', '2023-12-05 16:15:21');
+INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
+VALUES (3, '《安卓开发》Lab3', 0, null, 2, 0, '2023-12-05 16:16:05', '2023-12-05 16:16:05');
 
 INSERT INTO task_content_info (id, task_id, description, create_time, update_time)
 VALUES (1, 1, 'Lab2', '2023-12-05 16:15:21', '2023-12-05 16:15:21');
@@ -65,9 +72,6 @@ INSERT INTO task_tag_match (id, task_id, tag_id)
 VALUES (1, 1, 5),
        (2, 2, 3),
        (3, 3, 3);
-
-INSERT INTO timer (id, task_id, start_time, end_time, completed)
-VALUES (1, 1, '2024-05-04 15:02:03', null, 0);
 
 -- Task 4
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
@@ -254,3 +258,19 @@ VALUES (14, '人机交互设计', 2, '2023-12-06 14:00:00', '2023-12-06 14:00:00
 
 INSERT INTO task_tag_match (id, task_id, tag_id)
 VALUES (12, 12, 14);
+
+--- Timer
+--- 清单2
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (1, 1, '2024-05-01 15:02:03', '2024-05-01 16:02:03', 0);
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (2, 2, '2024-05-02 15:02:03', '2024-05-02 16:02:03', 0);
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (3, 3, '2024-05-03 15:02:03', '2024-05-03 16:02:03', 0);
+--- 清单1
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (1, 4, '2024-05-04 15:02:03', '2024-05-04 16:02:03', 0);
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (2, 5, '2024-05-05 15:02:03', '2024-05-05 16:02:03', 0);
+INSERT INTO timer (id, task_id, start_time, end_time, completed)
+VALUES (3, 6, '2024-05-06 15:02:03', '2024-05-06 16:02:03', 0);
