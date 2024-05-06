@@ -21,5 +21,5 @@ public class TimerCreateReq {
 
     @NotNull(message = "计时器开始时间必填")
     @NotEmpty(message = "计时器开始时间不能为空")
-    private String startTime; // "2024-05-04 15:00:00"的timestamp格式
+    private String startTimestamp;
 }

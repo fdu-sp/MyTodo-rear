@@ -71,7 +71,7 @@ public class TimerService implements ITimerService {
             throw new RepeatedEntityInDatabase("该计时器已被结束！请勿重复操作！");
         }
         // 设置计时器结束时间
-        timer.setEndTimestamp(TimeUtils.toTimestamp(timerUpdateReq.getEndTime()));
+        timer.setEndTimestamp(TimeUtils.toTimestamp(timerUpdateReq.getEndTimestamp()));
         // 检查该任务在本次计时期间是否被完成，若完成则更新计时器完成状态
         Long taskId = timer.getTaskId();
         Task task = taskDAO.findTaskById(taskId);

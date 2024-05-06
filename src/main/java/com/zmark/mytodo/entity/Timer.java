@@ -45,7 +45,7 @@ public class Timer {
     public static Timer fromTimerCreateReq(TimerCreateReq timerCreateReq) {
         return Timer.builder()
                 .taskId(timerCreateReq.getTaskId())
-                .startTimestamp(TimeUtils.toTimestamp(timerCreateReq.getStartTime()))
+                .startTimestamp(TimeUtils.toTimestamp(timerCreateReq.getStartTimestamp()))
                 .build();
     }
 

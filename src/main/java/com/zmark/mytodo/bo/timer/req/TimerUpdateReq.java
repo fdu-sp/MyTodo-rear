@@ -21,5 +21,5 @@ public class TimerUpdateReq {
 
     @NotNull(message = "计时器结束时间必填")
     @NotEmpty(message = "计时器结束时间不能为空")
-    private String endTime; // "2024-05-05 15:00:00"的timestamp格式
+    private String endTimestamp;
 }
