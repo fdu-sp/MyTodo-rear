@@ -4,6 +4,7 @@ import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.dto.timer.TimerDayDTO;
+import com.zmark.mytodo.dto.timer.TimerMonthDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.UpdateEntityException;
@@ -40,15 +41,22 @@ public interface ITimerService {
     /**
      * 获取当前正在计时的计时器
      *
-     * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
      * @return 当前正在计时的计时器，若没有则将其中字段设为null（默认）即可
+     * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
      */
     TimerDTO getCurrentTimer() throws RuntimeException;
 
     /**
-     * 获取本周专注信息
+     * 获取本周专注时长信息
      *
-     * @return 专注信息列表，包含日期及当日专注时间
+     * @return 专注时长信息列表，包含日期及当日专注时间
      */
     List<TimerDayDTO> getTimerWeekAnalysis();
+
+    /**
+     * 获取本月各清单专注信息
+     *
+     * @return 专注时长信息列表，包含清单id及当月该清单专注时间
+     */
+    List<TimerMonthDTO> getTimerMonthAnalysis();
 }

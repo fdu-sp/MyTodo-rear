@@ -64,7 +64,7 @@ public class TimerDayDTO {
 
     public static TimerWeekAnalysisResp toWeekAnalysisResp(List<TimerDayDTO> timerDayDTOList) {
         return TimerWeekAnalysisResp.builder()
-                .dayFocusTime(
+                .focusTimeEveryDay(
                         timerDayDTOList.stream()
                                 .collect(Collectors.toMap(
                                         t -> TimeUtils.toString(t.getDay()),
@@ -73,7 +73,5 @@ public class TimerDayDTO {
                                 ))
                 )
                 .build();
-
-
     }
 }

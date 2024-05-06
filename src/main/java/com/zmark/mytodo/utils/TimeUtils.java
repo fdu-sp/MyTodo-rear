@@ -117,7 +117,7 @@ public class TimeUtils {
     }
 
     /**
-     * 获取hour小时后的时间
+     * 获取hour小时后的时间戳
      */
     public static Timestamp addHour(Timestamp timestamp, Integer hour) {
         Calendar calendar = Calendar.getInstance();
@@ -127,7 +127,7 @@ public class TimeUtils {
     }
 
     /**
-     * 获取当天0点的时间戳
+     * 获取当天0点的日期
      */
     public static Date getStartOfDay(Timestamp timestamp) {
         Calendar calendar = Calendar.getInstance();
@@ -137,6 +137,34 @@ public class TimeUtils {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return new Date(calendar.getTimeInMillis());
+    }
+
+    /**
+     * 获取当周第一天0点的时间戳
+     */
+    public static Timestamp getStartOfWeek(Timestamp timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(timestamp.getTime()));
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return new Timestamp(calendar.getTimeInMillis());
+    }
+
+    /**
+     * 获取当月第一天0点的时间戳
+     */
+    public static Timestamp getStartOfMonth(Timestamp timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(timestamp.getTime()));
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 
     /**

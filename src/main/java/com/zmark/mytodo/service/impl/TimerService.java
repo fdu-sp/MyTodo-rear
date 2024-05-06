@@ -6,6 +6,7 @@ import com.zmark.mytodo.dao.TaskDAO;
 import com.zmark.mytodo.dao.TimerDAO;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.dto.timer.TimerDayDTO;
+import com.zmark.mytodo.dto.timer.TimerMonthDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.exception.NewEntityException;
@@ -115,7 +116,8 @@ public class TimerService implements ITimerService {
     public List<TimerDayDTO> getTimerWeekAnalysis() {
         // 查找近一周所有计时器
         // TODO: 目前只根据开始时间查找，没有检查结束时间可能在一周内的
-        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.before(7), TimeUtils.now());
+        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.getStartOfWeek(TimeUtils.now()), TimeUtils.now());
+//        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.before(7), TimeUtils.now());
         System.out.println("timers = " + timers.toString());
         // 统计每个计时器的信息（专注日期及专注时长），考虑一个计时器横框多天的情况
         List<TimerDayDTO> timerDayDTOList = new ArrayList<>();
@@ -124,5 +126,26 @@ public class TimerService implements ITimerService {
         }
         System.out.println("timerDayDTOList = " + timerDayDTOList.toString());
         return timerDayDTOList;
+    }
+
+    @Override
+    public List<TimerMonthDTO> getTimerMonthAnalysis() {
+        System.out.println("start time = " + TimeUtils.getStartOfMonth(TimeUtils.now()));
+        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.getStartOfMonth(TimeUtils.now()), TimeUtils.now());
+
+        // 统计每个计时器的信息（专注日期及专注时长），考虑一个计时器横框多天的情况
+        List<TimerMonthDTO> timerMonthDTOList = new ArrayList<>();
+        for (Timer timer : timers) {
+            Long taskListId = taskDAO.findTaskById(timer.getTaskId()).getTaskListId();
+            Long focusTime = TimeUtils.minutesDiff(timer.getStartTimestamp(), timer.getEndTimestamp());
+            TimerMonthDTO timerMonthDTO = TimerMonthDTO.builder()
+                    .taskListId(taskListId)
+                    .focusTime(focusTime)
+                    .build();
+            timerMonthDTOList.add(timerMonthDTO);
+//            timerMonthDTOList.addAll(timerMonthDTOList.from(timer));
+        }
+        System.out.println("timerDayDTOList = " + timerMonthDTOList.toString());
+        return timerMonthDTOList;
     }
 }

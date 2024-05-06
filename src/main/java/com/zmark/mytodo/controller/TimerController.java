@@ -2,10 +2,12 @@ package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.timer.req.TimerCreateReq;
 import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
+import com.zmark.mytodo.bo.timer.resp.TimerMonthAnalysisResp;
 import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
 import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
 import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.dto.timer.TimerDayDTO;
+import com.zmark.mytodo.dto.timer.TimerMonthDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
@@ -84,6 +86,18 @@ public class TimerController {
             return ResultFactory.buildSuccessResult(respData);
         } catch (Exception e) {
             log.error("getTimerWeekAnalysis error", e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @GetMapping("/api/timer/get-timer-month-analysis")
+    public Result getTimerMonthAnalysis() {
+        try {
+            List<TimerMonthDTO> timerMonthDTOList = timerService.getTimerMonthAnalysis();
+            TimerMonthAnalysisResp respData = TimerMonthDTO.toMonthAnalysisResp(timerMonthDTOList);
+            return ResultFactory.buildSuccessResult(respData);
+        } catch (Exception e) {
+            log.error("getTimerMonthAnalysis error", e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }
