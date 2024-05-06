@@ -35,9 +35,10 @@ public interface ITimerService {
     TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, RepeatedEntityInDatabase;
 
     /**
-     * 返回当前正在计时的计时器，若没有则将其中字段设为null（默认）即可
+     * 获取当前正在计时的计时器
      *
      * @throws RuntimeException 如果后台存在多个正在计时的计时器，抛出异常
+     * @return 当前正在计时的计时器，若没有则将其中字段设为null（默认）即可
      */
     TimerDTO getCurrentTimer() throws RuntimeException;
 }

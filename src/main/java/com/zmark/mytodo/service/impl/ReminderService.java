@@ -8,6 +8,7 @@ import com.zmark.mytodo.utils.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -27,6 +28,14 @@ public class ReminderService implements IReminderService {
     public List<TaskReminderInfo> getTaskReminderInfoList() {
         // TODO 在后端获取时间，会不会刚好错过提醒时间？
         List<TaskTimeInfo> taskTimeInfoRespList = taskTimeInfoDAO.findAllByReminderTimestampAfterAndTask_Completed(TimeUtils.now(), false);
+        return TaskTimeInfo.toTaskReminderInfoList(taskTimeInfoRespList);
+    }
+
+    @Override
+    public List<TaskReminderInfo> getTaskReminderInfoList(Integer hour) {
+        Timestamp startTimestamp = TimeUtils.now();
+        Timestamp endTimestamp = TimeUtils.addHour(startTimestamp, hour);
+        List<TaskTimeInfo> taskTimeInfoRespList = taskTimeInfoDAO.findAllByReminderTimestampBetweenAndTask_Completed(startTimestamp, endTimestamp, false);
         return TaskTimeInfo.toTaskReminderInfoList(taskTimeInfoRespList);
     }
 }

@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Optional;
 
 /**
@@ -109,5 +110,12 @@ public class TimeUtils {
      */
     public static boolean isAfter(Timestamp timestampBefore, Timestamp timestampAfter) {
         return timestampAfter != null && timestampBefore != null && timestampAfter.after(timestampBefore);
+    }
+
+    public static Timestamp addHour(Timestamp timestamp, Integer hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(timestamp.getTime()));
+        calendar.add(Calendar.HOUR_OF_DAY, hour);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 }

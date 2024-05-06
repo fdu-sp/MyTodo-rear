@@ -10,4 +10,6 @@ public interface TaskTimeInfoDAO extends JpaRepository<TaskTimeInfo, Long> {
     List<TaskTimeInfo> findAllByReminderTimestampNotNullAndTask_Completed(Boolean completed);
 
     List<TaskTimeInfo> findAllByReminderTimestampAfterAndTask_Completed(Timestamp timestamp, Boolean completed);
+
+    List<TaskTimeInfo> findAllByReminderTimestampBetweenAndTask_Completed(Timestamp startTimestamp, Timestamp endTimestamp, Boolean completed);
 }
