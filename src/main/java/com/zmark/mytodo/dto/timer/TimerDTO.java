@@ -1,7 +1,6 @@
 package com.zmark.mytodo.dto.timer;
 
 import com.zmark.mytodo.bo.timer.resp.TimerSimpleResp;
-import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * @author Violette
@@ -32,8 +30,8 @@ public class TimerDTO {
         return TimerDTO.builder()
                 .id(timer.getId())
                 .taskId(timer.getTaskId())
-                .startTime(timer.getStartTime())
-                .endTime(timer.getEndTime())
+                .startTime(timer.getStartTimestamp())
+                .endTime(timer.getEndTimestamp())
                 .completed(timer.getCompleted())
                 .build();
     }

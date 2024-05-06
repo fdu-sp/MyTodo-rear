@@ -38,7 +38,7 @@ public class TimerService implements ITimerService {
     @Override
     public TimerDTO createNewTimer(TimerCreateReq createReq) throws NewEntityException, NoDataInDataBaseException {
         // 某时刻最多只能有一个计时器
-        List<Timer> timers = timerDAO.findByEndTimeIsNull();
+        List<Timer> timers = timerDAO.findByEndTimestampIsNull();
         if (!timers.isEmpty()) {
             throw new NewEntityException("创建计时器失败！某时刻最多只能有一个计时器！");
         }
@@ -67,11 +67,11 @@ public class TimerService implements ITimerService {
             throw new NoDataInDataBaseException("Timer", timerId);
         }
         // 计时器的结束时间已经被设置
-        if (timer.getEndTime() != null) {
+        if (timer.getEndTimestamp() != null) {
             throw new RepeatedEntityInDatabase("该计时器已被结束！请勿重复操作！");
         }
         // 设置计时器结束时间
-        timer.setEndTime(TimeUtils.toTimestamp(timerUpdateReq.getEndTime()));
+        timer.setEndTimestamp(TimeUtils.toTimestamp(timerUpdateReq.getEndTime()));
         // 检查该任务在本次计时期间是否被完成，若完成则更新计时器完成状态
         Long taskId = timer.getTaskId();
         Task task = taskDAO.findTaskById(taskId);
@@ -88,7 +88,7 @@ public class TimerService implements ITimerService {
 
     @Override
     public TimerDTO getCurrentTimer() throws RuntimeException {
-        List<Timer> timers = timerDAO.findByEndTimeIsNull();
+        List<Timer> timers = timerDAO.findByEndTimestampIsNull();
         if (timers.isEmpty()) {
             // 当前不存在正在计时的计时器
             Timer timer = Timer.builder().build();

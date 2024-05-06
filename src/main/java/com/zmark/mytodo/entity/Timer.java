@@ -30,13 +30,13 @@ public class Timer {
     @Builder.Default
     private Long taskId = null;
 
-    @Column(name = "start_time")
+    @Column(name = "start_timestamp")
     @Builder.Default
-    private Timestamp startTime = null;
+    private Timestamp startTimestamp = null;
 
-    @Column(name = "end_time")
+    @Column(name = "end_timestamp")
     @Builder.Default
-    private Timestamp endTime = null;
+    private Timestamp endTimestamp = null;
 
     @Column(nullable = false, name = "completed")
     @Builder.Default
@@ -45,7 +45,7 @@ public class Timer {
     public static Timer fromTimerCreateReq(TimerCreateReq timerCreateReq) {
         return Timer.builder()
                 .taskId(timerCreateReq.getTaskId())
-                .startTime(TimeUtils.toTimestamp(timerCreateReq.getStartTime()))
+                .startTimestamp(TimeUtils.toTimestamp(timerCreateReq.getStartTime()))
                 .build();
     }
 

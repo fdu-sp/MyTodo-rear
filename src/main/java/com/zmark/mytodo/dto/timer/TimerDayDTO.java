@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +29,8 @@ public class TimerDayDTO {
     public static List<TimerDayDTO> from(Timer timer) {
         List<TimerDayDTO> timerDayDTOList = new ArrayList<>();
 
-        Timestamp startTime = timer.getStartTime();
-        Timestamp endTime = timer.getEndTime();
+        Timestamp startTime = timer.getStartTimestamp();
+        Timestamp endTime = timer.getEndTimestamp();
 
 //        Long timeDiffInMinutes = TimeUtils.minutesDiff(startTime, endTime);
 //        System.out.println("timeDiffInMinutes = " + timeDiffInMinutes.toString());
