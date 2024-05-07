@@ -73,12 +73,8 @@ public class TimerService implements ITimerService {
         if (timer.getEndTimestamp() != null) {
             throw new UpdateEntityException("该计时器已被结束！请勿重复操作！");
         }
-        // 计时器结束时间晚于开始时间
-        Timestamp endTimestamp = TimeUtils.toTimestamp(timerUpdateReq.getEndTimestamp());
-        if (endTimestamp.before(timer.getStartTimestamp())) {
-            throw new UpdateEntityException("计时器结束时间不能早于开始时间！");
-        }
-        timer.setEndTimestamp(endTimestamp);
+        // 设置计时器结束时间
+        timer.setEndTimestamp(TimeUtils.now());
         // 检查该任务在本次计时期间是否被完成，若完成则更新计时器完成状态
         Long taskId = timer.getTaskId();
         Task task = taskDAO.findTaskById(taskId);
