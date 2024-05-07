@@ -4,13 +4,17 @@ import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.bo.task.req.TaskQueryByTagsReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
+import com.zmark.mytodo.bo.timer.req.TimerUpdateReq;
 import com.zmark.mytodo.dao.*;
 import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.dto.timer.TimerDTO;
 import com.zmark.mytodo.entity.*;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.UpdateEntityException;
 import com.zmark.mytodo.service.api.ITagService;
 import com.zmark.mytodo.service.api.ITaskService;
+import com.zmark.mytodo.service.api.ITimerService;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +39,8 @@ public class TaskService implements ITaskService {
     private final TaskListDAO taskListDAO;
     private final TaskTimeInfoDAO taskTimeInfoDAO;
     private final MyDayTaskDAO myDayTaskDAO;
-
     private final ITagService tagService;
+    private final ITimerService timerService;
 
     @Autowired
     public TaskService(TaskDAO taskDAO,
@@ -45,7 +49,8 @@ public class TaskService implements ITaskService {
                        TaskListDAO taskListDAO,
                        TaskTimeInfoDAO taskTimeInfoDAO,
                        MyDayTaskDAO myDayTaskDAO,
-                       TagService tagService) {
+                       TagService tagService,
+                       TimerService timerService) {
         this.taskDAO = taskDAO;
         this.taskTagMatchDAO = taskTagMatchDAO;
         this.tagDAO = tagDAO;
@@ -53,6 +58,7 @@ public class TaskService implements ITaskService {
         this.taskTimeInfoDAO = taskTimeInfoDAO;
         this.myDayTaskDAO = myDayTaskDAO;
         this.tagService = tagService;
+        this.timerService = timerService;
     }
 
     @Override
@@ -208,13 +214,20 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public void completeTask(Long taskId) throws NoDataInDataBaseException {
+    public void completeTask(Long taskId) throws NoDataInDataBaseException, UpdateEntityException {
+        // 设置任务完成状态
         Task task = taskDAO.findTaskById(taskId);
         if (task == null) {
             throw new NoDataInDataBaseException("找不到id为" + taskId + "的任务");
         }
         task.complete();
         taskDAO.save(task);
+
+        // 检查当前是否有与该任务关联的计时器，若有则结束计时器
+        TimerDTO timerDTO = timerService.getCurrentTimer();
+        if (timerDTO != null && timerDTO.getTaskId().equals(taskId) && timerDTO.getEndTime() == null) {
+            timerService.updateTimer(TimerUpdateReq.builder().timerId(timerDTO.getId()).build());
+        }
     }
 
     @Override

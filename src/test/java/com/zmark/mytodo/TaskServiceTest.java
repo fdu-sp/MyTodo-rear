@@ -1,6 +1,7 @@
 package com.zmark.mytodo;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
@@ -15,6 +16,7 @@ import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.service.impl.TagService;
 import com.zmark.mytodo.service.impl.TaskService;
+import com.zmark.mytodo.service.impl.TimerService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,6 +59,8 @@ public class TaskServiceTest {
     private MyDayTaskDAO myDayTaskDAO;
     @MockBean
     private TagService tagService;
+    @MockBean
+    private TimerService timerService;
 
     private TaskService taskService;
 
@@ -139,9 +143,9 @@ public class TaskServiceTest {
         defaultTaskList.setName("默认清单");
         taskListsInDB.add(defaultTaskList);
         //重置
-        reset(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService);
+        reset(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService, timerService);
         //初始化被测对象
-        taskService = new TaskService(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService);
+        taskService = new TaskService(taskDAO, taskTagMatchDAO, tagDAO, taskListDAO, taskTimeInfoDAO, myDayTaskDAO, tagService, timerService);
         //指定mock对象的行为
 
         /*
@@ -626,7 +630,7 @@ public class TaskServiceTest {
         assertAll(
                 () -> assertEquals("The task list IDs should be equal", taskDTO.getTaskListId(), findTaskDTO.getTaskListId()),
                 () -> assertEquals("The inMyDay values should be equal", taskDTO.getInMyDay(), findTaskDTO.getInMyDay()),
-                () -> assertEquals("The titles should be equal",taskDTO.getTitle(), findTaskDTO.getTitle())
+                () -> assertEquals("The titles should be equal", taskDTO.getTitle(), findTaskDTO.getTitle())
 
         );
 

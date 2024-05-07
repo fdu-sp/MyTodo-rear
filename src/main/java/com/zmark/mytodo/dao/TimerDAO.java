@@ -13,7 +13,7 @@ import java.util.List;
 public interface TimerDAO extends JpaRepository<Timer, Long> {
     Timer findTimerById(Long id);
 
-    List<Timer> findByEndTimestampIsNull();
+    List<Timer> findAllByEndTimestampIsNull();
 
     List<Timer> findAllByStartTimestampBetweenAndEndTimestampIsNotNull(Timestamp startTimestamp, Timestamp endTimestamp);
 }

@@ -40,7 +40,7 @@ public class TimerService implements ITimerService {
     @Override
     public TimerDTO createNewTimer(TimerCreateReq createReq) throws NewEntityException, NoDataInDataBaseException {
         // 某时刻最多只能有一个计时器
-        List<Timer> timers = timerDAO.findByEndTimestampIsNull();
+        List<Timer> timers = timerDAO.findAllByEndTimestampIsNull();
         if (!timers.isEmpty()) {
             throw new NewEntityException("创建计时器失败！某时刻最多只能有一个计时器！");
         }
@@ -90,11 +90,12 @@ public class TimerService implements ITimerService {
 
     @Override
     public TimerDTO getCurrentTimer() throws RuntimeException {
-        List<Timer> timers = timerDAO.findByEndTimestampIsNull();
+        List<Timer> timers = timerDAO.findAllByEndTimestampIsNull();
         if (timers.isEmpty()) {
             // 当前不存在正在计时的计时器，返回内容为null的timer
-            Timer timer = Timer.builder().build();
-            return TimerDTO.from(timer);
+            return null;
+//            Timer timer = Timer.builder().build();
+//            return TimerDTO.from(timer);
         } else if (timers.size() > 1) {
             // 有多于1个正在计时的计时器
             // 新建计时器时会检查，出现多个正在计时的计时器有可能是由于并发或其他不可控因素导致的

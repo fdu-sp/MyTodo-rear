@@ -7,6 +7,7 @@ import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.entity.Task;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
+import com.zmark.mytodo.exception.UpdateEntityException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -59,7 +60,7 @@ public interface ITaskService {
      * @param taskId 任务id
      * @throws NoDataInDataBaseException 如果任务不存在，抛出异常
      */
-    void completeTask(Long taskId) throws NoDataInDataBaseException;
+    void completeTask(Long taskId) throws NoDataInDataBaseException, UpdateEntityException;
 
     /**
      * 标记任务为未完成

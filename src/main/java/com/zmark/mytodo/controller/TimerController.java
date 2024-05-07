@@ -69,8 +69,12 @@ public class TimerController {
     public Result getCurrentTimer() {
         try {
             TimerDTO timerDTO = timerService.getCurrentTimer();
-            TimerSimpleResp respData = TimerDTO.toSimpleResp(timerDTO);
-            return ResultFactory.buildSuccessResult(respData);
+            if (timerDTO == null) {
+                return ResultFactory.buildSuccessResult(null);
+            } else {
+                TimerSimpleResp respData = TimerDTO.toSimpleResp(timerDTO);
+                return ResultFactory.buildSuccessResult(respData);
+            }
         } catch (Exception e) {
             log.error("getCurrentTimer error", e);
             return ResultFactory.buildInternalServerErrorResult();
