@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class TimerService implements ITimerService {
     @Override
     public TimerDTO updateTimer(TimerUpdateReq timerUpdateReq) throws NoDataInDataBaseException, UpdateEntityException {
         // 对应的计时器必须存在
-        Long timerId = timerUpdateReq.getId();
+        Long timerId = timerUpdateReq.getTimerId();
         Timer timer = timerDAO.findTimerById(timerId);
         if (timer == null) {
             throw new NoDataInDataBaseException("Timer", timerId);
@@ -74,7 +73,7 @@ public class TimerService implements ITimerService {
             throw new UpdateEntityException("该计时器已被结束！请勿重复操作！");
         }
         // 设置计时器结束时间
-        timer.setEndTimestamp(TimeUtils.now());
+        timer.end();
         // 检查该任务在本次计时期间是否被完成，若完成则更新计时器完成状态
         Long taskId = timer.getTaskId();
         Task task = taskDAO.findTaskById(taskId);
@@ -82,7 +81,7 @@ public class TimerService implements ITimerService {
             throw new NoDataInDataBaseException("Task", taskId);
         }
         if (task.getCompleted()) {
-            timer.setCompleted(true);
+            timer.complete();
         }
 
         timerDAO.save(timer);
@@ -93,9 +92,8 @@ public class TimerService implements ITimerService {
     public TimerDTO getCurrentTimer() throws RuntimeException {
         List<Timer> timers = timerDAO.findByEndTimestampIsNull();
         if (timers.isEmpty()) {
-            // 当前不存在正在计时的计时器
+            // 当前不存在正在计时的计时器，返回内容为null的timer
             Timer timer = Timer.builder().build();
-            log.info("null timer = {}", timer);
             return TimerDTO.from(timer);
         } else if (timers.size() > 1) {
             // 有多于1个正在计时的计时器

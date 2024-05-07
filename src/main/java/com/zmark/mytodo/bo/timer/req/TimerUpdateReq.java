@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TimerUpdateReq {
     @NotNull(message = "计时器id必填")
-    private Long id;
+    private Long timerId;
 }

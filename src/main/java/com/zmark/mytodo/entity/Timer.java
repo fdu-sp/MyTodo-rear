@@ -49,4 +49,12 @@ public class Timer {
                 .build();
     }
 
+    public void end() {
+        this.endTimestamp = TimeUtils.now();
+    }
+
+    public void complete() {
+        this.completed = true;
+    }
+
 }
