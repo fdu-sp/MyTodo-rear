@@ -22,16 +22,16 @@ import java.sql.Timestamp;
 public class TimerDTO {
     private Long id;
     private Long taskId;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Timestamp startTimestamp;
+    private Timestamp endTimestamp;
     private Boolean completed;
 
     public static TimerDTO from(Timer timer) {
         return TimerDTO.builder()
                 .id(timer.getId())
                 .taskId(timer.getTaskId())
-                .startTime(timer.getStartTimestamp())
-                .endTime(timer.getEndTimestamp())
+                .startTimestamp(timer.getStartTimestamp())
+                .endTimestamp(timer.getEndTimestamp())
                 .completed(timer.getCompleted())
                 .build();
     }
@@ -40,7 +40,7 @@ public class TimerDTO {
         return TimerSimpleResp.builder()
                 .id(timerDTO.getId())
                 .taskId(timerDTO.getTaskId())
-                .startTimestamp(TimeUtils.toString(timerDTO.getStartTime()))
+                .startTimestamp(TimeUtils.toString(timerDTO.getStartTimestamp()))
                 .build();
     }
 }

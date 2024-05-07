@@ -225,7 +225,7 @@ public class TaskService implements ITaskService {
 
         // 检查当前是否有与该任务关联的计时器，若有则结束计时器
         TimerDTO timerDTO = timerService.getCurrentTimer();
-        if (timerDTO != null && timerDTO.getTaskId().equals(taskId) && timerDTO.getEndTime() == null) {
+        if (timerDTO != null && timerDTO.getTaskId().equals(taskId)) {
             timerService.updateTimer(TimerUpdateReq.builder().timerId(timerDTO.getId()).build());
         }
     }
