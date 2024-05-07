@@ -10,7 +10,6 @@ import com.zmark.mytodo.dto.timer.TimerDayDTO;
 import com.zmark.mytodo.dto.timer.TimerMonthDTO;
 import com.zmark.mytodo.exception.NewEntityException;
 import com.zmark.mytodo.exception.NoDataInDataBaseException;
-import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import com.zmark.mytodo.exception.UpdateEntityException;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
@@ -44,7 +43,7 @@ public class TimerController {
             TimerDTO timerDTO = timerService.createNewTimer(timerCreateReq);
             return ResultFactory.buildSuccessResult("创建成功", TimerDTO.toSimpleResp(timerDTO));
         } catch (NewEntityException | NoDataInDataBaseException e) {
-            log.error("createNewTimer error, timerCreateReq: {}", timerCreateReq, e);
+            log.warn("createNewTimer error, timerCreateReq: {}", timerCreateReq, e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
             log.error("createNewTimer error, timerCreateReq: {}", timerCreateReq, e);
@@ -56,9 +55,9 @@ public class TimerController {
     public Result updateTimer(@Validated @RequestBody TimerUpdateReq timerUpdateReq) {
         try {
             timerService.updateTimer(timerUpdateReq);
-            return ResultFactory.buildSuccessResult();
+            return ResultFactory.buildSuccessResult("计时器已结束", null);
         } catch (UpdateEntityException | NoDataInDataBaseException e) {
-            log.error("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
+            log.warn("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
             return ResultFactory.buildFailResult(e.getMessage());
         } catch (RuntimeException e) {
             log.error("updateTimer error, timerUpdateReq: {}", timerUpdateReq, e);
