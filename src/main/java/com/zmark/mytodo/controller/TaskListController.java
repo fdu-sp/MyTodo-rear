@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author ZMark
  * @date 2023/12/7 20:25
@@ -93,6 +95,17 @@ public class TaskListController {
         } catch (Exception e) {
             log.error("更新任务列表失败！" + e.getMessage(), e);
             return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    @GetMapping("/api/task-list/getAllLists")
+    public Result getAllLists() {
+        try {
+            List<TaskListDTO> taskListDTOList = taskListService.findAll();
+            return ResultFactory.buildSuccessResult(taskListDTOList);
+        } catch (NoDataInDataBaseException e){
+            log.warn("获取任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(e.getMessage());
         }
     }
 }

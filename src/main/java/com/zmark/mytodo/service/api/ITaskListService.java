@@ -7,11 +7,15 @@ import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.exception.RepeatedEntityInDatabase;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author ZMark
  * @date 2023/12/7 19:22
  */
 public interface ITaskListService {
+
+    List<TaskListDTO> findAll() throws NoDataInDataBaseException;
 
     TaskListDTO findById(long taskListId) throws NoDataInDataBaseException;
 

@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author ZMark
  * @date 2023/12/7 19:26
@@ -117,6 +119,12 @@ public class TaskListService implements ITaskListService {
         // 更新数据库
         taskListDAO.save(taskList);
         return TaskListDTO.from(taskList, taskService);
+    }
+
+    @Override
+    public List<TaskListDTO> findAll(){
+        List<TaskList> taskLists = taskListDAO.findAll();
+        return TaskListDTO.from(taskLists, taskService);
     }
 
     private boolean isNameChanged(TaskList taskList, String newName) {
