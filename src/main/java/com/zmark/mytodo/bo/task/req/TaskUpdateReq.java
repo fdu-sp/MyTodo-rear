@@ -45,11 +45,5 @@ public class TaskUpdateReq {
     private TaskPriorityInfoResp taskPriorityInfo;
     @NotNull
     private TaskTimeInfoResp taskTimeInfo;
-    @NotNull
-    private String createTime;
-    @NotNull
-    private String updateTime;
 
-
-    }
 }
