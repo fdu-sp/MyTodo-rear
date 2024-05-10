@@ -24,6 +24,7 @@ import java.util.List;
 public class TaskUpdateReq {
     @NotNull(message = "任务id必填")
     private Long id;
+    
     @NotEmpty(message = "任务标题不能为空")
     private String title;
     @NotNull
