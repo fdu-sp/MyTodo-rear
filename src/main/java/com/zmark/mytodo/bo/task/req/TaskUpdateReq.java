@@ -49,7 +49,4 @@ public class TaskUpdateReq {
     private String createTime;
     @NotNull
     private String updateTime;
-
-
-    }
 }
