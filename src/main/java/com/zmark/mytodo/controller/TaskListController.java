@@ -73,6 +73,7 @@ public class TaskListController {
     @PostMapping("/api/task-list/create-new")
     public Result createNew(@Validated @RequestBody TaskListCreateReq creatReq) {
         try {
+            
             TaskListDTO taskListDTO = taskListService.createNewTaskList(creatReq);
             return ResultFactory.buildSuccessResult(taskListDTO.toDetailResp());
         } catch (NoDataInDataBaseException | RepeatedEntityInDatabase e) {
