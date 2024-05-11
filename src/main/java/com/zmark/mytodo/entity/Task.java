@@ -106,7 +106,7 @@ public class Task {
                 .build();
         Task task = Task.builder()
                 .title(req.getTitle())
-                .completed(req.getCompleted())
+                .completed(req.getCompleted() != null && req.getCompleted())
                 .completedTime(null)
                 .archived(false)
                 .taskListId(req.getTaskListId() == null ? TaskList.DEFAULT_LIST_ID : req.getTaskListId())
