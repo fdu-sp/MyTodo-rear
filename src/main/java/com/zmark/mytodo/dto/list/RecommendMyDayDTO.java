@@ -15,12 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecommendMyDayDTO {
-    // 截止日期为今天的任务
-    /**
-     * @deprecated 我的一天 建议功能中不再需要这个字段，不过安卓端仍然需要
-     */
-    @Deprecated
-    RecommendTaskListDTO tasksEndToday;
     // 三天内：截止日期为之后三天的任务
     RecommendTaskListDTO tasksEndInThreeDays;
     // 未来：截止日期为之后四到七天的任务
@@ -32,7 +26,6 @@ public class RecommendMyDayDTO {
 
     public RecommendMyDayResp toResp() {
         return RecommendMyDayResp.builder()
-                .tasksEndToday(tasksEndToday.toResp())
                 .tasksEndInThreeDays(tasksEndInThreeDays.toResp())
                 .tasksEndInFourToSevenDays(tasksEndInFourToSevenDays.toResp())
                 .uncompletedTasksEndBeforeToday(uncompletedTasksBeforeToday.toResp())
