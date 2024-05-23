@@ -136,7 +136,7 @@ public class TaskListServiceTest {
     /**
      * 用户故事：任务清单的创建
      *
-     * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
+     * @see TaskListService#createNewTaskList(TaskListCreateReq)   被测方法
      */
     @Test
     public void testCreateNewTaskListNormal() {
@@ -168,7 +168,7 @@ public class TaskListServiceTest {
     /**
      * 用户故事：任务清单的创建
      *
-     * @see TaskListService#updateTaskList(TaskListUpdateReq)  被测方法
+     * @see TaskListService#createNewTaskList(TaskListCreateReq) 被测方法
      */
     @Test
     public void testCreateNewTaskListException() throws NoDataInDataBaseException, RepeatedEntityInDatabase {
