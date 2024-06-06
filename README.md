@@ -86,8 +86,7 @@ docker build -t mytodo-rear:1.0.0 .
 
 ```shell
 # 单行命令
-docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8788:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 
-mytodo-rear:1.0.0 
+docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8788:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 mytodo-rear:1.0.0 
 
 # 多行命令
 docker run -d \
