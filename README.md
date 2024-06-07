@@ -45,9 +45,9 @@ mysql> quit
 
 1. 修改配置文件[application.properties](./src/main/resources/application.properties)，启用prod置
 
-```properties
-spring.profiles.active=prod
-```
+  ```properties
+  spring.profiles.active=prod
+  ```
 
 2. 使用docker-compose部署MySQL-->见[使用docker-compose部署MySQL](#使用docker-compose部署mysql)
 
@@ -57,7 +57,7 @@ spring.profiles.active=prod
 
 启动MySQL-Docker，会使用sh脚本，如果启动失败，可以通过vscode修改 转换换行符：
 
-- 打开[脚本文件](mytodo-mysql-docker/wait-for-it.sh)。
+- 打开[脚本文件](MyTodo-mysql-docker/wait-for-it.sh)。
 - 点击底部的换行符显示选项，并选择 "CRLF"（Windows）。
 - 选择 "LF"（Unix）。
 
