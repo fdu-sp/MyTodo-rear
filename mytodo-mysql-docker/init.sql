@@ -173,6 +173,23 @@ CREATE TABLE `task_tag_match`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+
+-- --------------------------
+-- Table structure for timer 计时表
+-- --------------------------
+DROP TABLE IF EXISTS `timer`;
+CREATE TABLE `timer`
+(
+    `id`              BIGINT  NOT NULL AUTO_INCREMENT,
+    `task_id`         BIGINT  NOT NULL COMMENT '关联任务id',
+    `start_timestamp` timestamp        DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
+    `end_timestamp`   timestamp        COMMENT '结束时间',
+    `completed`       boolean NOT NULL DEFAULT FALSE COMMENT '任务在本次专注过程中是否完成',
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 -- ----------------------------
 SET
 FOREIGN_KEY_CHECKS = 1;
