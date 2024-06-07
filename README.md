@@ -57,7 +57,7 @@ mysql> quit
 
 启动MySQL-Docker，会使用sh脚本，如果启动失败，可以通过vscode修改 转换换行符：
 
-- 打开[脚本文件](MyTodo-mysql-docker/wait-for-it.sh)。
+- 打开[脚本文件](mytodo-mysql-docker/wait-for-it.sh)。
 - 点击底部的换行符显示选项，并选择 "CRLF"（Windows）。
 - 选择 "LF"（Unix）。
 
@@ -68,17 +68,14 @@ docker-compose up -d
 
 ## 后端docker镜像打包
 
-1. 修改配置文件[application.properties](./src/main/resources/application.properties)，启用prod配置
+> 不选择进行多阶段构建，而是本机构建 jar 包，因为多阶段构建速度慢
 
-```properties
-spring.profiles.active=prod
-```
+1. 打包jar：maven-->MyTodo-->生命周期-->package （如果测试无法通过，可能需要使用`@Disabled`注解禁用测试）
 
-2. 打包jar：maven-->MyTodo-->生命周期-->package （如果测试无法通过，可能需要使用`@Disabled`注解禁用测试）
-
-3. 构建docker镜像
+2. 构建docker镜像
 
 ```shell
+# 在项目根目录下进行
 docker build -t mytodo-rear:1.0.0 .
 ```
 
@@ -86,7 +83,7 @@ docker build -t mytodo-rear:1.0.0 .
 
 ```shell
 # 单行命令
-docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8788:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 mytodo-rear:1.0.0 
+docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8787:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 mytodo-rear:1.0.0 
 
 # 多行命令
 docker run -d \

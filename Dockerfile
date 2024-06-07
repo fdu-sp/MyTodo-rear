@@ -1,4 +1,7 @@
-FROM openjdk:17-jdk-alpine
-MAINTAINER ZMark <351479188@qq.com> 
-ADD target/MyTodo-0.0.1-SNAPSHOT.jar target.jar
-ENTRYPOINT ["java","-jar","target.jar"]
+FROM openjdk:17-jdk
+WORKDIR /app
+# 复制编译后的jar文件到新的镜像中
+COPY  ./target/app.jar app.jar
+ENV env=prod
+# 运行Spring Boot应用
+ENTRYPOINT ["java","-jar","app.jar", "--spring.config.location=classpath:/application-${env}.properties"]

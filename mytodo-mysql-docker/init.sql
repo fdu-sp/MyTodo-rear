@@ -190,6 +190,12 @@ CREATE TABLE `timer`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+INSERT INTO task_group (id, name, create_time, update_time)
+VALUES (1, '默认分组', '2024-05-05 16:15:21', '2024-05-05 16:15:21');
+
+INSERT INTO task_list (id, name, create_time, update_time)
+VALUES (1, '默认清单', '2024-05-05 16:15:21', '2024-05-05 16:15:21');
+
 -- ----------------------------
 SET
 FOREIGN_KEY_CHECKS = 1;
