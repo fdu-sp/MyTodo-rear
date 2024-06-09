@@ -193,6 +193,16 @@ public class TaskService implements ITaskService {
         List<String> tagNameList = taskUpdateReq.getTags().stream().map(TagSimpleResp::getTagPath).toList();
         TaskDTO taskDTO = this.saveOrUpdate(Task.fromTaskUpdateReq(taskUpdateReq), tagNameList, taskUpdateReq.getInMyDay());
         log.info("updateTask succeed, task: {}", taskUpdateReq);
+        // 更新“我的一天”任务清单
+        Date today = TimeUtils.today();
+        TaskTimeInfo taskTimeInfo = taskDTO.getTaskTimeInfo();
+        Date endDate = taskTimeInfo.getEndDate();
+        Date reminderDate = new Date(taskTimeInfo.getReminderTimestamp().getTime());
+        Date expectedExecutionDate = taskTimeInfo.getExpectedExecutionDate();
+        if (TimeUtils.isSameDay(today, endDate) || TimeUtils.isSameDay(today, reminderDate) || TimeUtils.isSameDay(today, expectedExecutionDate)) {
+            myDayTaskDAO.save(MyDayTask.builder().taskId(taskDTO.getId()).build());
+            log.info("just updated task has been added to my day");
+        }
         return taskDTO;
     }
 

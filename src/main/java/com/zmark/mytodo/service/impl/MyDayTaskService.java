@@ -76,8 +76,7 @@ public class MyDayTaskService implements IMyDayTaskService {
 
     /**
      * `我的一天` 列表中，自动加入：<br/>
-     * 1. 过去没有完成的任务(截止时间)<br/>
-     * 2. 今日截止的任务、设定今日提醒的任务、规划今日执行的任务<br/>
+     * 今日截止的任务、设定今日提醒的任务、规划今日执行的任务<br/>
      */
     @Override
     public List<TaskDTO> getMyDayList() {
