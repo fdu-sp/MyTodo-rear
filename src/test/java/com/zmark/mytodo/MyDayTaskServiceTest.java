@@ -244,6 +244,34 @@ public class MyDayTaskServiceTest {
         assertTrue("我的一天中应该有今日提醒的任务", myDayTaskList.contains(taskRemindToday));
     }
 
+    @Test
+    public void test_getMyDayList_empty() {
+        // 1. Given: 准备数据
+        // 准备Task
+        // 不存在截止时间、提醒时间、规划时间在今天的任务（我的一天为空）
+        // 截止时间、提醒时间、规划时间在明天的任务
+        TaskDTO taskOfFullTimeInfoOfTomorrow = saveUncompletedTask(tomorrowTimestamp, tomorrowTimestamp, tomorrow, tomorrow);
+        TaskDTO taskRemindTomorrow = saveUncompletedTask(tomorrowTimestamp, tomorrowTimestamp, null, null);
+        TaskDTO taskExpectedTomorrow = saveUncompletedTask(tomorrowTimestamp, null, tomorrow, null);
+        TaskDTO taskEndTomorrow = saveUncompletedTask(tomorrowTimestamp, null, null, tomorrow);
+        // 截止时间、提醒时间、规划时间在昨天的任务
+        TaskDTO taskOfFullTimeInfoOfYesterday = saveUncompletedTask(yesterdayTimestamp, yesterdayTimestamp, yesterday, yesterday);
+        TaskDTO taskRemindYesterday = saveUncompletedTask(yesterdayTimestamp, yesterdayTimestamp, null, null);
+        TaskDTO taskExpectedYesterday = saveUncompletedTask(yesterdayTimestamp, null, yesterday, null);
+        TaskDTO taskEndYesterday = saveUncompletedTask(yesterdayTimestamp, null, null, yesterday);
+        // 截止时间、提醒时间、规划时间在3天后的任务
+        TaskDTO taskOfFullTimeInfoOfAfterThreeDays = saveUncompletedTask(beforeThreeDaysTimestamp, afterThreeDaysTimestamp, afterThreeDays, afterThreeDays);
+        TaskDTO taskEndAfterThreeDays = saveUncompletedTask(beforeThreeDaysTimestamp, null, null, afterThreeDays);
+        TaskDTO taskRemindAfterThreeDays = saveUncompletedTask(beforeThreeDaysTimestamp, beforeThreeDaysTimestamp, null, null);
+        TaskDTO taskExpectedAfterThreeDays = saveUncompletedTask(beforeThreeDaysTimestamp, null, afterThreeDays, null);
+
+        // 2. when
+        List<TaskDTO> myDayTaskList = myDayTaskService.getMyDayList();
+
+        // 3. then 我的一天任务列表应该包含0个任务：
+        assertEquals("我的一天任务数量不正确", 0, myDayTaskList.size());
+    }
+
     private TaskDTO saveUncompletedTask(Timestamp createTimestamp,
                                         Timestamp reminderTimestamp,
                                         Date expectedExecutionDate,
