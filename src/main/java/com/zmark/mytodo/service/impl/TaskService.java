@@ -136,7 +136,7 @@ public class TaskService implements ITaskService {
         taskListId = taskListId == null ? TaskList.DEFAULT_LIST_ID : taskListId;
         TaskList taskList = taskListDAO.findTaskListById(taskListId);
         if (taskList == null) {
-            throw new NoDataInDataBaseException("找不到id为" + taskListId + "的任务清单");
+            throw new NewEntityException("找不到id为" + taskListId + "的任务清单");
         }
         task.setTaskListId(taskListId);
         // 保存新增的 tags
