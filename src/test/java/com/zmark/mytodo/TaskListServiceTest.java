@@ -146,13 +146,15 @@ public class TaskListServiceTest {
 
         // 添加清单，不指定分组，service函数会自动选择默认分组
         TaskListCreateReq taskListCreateReqWithDefaultGroup = new TaskListCreateReq("清单1", "测试", null);
+
         assertDoesNotThrow(() -> taskListService.createNewTaskList(taskListCreateReqWithDefaultGroup));
+        assertEquals(1, taskListInDB.size());
+
 
         verify(taskGroupDAO, times(1)).findTaskGroupById(anyLong());
         verify(taskListDAO, times(1)).findByNameAndGroupId(anyString(), anyLong());
         verify(taskListDAO, times(1)).save(any(TaskList.class));
 
-        assertEquals(1, taskListInDB.size());
 
         // 添加清单，指定分组为第二个
         TaskListCreateReq taskListCreateReqWithAnotherGroup = new TaskListCreateReq("清单2", "测试", 2L);

@@ -176,6 +176,15 @@ public class TimeUtils {
         return date1.equals(date2);
     }
 
+    public static boolean isSameDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            return false;
+        }
+        LocalDate localDate1 = date1.toLocalDate();
+        LocalDate localDate2 = date2.toLocalDate();
+        return localDate1.equals(localDate2);
+    }
+
     /**
      * 获取两个时间戳相差的分钟数
      */

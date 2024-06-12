@@ -112,7 +112,7 @@ public class TaskServiceTest {
                 .inMyDay(true)
                 .tags(List.of(new TagSimpleResp(0L, "啊啊啊啊", "啊啊啊啊"))) // 假设的有效的标签对象
                 .taskContentInfo(new TaskContentInfoResp())
-                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp("2024-06-15 16:16:05"))
                 .taskPriorityInfo(new TaskPriorityInfoResp())
                 .build();
 
@@ -124,7 +124,7 @@ public class TaskServiceTest {
                 .taskListId(2L) // 无效的taskListId
                 .tags(List.of(new TagSimpleResp(0L, "啊啊啊啊", "啊啊啊啊"))) // 假设的有效的标签对象
                 .taskContentInfo(new TaskContentInfoResp())
-                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskTimeInfo(new TaskTimeInfoResp("2024-06-15 16:16:05"))
                 .taskPriorityInfo(new TaskPriorityInfoResp())
                 .build();
     }
@@ -519,18 +519,21 @@ public class TaskServiceTest {
                 .tagNames(new ArrayList<>())
                 .taskListId(1L)
                 .description("任务1的描述")
+                .reminderTimestamp("2024-06-15 16:16:05")
                 .build());
         TaskDTO task2 = taskService.createNewTask(TaskCreateReq.builder()
                 .title("任务2")
                 .tagNames(new ArrayList<>())
                 .taskListId(1L)
                 .description("任务2的描述")
+                .reminderTimestamp("2024-06-15 16:16:05")
                 .build());
         TaskDTO task3 = taskService.createNewTask(TaskCreateReq.builder()
                 .title("任务3")
                 .tagNames(new ArrayList<>())
                 .taskListId(1L)
                 .description("任务3的描述")
+                .reminderTimestamp("2024-06-15 16:16:05")
                 .build());
         // 验证默认清单中有3个任务
         TaskList defaultList = taskListDAO.findTaskListById(TaskList.DEFAULT_LIST_ID);
@@ -542,7 +545,7 @@ public class TaskServiceTest {
                 .tags(new ArrayList<>())
                 .taskContentInfo(new TaskContentInfoResp())
                 .taskPriorityInfo(new TaskPriorityInfoResp())
-                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskTimeInfo(TaskTimeInfo.from(task1.getTaskTimeInfo()))
                 .taskListId(2L)
                 .build());
         // 将任务2分配给 清单2
@@ -551,7 +554,7 @@ public class TaskServiceTest {
                 .tags(new ArrayList<>())
                 .taskContentInfo(new TaskContentInfoResp())
                 .taskPriorityInfo(new TaskPriorityInfoResp())
-                .taskTimeInfo(new TaskTimeInfoResp())
+                .taskTimeInfo(TaskTimeInfo.from(task2.getTaskTimeInfo()))
                 .taskListId(3L)
                 .build());
         // Then 系统的特定清单中会有特定的任务
