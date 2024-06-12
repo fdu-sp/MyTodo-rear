@@ -50,11 +50,11 @@ jobs:
       - name: Build Docker image
         if: env.IS_VERSION_TAG == 'true'
         run: |
-          docker build -t $IMAGE_NAME:${TAG_VERSION} .
-          docker tag $IMAGE_NAME:${TAG_VERSION} $IMAGE_NAME:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION} .
+          docker tag $IMAGE_NAME:${TAG_VERSION} ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
 
       - name: Push Docker image
         if: env.IS_VERSION_TAG == 'true'
         run: |
-          docker push $IMAGE_NAME:${TAG_VERSION}
-          docker push $IMAGE_NAME:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION}
+          docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
