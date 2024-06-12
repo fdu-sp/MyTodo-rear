@@ -32,35 +32,29 @@ jobs:
       - name: Check if tag is vX.X.X
         id: check_tag
         run: |
-          TAG=$(echo "${{ github.ref }}" | sed 's/v//') # 移除 tag 中的 'v'
+          TAG=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\/v//') # 移除 tag 中的 'refs/tags/v'
           if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::set-output name=IS_VERSION_TAG::true"
+            echo "IS_VERSION_TAG=true" >> $GITHUB_ENV
+            echo "TAG_VERSION=$TAG" >> $GITHUB_ENV
           else
-            echo "::set-output name=IS_VERSION_TAG::false"
+            echo "IS_VERSION_TAG=false" >> $GITHUB_ENV
           fi
 
       - name: Log in to Docker Hub
+        if: env.IS_VERSION_TAG == 'true'
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-        if: steps.check_tag.outputs.IS_VERSION_TAG == 'true'
-
-      - name: Parse version from tag
-        id: parse_version
-        run: |
-          TAG_VERSION=$(echo "${{ github.ref }}" | sed 's/v//') # 移除 tag 中的 'v'
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
-        if: steps.check_tag.outputs.IS_VERSION_TAG == 'true'
 
       - name: Build Docker image
+        if: env.IS_VERSION_TAG == 'true'
         run: |
-          docker build -t ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }} .
-          docker tag ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }} ${{ env.IMAGE_NAME }}:latest
-        if: steps.check_tag.outputs.IS_VERSION_TAG == 'true'
+          docker build -t $IMAGE_NAME:${TAG_VERSION} .
+          docker tag $IMAGE_NAME:${TAG_VERSION} $IMAGE_NAME:latest
 
       - name: Push Docker image
+        if: env.IS_VERSION_TAG == 'true'
         run: |
-          docker push ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }}
-          docker push ${{ env.IMAGE_NAME }}:latest
-        if: steps.check_tag.outputs.IS_VERSION_TAG == 'true'
+          docker push $IMAGE_NAME:${TAG_VERSION}
+          docker push $IMAGE_NAME:latest
