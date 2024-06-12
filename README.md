@@ -120,8 +120,13 @@ mytodo-rear:1.0.0
 | `MYSQL_USER_PASSWORD` | MySQL 密码   | `root`      |
 | `MYSQL_DATABASE`      | MySQL 数据库名 | `my_todo`   |
 
-# 发布指南
+# CI/CD
 
-在提交时，给提交打上vx.x.x的tag，推送到github后，action会被触发，完成jar包构建、镜像构建和镜像推送。
+CI部分：
 
-会推送两个镜像，一个带有tag x.x.x，一个带有tag latest。
+- main分支上的push会触发CI，进行编译构建，在构建过程中会运行测试用例。
+
+CD部分：
+
+- main分支上，提交时给提交打上vx.x.x的tag，推送到github后，action会被触发，完成jar包构建、镜像构建和镜像推送。
+- 会推送两个镜像，一个带有tag x.x.x，一个带有tag latest。
