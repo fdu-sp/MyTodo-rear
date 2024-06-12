@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0.34
-    container_name: MyTodo-mysql
+    container_name: mytodo-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
@@ -13,7 +13,7 @@ services:
     entrypoint: /bin/bash -c 'chmod 644 /etc/mysql/conf.d/my.cnf && docker-entrypoint.sh mysqld'
   startup-sql-runner:
     image: mysql:8.0.34
-    container_name: MyTodo-startup-sql-runner
+    container_name: mytodo-startup-sql-runner
     depends_on:
       - mysql
     links:
