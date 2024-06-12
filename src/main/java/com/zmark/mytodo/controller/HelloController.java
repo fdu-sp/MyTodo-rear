@@ -16,7 +16,7 @@ public class HelloController {
 
 
     static {
-        welcomeMsgList = List.of("Hello!", "Welcome!", "Hi!", "Nice to meet you!", "Good day!");
+        welcomeMsgList = List.of("Hello!", "Welcome!", "Nice to meet you!", "Good day!");
     }
 
     @GetMapping("/api/hello")
