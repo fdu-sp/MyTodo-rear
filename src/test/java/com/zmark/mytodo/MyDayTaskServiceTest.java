@@ -40,23 +40,23 @@ import static org.springframework.test.util.AssertionErrors.*;
 @Slf4j
 @ExtendWith(SpringExtension.class)
 public class MyDayTaskServiceTest {
-    public static final Date beforeFourDays = Date.valueOf("2024-03-25");
+    public static final Date beforeFourDays = Date.valueOf("2024-06-07");
     public static final Timestamp beforeFourDaysTimestamp = new Timestamp(beforeFourDays.getTime());
-    public static final Date beforeThreeDays = Date.valueOf("2024-03-26");
+    public static final Date beforeThreeDays = Date.valueOf("2024-06-08");
     public static final Timestamp beforeThreeDaysTimestamp = new Timestamp(beforeThreeDays.getTime());
-    public static final Date beforeYesterday = Date.valueOf("2024-03-27");
+    public static final Date beforeYesterday = Date.valueOf("2024-06-09");
     public static final Timestamp beforeYesterdayTimestamp = new Timestamp(beforeYesterday.getTime());
-    public static final Date yesterday = Date.valueOf("2024-03-28");
+    public static final Date yesterday = Date.valueOf("2024-06-10");
     public static final Timestamp yesterdayTimestamp = new Timestamp(yesterday.getTime());
-    public static final Date today = Date.valueOf("2024-03-29");
+    public static final Date today = Date.valueOf("2024-06-11");
     public static final Timestamp todayTimestamp = new Timestamp(today.getTime());
-    public static final Date tomorrow = Date.valueOf("2024-03-30");
+    public static final Date tomorrow = Date.valueOf("2024-06-12");
     public static final Timestamp tomorrowTimestamp = new Timestamp(tomorrow.getTime());
-    public static final Date afterThreeDays = Date.valueOf("2024-04-01");
+    public static final Date afterThreeDays = Date.valueOf("2024-06-13");
     public static final Timestamp afterThreeDaysTimestamp = new Timestamp(afterThreeDays.getTime());
-    public static final Date afterFourDays = Date.valueOf("2024-04-02");
+    public static final Date afterFourDays = Date.valueOf("2024-06-14");
     public static final Timestamp afterFourDaysTimestamp = new Timestamp(afterFourDays.getTime());
-    public static final Date afterSevenDays = Date.valueOf("2024-04-05");
+    public static final Date afterSevenDays = Date.valueOf("2024-06-15");
     public static final Timestamp afterSevenDaysTimestamp = new Timestamp(afterSevenDays.getTime());
 
     /**

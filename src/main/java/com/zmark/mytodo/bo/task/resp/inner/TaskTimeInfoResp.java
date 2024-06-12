@@ -23,4 +23,8 @@ public class TaskTimeInfoResp {
     private String expectedExecutionDate;
     private String expectedExecutionStartPeriod;
     private String expectedExecutionEndPeriod;
+
+    public TaskTimeInfoResp(String reminderTimestamp){
+        this.reminderTimestamp = reminderTimestamp;
+    }
 }
