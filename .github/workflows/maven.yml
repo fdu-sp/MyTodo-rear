@@ -46,14 +46,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build Docker image and push1 (TAG_VERSION)
         if: env.IS_VERSION_TAG == 'true'
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION} .
-          docker tag $IMAGE_NAME:${TAG_VERSION} ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION}
 
-      - name: Push Docker image
+      - name: Build Docker image and push2 (latest)
         if: env.IS_VERSION_TAG == 'true'
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${TAG_VERSION} ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
