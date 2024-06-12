@@ -1,7 +1,5 @@
 package com.zmark.mytodo;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import com.zmark.mytodo.bo.tag.resp.TagSimpleResp;
 import com.zmark.mytodo.bo.task.req.TaskCreateReq;
 import com.zmark.mytodo.bo.task.req.TaskUpdateReq;
@@ -28,8 +26,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.util.AssertionErrors.*;
@@ -417,13 +416,7 @@ public class TaskServiceTest {
     @Test
     public void test_createTaskFailed() {
         // 尝试调用 createNewTask 方法
-        try {
-            taskService.createNewTask(taskCreateReqFail);
-            fail("Expected NewEntityException to be thrown");
-        } catch (NewEntityException | NoDataInDataBaseException e) {
-            // 验证抛出的异常类型
-            Assertions.assertEquals("找不到id为" + taskCreateReqFail.getTaskListId() + "的任务清单", e.getMessage());
-        }
+        assertThrows(NoDataInDataBaseException.class, () -> taskService.createNewTask(taskCreateReqFail));
     }
 
     @Test
