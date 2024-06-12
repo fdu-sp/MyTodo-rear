@@ -197,9 +197,14 @@ public class TaskService implements ITaskService {
         Date today = TimeUtils.today();
         TaskTimeInfo taskTimeInfo = taskDTO.getTaskTimeInfo();
         Date endDate = taskTimeInfo.getEndDate();
-        Date reminderDate = new Date(taskTimeInfo.getReminderTimestamp().getTime());
+        Timestamp reminderTimestamp = taskTimeInfo.getReminderTimestamp();
+        boolean isEndToday = TimeUtils.isSameDay(today, endDate);
+        boolean isReminderToday = reminderTimestamp != null
+                && TimeUtils.isSameDay(today, new Date(reminderTimestamp.getTime()));
         Date expectedExecutionDate = taskTimeInfo.getExpectedExecutionDate();
-        if (TimeUtils.isSameDay(today, endDate) || TimeUtils.isSameDay(today, reminderDate) || TimeUtils.isSameDay(today, expectedExecutionDate)) {
+        boolean isExpectedToday = expectedExecutionDate != null
+                && TimeUtils.isSameDay(today, expectedExecutionDate);
+        if (isEndToday || isReminderToday || isExpectedToday) {
             myDayTaskDAO.save(MyDayTask.builder().taskId(taskDTO.getId()).build());
             log.info("just updated task has been added to my day");
         }
