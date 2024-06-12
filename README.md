@@ -119,3 +119,9 @@ mytodo-rear:1.0.0
 | `MYSQL_USER_NAME`     | MySQL 用户名  | `root`      |
 | `MYSQL_USER_PASSWORD` | MySQL 密码   | `root`      |
 | `MYSQL_DATABASE`      | MySQL 数据库名 | `my_todo`   |
+
+# 发布指南
+
+在提交时，给提交打上vx.x.x的tag，推送到github后，action会被触发，完成jar包构建、镜像构建和镜像推送。
+
+会推送两个镜像，一个带有tag x.x.x，一个带有tag latest。
