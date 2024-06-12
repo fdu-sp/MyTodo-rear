@@ -1,4 +1,4 @@
-name: 'Java CI/CD Create and publish a Docker image'
+name: 'CD: Create and publish a Docker image'
 
 on:
   push:
