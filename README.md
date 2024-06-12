@@ -122,11 +122,25 @@ mytodo-rear:1.0.0
 
 # CI/CD
 
-CI部分：
+## CI部分：
 
 - main分支上的push会触发CI，进行编译构建，在构建过程中会运行测试用例。
 
-CD部分：
+## CD部分：
 
-- main分支上，提交时给提交打上vx.x.x的tag，推送到github后，action会被触发，完成jar包构建、镜像构建和镜像推送。
-- 会推送两个镜像，一个带有tag x.x.x，一个带有tag latest。
+采用主干开发，主干发布的方式。
+
+先设置 GitHub Secrets ，请按照以下步骤操作：
+
+1. 打开 GitHub 仓库。
+2. 转到 Settings（设置）。
+3. 在左侧菜单中选择 Secrets and variables -> Actions。
+4. 点击 New repository secret。
+5. 添加以下两个秘密变量：
+
+  - DOCKER_USERNAME: 你的 Docker Hub 用户名。
+  - DOCKER_PASSWORD: 你的 Docker Hub 密码。
+
+main分支上，提交时给提交打上vx.x.x的tag，推送到github后，action会被触发，完成jar包构建、镜像构建和镜像推送。
+
+会推送两个镜像，一个带有tag x.x.x，一个带有tag latest。
