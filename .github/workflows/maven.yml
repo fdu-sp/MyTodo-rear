@@ -2,8 +2,7 @@ name: 'Java CI/CD Create and publish a Docker image'
 
 on:
   push:
-    tags:
-      - 'v*.*.*' # 监听以 'v' 开头，后跟三个数字的标签
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
