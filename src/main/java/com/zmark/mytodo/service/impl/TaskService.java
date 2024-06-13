@@ -194,6 +194,10 @@ public class TaskService implements ITaskService {
         TaskDTO taskDTO = this.saveOrUpdate(Task.fromTaskUpdateReq(taskUpdateReq), tagNameList, taskUpdateReq.getInMyDay());
         log.info("updateTask succeed, task: {}", taskUpdateReq);
         // 更新“我的一天”任务清单
+        // 在我的一天中，已经存在该任务，因此直接返回
+        if (myDayTaskDAO.existsByTaskId(taskDTO.getId())) {
+            return taskDTO;
+        }
         Date today = TimeUtils.today();
         TaskTimeInfo taskTimeInfo = taskDTO.getTaskTimeInfo();
         Date endDate = taskTimeInfo.getEndDate();
