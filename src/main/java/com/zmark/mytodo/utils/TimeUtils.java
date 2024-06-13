@@ -20,11 +20,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class TimeUtils {
+    // 定义日期格式
+    private static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
-     * 返回Timestamp的字符串形式，如果timestamp为null，则返回null
+     * 返回Timestamp的字符串形式（yyyy-MM-dd HH:mm:ss），如果timestamp为null，则返回null
      */
     public static String toString(Timestamp timestamp) {
-        return Optional.ofNullable(timestamp).map(Timestamp::toString).orElse(null);
+        return Optional.ofNullable(timestamp).map(timestampFormat::format).orElse(null);
     }
 
     /**
