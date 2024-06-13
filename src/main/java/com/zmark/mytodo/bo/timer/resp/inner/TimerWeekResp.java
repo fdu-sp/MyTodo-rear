@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeWeekResp {
+public class TimerWeekResp {
     String day;
     Long focusTime;
 }

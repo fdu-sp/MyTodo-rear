@@ -1,7 +1,7 @@
 package com.zmark.mytodo.dto.timer;
 
 import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
-import com.zmark.mytodo.bo.timer.resp.inner.TimeWeekResp;
+import com.zmark.mytodo.bo.timer.resp.inner.TimerWeekResp;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Violette
@@ -78,10 +77,10 @@ public class TimerDayDTO {
         }
 
         // 将Map转换为List
-        List<TimeWeekResp> focusTimeList = new ArrayList<>();
+        List<TimerWeekResp> focusTimeList = new ArrayList<>();
         for (Map.Entry<String, Long> entry : dailyFocusTimeMap.entrySet()) {
             focusTimeList.add(
-                    TimeWeekResp.builder()
+                    TimerWeekResp.builder()
                             .day(entry.getKey())
                             .focusTime(entry.getValue())
                             .build()

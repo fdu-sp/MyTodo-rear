@@ -1,6 +1,6 @@
 package com.zmark.mytodo.bo.timer.resp;
 
-import com.zmark.mytodo.bo.timer.resp.inner.TimeWeekResp;
+import com.zmark.mytodo.bo.timer.resp.inner.TimerWeekResp;
 import com.zmark.mytodo.entity.Timer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +21,5 @@ import java.util.List;
 @AllArgsConstructor
 public class TimerWeekAnalysisResp {
     // sql.Date类型的字符串 : 当日专注时长
-    private List<TimeWeekResp> focusTimeEveryDay;
+    private List<TimerWeekResp> focusTimeEveryDay;
 }
