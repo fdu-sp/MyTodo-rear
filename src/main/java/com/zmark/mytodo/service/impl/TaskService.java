@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author ZMark
@@ -316,10 +318,12 @@ public class TaskService implements ITaskService {
         List<TaskDTO> endBefore = this.getUncompletedTasksEndBefore(date);
         List<TaskDTO> remindBefore = this.getUncompletedTasksReminderBefore(date);
         List<TaskDTO> expectedBefore = this.getUncompletedTasksExpectedBefore(date);
-        List<TaskDTO> tasksBefore = new ArrayList<>(endBefore);
-        tasksBefore.addAll(remindBefore);
-        tasksBefore.addAll(expectedBefore);
-        return tasksBefore;
+
+        Set<TaskDTO> tasksBeforeSet = new HashSet<>(endBefore);
+        tasksBeforeSet.addAll(remindBefore);
+        tasksBeforeSet.addAll(expectedBefore);
+
+        return new ArrayList<>(tasksBeforeSet);
     }
 
     @Override
