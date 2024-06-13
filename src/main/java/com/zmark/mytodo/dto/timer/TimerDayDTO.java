@@ -1,6 +1,7 @@
 package com.zmark.mytodo.dto.timer;
 
 import com.zmark.mytodo.bo.timer.resp.TimerWeekAnalysisResp;
+import com.zmark.mytodo.bo.timer.resp.inner.TimerWeekResp;
 import com.zmark.mytodo.entity.Timer;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -11,8 +12,9 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * @author Violette
@@ -63,15 +65,28 @@ public class TimerDayDTO {
     }
 
     public static TimerWeekAnalysisResp toWeekAnalysisResp(List<TimerDayDTO> timerDayDTOList) {
-        return TimerWeekAnalysisResp.builder()
-                .focusTimeEveryDay(
-                        timerDayDTOList.stream()
-                                .collect(Collectors.toMap(
-                                        t -> TimeUtils.toString(t.getDay()),
-                                        TimerDayDTO::getFocusTime,
-                                        Long::sum  // 累加同一天的专注时间
-                                ))
-                )
-                .build();
+        // 使用Map来存储每一天的累计专注时间
+        Map<String, Long> dailyFocusTimeMap = new HashMap<>();
+
+        for (TimerDayDTO dto : timerDayDTOList) {
+            String day = TimeUtils.toString(dto.getDay());
+            Long focusTime = dto.getFocusTime();
+
+            // 累加同一天的专注时间
+            dailyFocusTimeMap.merge(day, focusTime, Long::sum);
+        }
+
+        // 将Map转换为List
+        List<TimerWeekResp> focusTimeList = new ArrayList<>();
+        for (Map.Entry<String, Long> entry : dailyFocusTimeMap.entrySet()) {
+            focusTimeList.add(
+                    TimerWeekResp.builder()
+                            .day(entry.getKey())
+                            .focusTime(entry.getValue())
+                            .build()
+            );
+        }
+
+        return TimerWeekAnalysisResp.builder().focusTimeEveryDay(focusTimeList).build();
     }
 }

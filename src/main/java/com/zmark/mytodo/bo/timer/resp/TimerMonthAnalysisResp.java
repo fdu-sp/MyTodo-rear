@@ -1,12 +1,13 @@
 package com.zmark.mytodo.bo.timer.resp;
 
+import com.zmark.mytodo.bo.timer.resp.inner.TimerMonthResp;
 import com.zmark.mytodo.entity.Timer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Violette
@@ -19,6 +20,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimerMonthAnalysisResp {
-    // 清单id : 该清单当月总专注时长
-    private Map<Long, Long> focusTimeEveryTaskList;
+    private List<TimerMonthResp> focusTimeEveryTaskList;
+//    private Map<Long, Long> focusTimeEveryTaskList;
 }
