@@ -114,7 +114,7 @@ public class TimerService implements ITimerService {
         List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.getStartOfWeek(TimeUtils.now()), TimeUtils.now());
 //        List<Timer> timers = timerDAO.findAllByStartTimestampBetweenAndEndTimestampIsNotNull(TimeUtils.before(7), TimeUtils.now());
         System.out.println("timers = " + timers.toString());
-        // 统计每个计时器的信息（专注日期及专注时长），考虑一个计时器横框多天的情况
+        // 统计每个计时器的信息（专注日期及专注时长），考虑一个计时器横跨多天的情况
         List<TimerDayDTO> timerDayDTOList = new ArrayList<>();
         for (Timer timer : timers) {
             timerDayDTOList.addAll(TimerDayDTO.from(timer));
