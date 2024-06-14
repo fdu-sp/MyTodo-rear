@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,19 @@ public class TaskDTO {
     private Timestamp createTime;
 
     private Timestamp updateTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskDTO taskDTO = (TaskDTO) o;
+        return id.equals(taskDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     public static TaskDTO from(Task task, List<Tag> tags, Boolean inMyDay, TaskList taskList) {
         return TaskDTO.builder()
