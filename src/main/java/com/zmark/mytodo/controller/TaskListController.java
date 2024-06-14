@@ -54,10 +54,27 @@ public class TaskListController {
     }
 
     /**
+     * 简洁-获取指定清单简洁信息
+     */
+    @GetMapping("/api/task-list/simple/find-by-id/{id}")
+    public Result getTaskListSimple(@PathVariable("id") int id) {
+        try {
+            TaskListDTO taskListDTO = taskListService.findById(id);
+            return ResultFactory.buildSuccessResult(taskListDTO.toSimpleResp());
+        } catch (NoDataInDataBaseException e) {
+            log.warn("根据id查询任务列表失败！" + e.getMessage());
+            return ResultFactory.buildFailResult(e.getMessage());
+        } catch (Exception e) {
+            log.error("根据id查询任务列表失败！" + e.getMessage(), e);
+            return ResultFactory.buildFailResult(String.format("不存在id为 %d 的任务列表！", id));
+        }
+    }
+
+    /**
      * 详细-获取指定清单，包括清单统计，拥有的TaskSimpleResp
      */
     @GetMapping("/api/task-list/detail/find-by-id/{id}")
-    public Result findById(@PathVariable("id") int id) {
+    public Result getTaskListDetail(@PathVariable("id") int id) {
         try {
             TaskListDTO taskListDTO = taskListService.findById(id);
             return ResultFactory.buildSuccessResult(taskListDTO.toDetailResp());
