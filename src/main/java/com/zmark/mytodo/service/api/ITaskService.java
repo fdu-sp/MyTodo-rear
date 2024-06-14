@@ -89,4 +89,11 @@ public interface ITaskService {
      * 指定时间段内创建的任务
      */
     List<TaskDTO> getTasksCreatedBetween(Timestamp start, Timestamp end);
+
+    /**
+     * 获取对应时间段内的任务
+     *
+     * @param period 'all': 所有， 'today':今天
+     */
+    List<TaskDTO> getTaskByPeriod(String period);
 }

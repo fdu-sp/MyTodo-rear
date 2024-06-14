@@ -125,6 +125,22 @@ public class TaskController {
         }
     }
 
+    /**
+     * 获取任务的统计数据
+     *
+     * @param period 'all': 所有， 'today':今天
+     */
+    @GetMapping("/api/task/analysis/get-task-analysis-by-period/{period}")
+    public Result getTaskAnalysisByPeriod(@PathVariable("period") String period) {
+        try {
+            List<TaskDTO> taskDTOList = taskService.getTaskByPeriod(period);
+            return ResultFactory.buildSuccessResult(TaskDTO.toAnalysisResp(taskDTOList));
+        } catch (RuntimeException e) {
+            log.error("getTaskAnalysisByPeriod error, period: {}", period, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
     @PostMapping("/api/task/create-new-task")
     public Result createNewTask(@Validated @RequestBody TaskCreateReq taskCreateReq) {
         try {

@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author ZMark
@@ -330,6 +327,23 @@ public class TaskService implements ITaskService {
     public List<TaskDTO> getTasksCreatedBetween(Timestamp start, Timestamp end) {
         List<Task> taskList = taskDAO.findAllByCreateTimeIsGreaterThanEqualAndCreateTimeIsLessThanEqual(start, end);
         return taskList.stream().map(this::toDTO).toList();
+    }
+
+    @Override
+    public List<TaskDTO> getTaskByPeriod(String period) {
+        if (Objects.equals(period, "all")) {
+            return findAllTasks();
+        } else if (Objects.equals(period, "today")) {
+            List<MyDayTask> myDayTaskList = myDayTaskDAO.findAll();
+            List<TaskDTO> taskDTOList = new ArrayList<>();
+            for (MyDayTask myDayTask : myDayTaskList) {
+                TaskDTO taskDTO = findTaskById(myDayTask.getTaskId());
+                taskDTOList.add(taskDTO);
+            }
+            return taskDTOList;
+        } else {
+            throw new IllegalArgumentException("getTaskByPeriod: 不合法参数");
+        }
     }
 
     private boolean isTaskInMyDay(Long taskId) {

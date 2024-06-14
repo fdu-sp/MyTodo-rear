@@ -1,5 +1,6 @@
 package com.zmark.mytodo.dto.task;
 
+import com.zmark.mytodo.bo.task.resp.TaskAnalysisResp;
 import com.zmark.mytodo.bo.task.resp.TaskDetailResp;
 import com.zmark.mytodo.bo.task.resp.TaskSimpleResp;
 import com.zmark.mytodo.dto.tag.TagDTO;
@@ -130,5 +131,17 @@ public class TaskDTO {
 
     public static List<TaskSimpleResp> toSimpleResp(List<TaskDTO> taskDTOS) {
         return taskDTOS.stream().map(TaskDTO::toSimpleResp).collect(Collectors.toList());
+    }
+
+    public static TaskAnalysisResp toAnalysisResp(List<TaskDTO> taskDTOS) {
+        Long totalTaskNum = (long) taskDTOS.size();
+        Long finishedTaskNum = taskDTOS.stream()
+                .filter(TaskDTO::getCompleted)
+                .count();
+        return TaskAnalysisResp.builder()
+                .totalTaskNum(totalTaskNum)
+                .finishedTaskNum(finishedTaskNum)
+                .unfinishedTaskNum(totalTaskNum - finishedTaskNum)
+                .build();
     }
 }
