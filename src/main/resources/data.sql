@@ -25,7 +25,7 @@ VALUES (2, '智能移动平台应用开发', 2),
 # VALUES (3, '《安卓开发》Lab3', 0, null, 0, '2024-05-05 16:16:05', '2024-05-05 16:16:05');
 
 INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
-VALUES (1, '概率论与数理统计HW11', 0, null, 2, 1, '2024-05-05 16:15:21', '2024-05-05 16:15:21');
+VALUES (1, '概率论与数理统计HW11', 1, null, 2, 1, '2024-05-05 16:15:21', '2024-05-05 16:15:21');
 INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
 VALUES (2, '《安卓开发》Lab4', 0, null, 2, 0, '2024-05-05 16:15:21', '2024-05-05 16:15:21');
 INSERT INTO task (id, title, completed, completed_time, list_id, archived, create_time, update_time)
@@ -48,13 +48,13 @@ VALUES (3, 3, 1, 1);
 
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
                             expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
-VALUES (1, 1, '2024-05-27', '23:59:59', 0, '2024-05-09', '08:00:00', '12:00:00', '2024-05-06 23:23:23');
+VALUES (1, 1, '2024-06-14', '23:59:59', 0, '2024-06-14', '08:00:00', '12:00:00', '2024-06-14 23:23:23');
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
                             expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
-VALUES (2, 2, '2024-05-20', '23:59:59', 0, '2024-05-09', '08:00:00', '12:00:00', '2024-05-06 21:23:23');
+VALUES (2, 2, '2024-06-14', '23:59:59', 0, '2024-06-14', '08:00:00', '12:00:00', '2024-06-14 21:23:23');
 INSERT INTO task_time_info (id, task_id, end_date, end_time, activate_countdown, expected_execution_date,
                             expected_execution_start_period, expected_execution_end_period, reminder_timestamp)
-VALUES (3, 3, '2024-05-24', '23:59:59', 0, '2024-05-09', '08:00:00', '12:00:00', '2024-04-02 12:23:23');
+VALUES (3, 3, '2024-06-14', '23:59:59', 0, '2024-06-14', '08:00:00', '12:00:00', '2024-06-14 12:23:23');
 
 
 INSERT INTO tag (id, tag_name, parent_tag_id, create_time, update_time)
@@ -75,7 +75,7 @@ VALUES (1, 1, 5),
 
 -- Task 4
 INSERT INTO task (id, title, completed, completed_time, archived, create_time, update_time)
-VALUES (4, '计算机网络作业', 0, null, 0, '2024-05-05 17:30:00', '2024-05-05 17:30:00');
+VALUES (4, '计算机网络作业', 1, null, 0, '2024-05-05 17:30:00', '2024-05-05 17:30:00');
 
 INSERT INTO task_content_info (id, task_id, description, create_time, update_time)
 VALUES (4, 4, 'Chapter 5 Exercises', '2024-05-05 17:30:00', '2024-05-05 17:30:00');
