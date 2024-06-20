@@ -6,6 +6,7 @@
 
 # 更新说明
 
+v1.0.7: 2024年06月20日
 v1.0.6: 2024年06月14日
 
 # 技术栈
@@ -80,14 +81,14 @@ docker-compose up -d
 
 ```shell
 # 在项目根目录下进行
-docker build -t mytodo-rear:1.0.0 .
+docker build -t mytodo-rear:latest .
 ```
 
 ## 使用docker部署后端
 
 ```shell
 # 单行命令
-docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8787:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 mytodo-rear:1.0.0 
+docker run -d --add-host=host.docker.internal:host-gateway --name mytodo-rear -p 8787:8787 -e SERVER_PORT=8787 -e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=9003 -e MYSQL_USER_NAME=my_todo_admin -e MYSQL_USER_PASSWORD=password123 mytodo-rear:latest 
 
 # 多行命令
 docker run -d \
@@ -99,7 +100,7 @@ docker run -d \
 -e MYSQL_PORT=9003 \
 -e MYSQL_USER_NAME=my_todo_admin \
 -e MYSQL_USER_PASSWORD=password123 \
-mytodo-rear:1.0.0 
+mytodo-rear:latest 
 ```
 
 - `-d` :后台运行容器，并返回容器ID
@@ -109,7 +110,7 @@ mytodo-rear:1.0.0
 - `-p` :指定端口映射
 - `-e` :指定环境变量，环境变量配置参考下面的表格；
     - `host.docker.internal`是Docker Desktop中的一个特殊域名，用于在容器内访问宿主机的地址
-- 最后的`mytodo-rear:1.0.0`指定镜像
+- 最后的`mytodo-rear:latest`指定镜像
 
 ### 环境变量配置
 
