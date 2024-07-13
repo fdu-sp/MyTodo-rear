@@ -26,5 +26,6 @@ public class TaskListCreateReq {
     @NotNull(message = "清单描述必填")
     String description;
 
+    @NotNull(message = "清单所属分组ID必填")
     Long taskGroupId;
 }
