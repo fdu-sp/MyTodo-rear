@@ -19,7 +19,10 @@ v1.0.6: 2024年06月14日
 
 # 开发指南
 
-配置好数据库，用idea打开本项目进行开发即可。
+1. 配置好数据库
+2. 基于[application-secrets.properties.example](./src/main/resources/application-secrets.properties.example)创建
+   application-secrets.properties，并进行相应的配置
+3. 用idea打开本项目进行开发
 
 ## 数据库配置
 
