@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TaskExtractFromAudioReq {
     // TODO
+    private String audioUrl;
 }

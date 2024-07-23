@@ -1,6 +1,5 @@
 package com.zmark.mytodo.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromAudioReq;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromTextReq;
@@ -36,10 +35,8 @@ public class TaskExtractService implements ITaskExtractService {
     public TaskExtractResp extraFromText(TaskExtractFromTextReq taskExtractReq) throws IOException {
         String text = taskExtractReq.getText();
         String prompt = generatePrompt(text);
-        String response = gptClient.call(prompt);
-        JSONObject jsonObject = JSON.parseObject(response);
-        String ansJson = jsonObject.getJSONArray("choices").getJSONObject(0).getString("text");
-        return TaskExtractResp.fromJson(ansJson);
+        String responseBody = gptClient.call(prompt);
+        return extractResponse(responseBody);
     }
 
     @Override
@@ -72,5 +69,23 @@ public class TaskExtractService implements ITaskExtractService {
                 "2. 对于不确定的信息，置为 null 或者 false；\n" +
                 "2. inMyDay表示是否需要在今天完成。\n"
                 ;
+    }
+
+    private TaskExtractResp extractResponse(String responseBody) {
+        // 解析响应体
+        JSONObject jsonObject = JSONObject.parseObject(responseBody);
+
+        // 获取第一个选择
+        JSONObject choice = jsonObject.getJSONArray("choices").getJSONObject(0);
+        // 提取 message.content 字段
+        String ansJson = choice.getJSONObject("message").getString("content").trim();
+
+        // 去除 ``` 包裹符号
+        if (ansJson.startsWith("```json") && ansJson.endsWith("```")) {
+            ansJson = ansJson.substring(7, ansJson.length() - 3).trim(); // 去除开头的 ```json 和结尾的 ```
+        }
+
+        // 解析 JSON 内容为 TaskExtractResp 对象
+        return TaskExtractResp.fromJson(ansJson);
     }
 }
