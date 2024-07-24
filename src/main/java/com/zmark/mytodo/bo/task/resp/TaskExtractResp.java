@@ -22,8 +22,8 @@ public class TaskExtractResp {
     private List<String> tags;
     private String dueTime;
     private String remindTime;
-    private String planningToTime;
     private String planningFromTime;
+    private String planningToTime;
     private Boolean isUrgent;
     private Boolean isImportant;
     private Boolean inMyDay;
