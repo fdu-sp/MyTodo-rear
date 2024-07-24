@@ -7,6 +7,7 @@ import com.zmark.mytodo.bo.task.resp.TaskExtractResp;
 import com.zmark.mytodo.gpt.IGptClient;
 import com.zmark.mytodo.gpt.OpenAIClient;
 import com.zmark.mytodo.service.api.ITaskExtractService;
+import com.zmark.mytodo.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +47,11 @@ public class TaskExtractService implements ITaskExtractService {
     }
 
     private String generatePrompt(String text) {
-        return "请从以下文字中提取任务相关的信息，包括任务标题、描述、标签（0-多个字符串）、" +
+        String timeNow = TimeUtils.toString(TimeUtils.now());
+        return "现在是" + timeNow + "，" +
+                "请从以下文字中提取任务相关的信息，包括任务标题、描述、标签（0-多个字符串）、" +
                 "截止时间、提醒时间、规划执行时间（time to time）、" +
-                "是否紧急、是否重要、是否需要在今天完成，" +
-                "语言和下面的文字匹配，并按json格式输出：\n\n" +
+                "是否紧急、是否重要、是否需要在今天完成，" + "并按json格式输出：\n\n" +
                 "文字：\n\"" + text + "\"\n\n" +
                 "json格式：\n" +
                 "{\n" +
@@ -58,16 +60,21 @@ public class TaskExtractService implements ITaskExtractService {
                 "  \"tags\": [\"\", \"\"],\n" +
                 "  \"dueTime\": \"\",\n" +
                 "  \"remindTime\": \"\",\n" +
-                "  \"planningToTime\": \"\",\n" +
                 "  \"planningFromTime\": \"\"\n" +
+                "  \"planningToTime\": \"\",\n" +
                 "  \"isUrgent\": false,\n" +
                 "  \"isImportant\": false,\n" +
                 "  \"inMyDay\": false\n" +
                 "}\n" +
                 "请注意：\n" +
                 "1. 请确保提取的信息是准确且完整的，不要遗漏或错误提取信息；\n" +
-                "2. 对于不确定的信息，置为 null 或者 false；\n" +
-                "2. inMyDay表示是否需要在今天完成。\n"
+                "2. 对于不确定的信息，置为 空数组、null 或者 false；\n" +
+                "3. title、description、tags的语言和文字匹配；\n" +
+                "4. tags为字符串数组，可以为空数组；\n" +
+                "5. dueTime、remindTime、planningFromTime、planningToTime 的格式为 yyyy-MM-dd HH:mm:ss；\n" +
+                "6. inMyDay表示是否需要在今天完成；\n" +
+                "7. isUrgent、isImportant、inMyDay的值为 true 或 false；\n" +
+                "8. 请按照上述格式输出json格式的任务信息。"
                 ;
     }
 
