@@ -1,6 +1,7 @@
 package com.zmark.mytodo.controller;
 
 import com.zmark.mytodo.bo.task.req.TaskExtractFromTextReq;
+import com.zmark.mytodo.dto.task.TaskDTO;
 import com.zmark.mytodo.result.Result;
 import com.zmark.mytodo.result.ResultFactory;
 import com.zmark.mytodo.service.api.ITaskExtractService;
@@ -33,9 +34,23 @@ public class TaskExtractController {
     @PostMapping("/api/task/extract-from-text")
     public Result extractTaskFromText(@Validated @RequestBody TaskExtractFromTextReq req) {
         try {
-            return ResultFactory.buildSuccessResult(taskExtractService.extraFromText(req));
+            return ResultFactory.buildSuccessResult(taskExtractService.extractFromText(req));
         } catch (Exception e) {
             log.error("extractTaskFromText error, req: {}", req, e);
+            return ResultFactory.buildInternalServerErrorResult();
+        }
+    }
+
+    /**
+     * AI语义分析任务并自动添加任务
+     */
+    @PostMapping("/api/task/extract-and-add-from-text")
+    public Result extractAndAddTaskFromText(@Validated @RequestBody TaskExtractFromTextReq req) {
+        try {
+            TaskDTO taskDTO = taskExtractService.extractAndAddFromText(req);
+            return ResultFactory.buildSuccessResult("任务提取并创建成功", TaskDTO.toDetailResp(taskDTO));
+        } catch (Exception e) {
+            log.error("extractAndAddTaskFromText error, req: {}", req, e);
             return ResultFactory.buildInternalServerErrorResult();
         }
     }

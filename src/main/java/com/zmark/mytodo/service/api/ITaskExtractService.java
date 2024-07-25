@@ -3,6 +3,9 @@ package com.zmark.mytodo.service.api;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromAudioReq;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromTextReq;
 import com.zmark.mytodo.bo.task.resp.TaskExtractResp;
+import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 
 import java.io.IOException;
 
@@ -12,7 +15,9 @@ import java.io.IOException;
  */
 public interface ITaskExtractService {
 
-    TaskExtractResp extraFromText(TaskExtractFromTextReq taskExtraReq) throws IOException;
+    TaskExtractResp extractFromText(TaskExtractFromTextReq taskExtractReq) throws IOException;
 
-    TaskExtractResp extraFromAudio(TaskExtractFromAudioReq taskExtraReq);
+    TaskDTO extractAndAddFromText(TaskExtractFromTextReq taskExtractReq) throws IOException, NewEntityException, NoDataInDataBaseException;
+
+    TaskExtractResp extractFromAudio(TaskExtractFromAudioReq taskExtractReq);
 }

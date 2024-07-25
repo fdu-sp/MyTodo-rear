@@ -4,9 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromAudioReq;
 import com.zmark.mytodo.bo.task.req.TaskExtractFromTextReq;
 import com.zmark.mytodo.bo.task.resp.TaskExtractResp;
+import com.zmark.mytodo.dto.task.TaskDTO;
+import com.zmark.mytodo.exception.NewEntityException;
+import com.zmark.mytodo.exception.NoDataInDataBaseException;
 import com.zmark.mytodo.gpt.IGptClient;
 import com.zmark.mytodo.gpt.OpenAIClient;
 import com.zmark.mytodo.service.api.ITaskExtractService;
+import com.zmark.mytodo.service.api.ITaskService;
 import com.zmark.mytodo.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,8 @@ import java.io.IOException;
 public class TaskExtractService implements ITaskExtractService {
 
     private IGptClient gptClient;
+
+    private ITaskService taskService;
 
     public static final String JSON_TEMPLATE = """
             {
@@ -55,11 +61,16 @@ public class TaskExtractService implements ITaskExtractService {
         this.gptClient = gptClient;
     }
 
+    @Autowired
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
     /**
      * 从文本中提取任务信息，包括任务标题、描述、标签（0-多个）、截止时间、提醒时间、规划执行时间（time to time）、是否紧急、是否重要、是否需要在今天完成、重复规则等信息
      */
     @Override
-    public TaskExtractResp extraFromText(TaskExtractFromTextReq taskExtractReq) throws IOException {
+    public TaskExtractResp extractFromText(TaskExtractFromTextReq taskExtractReq) throws IOException {
         String text = taskExtractReq.getText();
         String prompt = generatePrompt(text);
         log.info("prompt: {}", prompt);
@@ -69,7 +80,14 @@ public class TaskExtractService implements ITaskExtractService {
     }
 
     @Override
-    public TaskExtractResp extraFromAudio(TaskExtractFromAudioReq taskExtractReq) {
+    public TaskDTO extractAndAddFromText(TaskExtractFromTextReq taskExtractReq) throws IOException, NewEntityException, NoDataInDataBaseException {
+        TaskExtractResp taskExtractResp = extractFromText(taskExtractReq);
+        return taskService.createNewTask(taskExtractResp.toTaskCreateReq());
+    }
+
+
+    @Override
+    public TaskExtractResp extractFromAudio(TaskExtractFromAudioReq taskExtractReq) {
         // TODO
         return null;
     }
