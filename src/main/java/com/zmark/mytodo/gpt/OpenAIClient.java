@@ -69,7 +69,7 @@ public class OpenAIClient implements IGptClient {
         messages.add(userMessage);
 
         jsonObject.put("messages", messages);
-        jsonObject.put("max_tokens", 200);
+        jsonObject.put("max_tokens", 500);
 
         // Convert JSON payload to string
         return jsonObject.toJSONString();
