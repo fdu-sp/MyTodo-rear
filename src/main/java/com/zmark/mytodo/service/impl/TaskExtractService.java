@@ -24,6 +24,32 @@ public class TaskExtractService implements ITaskExtractService {
 
     private IGptClient gptClient;
 
+    public static final String JSON_TEMPLATE = """
+            {
+              "title": "",
+              "description": "",
+              "tags": ["", ""],
+              "dueTime": "",
+              "remindTime": "",
+              "planningFromTime": ""
+              "planningToTime": "",
+              "isUrgent": false,
+              "isImportant": false,
+              "inMyDay": false
+            }
+            """;
+
+    public static final String JSON_CONSTRAINED_PROMPT = """
+            1. 请确保提取的信息是准确且完整的，不要遗漏或错误提取信息；
+            2. 对于不确定的信息，置为 空数组、null 或者 false；
+            3. title、description、tags的语言和文字匹配；
+            4. tags为字符串数组，可以为空数组；
+            5. dueTime、remindTime、planningFromTime、planningToTime 的格式为 yyyy-MM-dd HH:mm:ss；
+            6. inMyDay表示是否需要在今天完成；
+            7. isUrgent、isImportant、inMyDay的值为 true 或 false；
+            8. 请严格按照上述格式输出json格式的任务信息，不要输出其他内容。
+            """;
+
     @Autowired
     public void setGptClient(OpenAIClient gptClient) {
         this.gptClient = gptClient;
@@ -36,7 +62,9 @@ public class TaskExtractService implements ITaskExtractService {
     public TaskExtractResp extraFromText(TaskExtractFromTextReq taskExtractReq) throws IOException {
         String text = taskExtractReq.getText();
         String prompt = generatePrompt(text);
-        String responseBody = gptClient.call(prompt);
+        log.info("prompt: {}", prompt);
+        String responseBody = gptClient.call("你是一个任务信息提取助手，专门从文本描述中提取和生成结构化的任务信息。你的主要目标是确保提取的信息准确、完整，并以预定义的JSON格式输出。", prompt);
+        log.info("responseBody: {}", responseBody);
         return extractResponse(responseBody);
     }
 
@@ -46,36 +74,17 @@ public class TaskExtractService implements ITaskExtractService {
         return null;
     }
 
-    private String generatePrompt(String text) {
+    private static String generatePrompt(String text) {
         String timeNow = TimeUtils.toString(TimeUtils.now());
-        return "现在是" + timeNow + "，" +
-                "请从以下文字中提取任务相关的信息，包括任务标题、描述、标签（0-多个字符串）、" +
-                "截止时间、提醒时间、规划执行时间（time to time）、" +
-                "是否紧急、是否重要、是否需要在今天完成，" + "并按json格式输出：\n\n" +
-                "文字：\n\"" + text + "\"\n\n" +
-                "json格式：\n" +
-                "{\n" +
-                "  \"title\": \"\",\n" +
-                "  \"description\": \"\",\n" +
-                "  \"tags\": [\"\", \"\"],\n" +
-                "  \"dueTime\": \"\",\n" +
-                "  \"remindTime\": \"\",\n" +
-                "  \"planningFromTime\": \"\"\n" +
-                "  \"planningToTime\": \"\",\n" +
-                "  \"isUrgent\": false,\n" +
-                "  \"isImportant\": false,\n" +
-                "  \"inMyDay\": false\n" +
-                "}\n" +
-                "请注意：\n" +
-                "1. 请确保提取的信息是准确且完整的，不要遗漏或错误提取信息；\n" +
-                "2. 对于不确定的信息，置为 空数组、null 或者 false；\n" +
-                "3. title、description、tags的语言和文字匹配；\n" +
-                "4. tags为字符串数组，可以为空数组；\n" +
-                "5. dueTime、remindTime、planningFromTime、planningToTime 的格式为 yyyy-MM-dd HH:mm:ss；\n" +
-                "6. inMyDay表示是否需要在今天完成；\n" +
-                "7. isUrgent、isImportant、inMyDay的值为 true 或 false；\n" +
-                "8. 请按照上述格式输出json格式的任务信息。"
-                ;
+        return """
+                现在是%s，请从用户输入中提取任务相关的信息，包括任务标题、描述、标签（0-多个字符串）、截止时间、提醒时间、规划执行时间（time to time）、是否紧急、是否重要、是否需要在今天完成，注意其中隐含的时间信息。按json格式输出。
+                ## 用户输入：
+                %s
+                ## json格式：
+                %s
+                ## 约束条件：
+                %s
+                """.formatted(timeNow, text, JSON_TEMPLATE, JSON_CONSTRAINED_PROMPT);
     }
 
     private TaskExtractResp extractResponse(String responseBody) {
@@ -94,5 +103,10 @@ public class TaskExtractService implements ITaskExtractService {
 
         // 解析 JSON 内容为 TaskExtractResp 对象
         return TaskExtractResp.fromJson(ansJson);
+    }
+
+    public static void main(String[] args) {
+        // test generatePrompt
+        System.out.println(generatePrompt("提醒我下午3点去开会"));
     }
 }
