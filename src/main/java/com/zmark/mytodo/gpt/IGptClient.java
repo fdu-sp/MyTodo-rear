@@ -8,5 +8,7 @@ import java.io.IOException;
  */
 public interface IGptClient {
 
-    String call(String prompt) throws IOException;
+    String call(String userContent) throws IOException;
+
+    String call(String agentContent, String userContent) throws IOException;
 }

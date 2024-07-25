@@ -27,29 +27,14 @@ public class OpenAIClient implements IGptClient {
     private final OkHttpClient client = new OkHttpClient();
 
     @Override
-    public String call(String prompt) throws IOException {
+    public String call(String userContent) throws IOException {
+        return call("You are a helpful assistant.", userContent);
+    }
+
+    @Override
+    public String call(String agentContent, String userContent) throws IOException {
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-        // Create JSON payload
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("model", openaiApiModel);
-        jsonObject.put("stream", false);
-
-        // Create JSON array for messages
-        JSONArray messages = new JSONArray();
-        JSONObject systemMessage = new JSONObject();
-        systemMessage.put("role", "system");
-        systemMessage.put("content", "You are a helpful assistant.");
-        JSONObject userMessage = new JSONObject();
-        userMessage.put("role", "user");
-        userMessage.put("content", prompt);
-        messages.add(systemMessage);
-        messages.add(userMessage);
-
-        jsonObject.put("messages", messages);
-        jsonObject.put("max_tokens", 200);
-
-        // Convert JSON payload to string
-        String jsonPayload = jsonObject.toJSONString();
+        String jsonPayload = getJsonRequest(agentContent, userContent);
         RequestBody body = RequestBody.create(jsonPayload, mediaType);
 
         Request request = new Request.Builder()
@@ -65,5 +50,28 @@ public class OpenAIClient implements IGptClient {
             }
             return Objects.requireNonNull(response.body()).string();
         }
+    }
+
+    private String getJsonRequest(String agentContent, String userContent) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("model", openaiApiModel);
+        jsonObject.put("stream", false);
+
+        // Create JSON array for messages
+        JSONArray messages = new JSONArray();
+        JSONObject systemMessage = new JSONObject();
+        systemMessage.put("role", "system");
+        systemMessage.put("content", agentContent);
+        JSONObject userMessage = new JSONObject();
+        userMessage.put("role", "user");
+        userMessage.put("content", userContent);
+        messages.add(systemMessage);
+        messages.add(userMessage);
+
+        jsonObject.put("messages", messages);
+        jsonObject.put("max_tokens", 200);
+
+        // Convert JSON payload to string
+        return jsonObject.toJSONString();
     }
 }
